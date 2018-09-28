@@ -10,6 +10,14 @@
   version = "v1.4.7"
 
 [[projects]]
+  digest = "1:b13707423743d41665fd23f0c36b2f37bb49c30e94adb813319c44188a51ba22"
+  name = "github.com/ghodss/yaml"
+  packages = ["."]
+  pruneopts = ""
+  revision = "0ca9ea5df5451ffdf184b4428c902747c2c11cd7"
+  version = "v1.0.0"
+
+[[projects]]
   digest = "1:026c7e5a8bc417cdc0fa3126ef46ba82cd6dcbde4c43e825bb8496b8a33180fc"
   name = "github.com/go-resty/resty"
   packages = ["."]
@@ -189,6 +197,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/ghodss/yaml",
     "github.com/go-resty/resty",
     "github.com/mitchellh/go-homedir",
     "github.com/pkg/errors",

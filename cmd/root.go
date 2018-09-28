@@ -10,21 +10,22 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
+// Flags / config options
+var (
+	cfgFile string
+
+	// TODO support names, not just IDs, and resolve appropriately
+	organizationID string
+	clusterID      string
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "csctl",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Short: "Command line client for interacting with Containership",
+	Long: `TODO
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+This is a long description`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -44,9 +45,16 @@ func init() {
 	// will be global for your application.
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.csctl.yaml)")
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.PersistentFlags().StringVar(&organizationID, "organization", "", "Organization")
+	// TODO alias and binding not working as expected
+	viper.RegisterAlias("organization", "org")
+	viper.BindPFlag("organization", rootCmd.Flags().Lookup("organization"))
+
+	rootCmd.PersistentFlags().StringVar(&clusterID, "cluster", "", "Cluster")
+	viper.BindPFlag("cluster", rootCmd.Flags().Lookup("cluster"))
+
+	viper.SetDefault("apiBaseURL", "https://api.containership.io")
+	viper.SetDefault("provisionBaseURL", "https://provision.containership.io")
 }
 
 // initConfig reads in config file and ENV variables if set.

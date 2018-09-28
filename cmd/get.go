@@ -1,24 +1,19 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 
+	"github.com/ghodss/yaml"
 	"github.com/go-resty/resty"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
-const (
-	provisionBaseURL = "https://stage-api.containership.io"
-)
-
+// Flags
 var (
-	orgID   string
-	orgName string
-
-	clusterID   string
-	clusterName string
+	outputFormat string
 )
 
 func getResource(url string) (string, error) {
@@ -37,14 +32,65 @@ func getResource(url string) (string, error) {
 	return string(resp.Body()), err
 }
 
-func getClusters(organizationID string) (string, error) {
-	url := fmt.Sprintf("%s/v3/organizations/%s/clusters", provisionBaseURL, organizationID)
+func getOrganizations() (string, error) {
+	url := fmt.Sprintf("%s/v3/organizations", viper.Get("apiBaseURL"))
 	return getResource(url)
 }
 
-func getOrganizations() (string, error) {
-	url := fmt.Sprintf("%s/v3/organizations", provisionBaseURL)
+func getClusters(organizationID string) (string, error) {
+	url := fmt.Sprintf("%s/v3/organizations/%s/clusters", viper.Get("apiBaseURL"), organizationID)
 	return getResource(url)
+}
+
+func getNodePools(organizationID, clusterID string) (string, error) {
+	url := fmt.Sprintf("%s/v3/organizations/%s/clusters/%s/node-pools",
+		viper.Get("provisionBaseURL"), organizationID, clusterID)
+	return getResource(url)
+}
+
+// TODO this function is beyond terrible
+func outputResponse(resp string) {
+	switch outputFormat {
+	case "", "table":
+		// Default
+		// TODO just dump raw response (json blob) for now
+		fmt.Println(resp)
+
+	case "json":
+		respMap := make([]map[string]interface{}, 0)
+
+		err := json.Unmarshal([]byte(resp), &respMap)
+		if err != nil {
+			fmt.Printf("Error unmarshalling JSON: %v", err)
+			return
+		}
+
+		j, err := json.MarshalIndent(respMap, "", "  ")
+		if err != nil {
+			fmt.Printf("Error formatting JSON: %v", err)
+			return
+		}
+
+		fmt.Println(string(j))
+
+		// TODO
+		fmt.Println("(output format %s not supported)", outputFormat)
+
+	case "yaml":
+		y, err := yaml.JSONToYAML([]byte(resp))
+		if err != nil {
+			fmt.Println("(Error converting to YAML)")
+			return
+		}
+
+		fmt.Println(string(y))
+
+	case "jsonpath":
+		fallthrough
+	default:
+		// TODO
+		fmt.Println("(output format %s not supported)", outputFormat)
+	}
 }
 
 // getCmd represents the get command
@@ -60,20 +106,6 @@ TODO this is a long description`,
 	Run: func(cmd *cobra.Command, args []string) {
 		resource := args[0]
 		switch resource {
-		case "cluster", "clusters":
-			if orgID == "" && orgName == "" {
-				fmt.Println("organization is required")
-				return
-			}
-
-			resp, err := getClusters(orgID)
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-
-			fmt.Println(resp)
-
 		case "org", "orgs", "organization", "organizations":
 			resp, err := getOrganizations()
 			if err != nil {
@@ -81,7 +113,35 @@ TODO this is a long description`,
 				return
 			}
 
-			fmt.Println(resp)
+			outputResponse(resp)
+
+		case "cluster", "clusters":
+			if organizationID == "" {
+				fmt.Println("organization is required")
+				return
+			}
+
+			resp, err := getClusters(organizationID)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+
+			outputResponse(resp)
+
+		case "nodepool", "nodepools", "np", "nps":
+			if organizationID == "" || clusterID == "" {
+				fmt.Println("organization and cluster are required")
+				return
+			}
+
+			resp, err := getNodePools(organizationID, clusterID)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+
+			outputResponse(resp)
 
 		default:
 			fmt.Println("Error: invalid resource specified: %q", resource)
@@ -92,7 +152,5 @@ TODO this is a long description`,
 func init() {
 	rootCmd.AddCommand(getCmd)
 
-	getCmd.Flags().StringP("output", "o", "json", "Output format")
-	getCmd.Flags().StringVar(&orgID, "org", "", "Organization")
-	getCmd.Flags().StringVar(&clusterID, "cluster", "", "Cluster")
+	getCmd.Flags().StringVarP(&outputFormat, "output", "o", "", "Output format")
 }
