@@ -13,3 +13,7 @@
 [[constraint]]
   name = "github.com/ghodss/yaml"
   version = "1.0.0"
+
+[[constraint]]
+  name = "github.com/olekukonko/tablewriter"
+  revision = "be2c049b30ccd4d3fd795d6bf7dce74e42eeedaa"
