@@ -1,0 +1,88 @@
+swagger: "2.0"
+host: api.containership.io
+basePath: /v3
+schemes:
+  - http
+  - https
+produces:
+  - application/json
+consumes:
+  - application/json
+
+info:
+  version: "3.0.0"
+  title: Containership Cloud API
+  contact:
+    name: Containership Developers
+    email: developers@containership.io
+    url: https://containership.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+paths:
+  /organizations:
+    get:
+      summary: List all organizations
+      operationId: listOrganizations
+      tags:
+        - organizations
+      responses:
+        "200":
+          description: A list of organizations
+          schema:
+            $ref: "#/definitions/Organizations"
+        default:
+          description: unexpected error TODO
+          schema:
+            $ref: "#/definitions/Error"
+
+definitions:
+  Organization:
+    title: A Containership organization
+    type: object
+    required:
+      - id
+      - name
+      - owner_id
+      - created_at
+      - updated_at
+      - locked
+    properties:
+      id:
+        title: Account ID
+        type: string
+        minLength: 36
+        maxLength: 36
+      name:
+        title: Name of the organization (typically a company name)
+        type: string
+      owner_id:
+        title: User ID of the organization owner
+        type: string
+        minLength: 36
+        maxLength: 36
+      created_at:
+        title: Timestamp at which the organization was created
+        type: string
+      updated_at:
+        title: Timestamp at which the organization was updated
+        type: string
+      locked:
+        title: Flag indicating if the organization is locked
+        description: If this flag is set to true, support must be contacted in order to re-enable access.
+        type: boolean
+  Organizations:
+    type: array
+    items:
+      $ref: "#/definitions/Organization"
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
