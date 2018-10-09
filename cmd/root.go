@@ -8,6 +8,8 @@ import (
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/containership/csctl/pkg/cloud/client"
 )
 
 // Flags / config options
@@ -19,6 +21,11 @@ var (
 	clusterID      string
 )
 
+var (
+	apiClient       *client.Client
+	provisionClient *client.Client
+)
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "csctl",
@@ -26,6 +33,11 @@ var rootCmd = &cobra.Command{
 	Long: `TODO
 
 This is a long description`,
+
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		apiClient = client.NewAPI()
+		provisionClient = client.NewProvision()
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

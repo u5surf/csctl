@@ -4,14 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 
-	//"github.com/ghodss/yaml"
-	"github.com/go-resty/resty"
-	//"github.com/olekukonko/tablewriter"
-	"github.com/pkg/errors"
+	"github.com/ghodss/yaml"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+	//"github.com/olekukonko/tablewriter"
+	//"github.com/pkg/errors"
 
-	"github.com/containership/csctl/pkg/cloud/api/types"
+	provisiontypes "github.com/containership/csctl/pkg/cloud/api/provision/types"
+	apitypes "github.com/containership/csctl/pkg/cloud/api/types"
 )
 
 // Flags
@@ -19,39 +18,28 @@ var (
 	outputFormat string
 )
 
-func getResource(url string, output interface{}) error {
-	token := viper.GetString("token")
-	if token == "" {
-		return errors.New("please provide a token")
-	}
-
-	authHeader := fmt.Sprintf("JWT %s", token)
-
-	resp, err := resty.R().SetHeader("Authorization", authHeader).
-		SetResult(output).
-		Get(url)
-
-	if err != nil {
-		return errors.Wrap(err, "error requesting resource")
-	}
-
-	if resp.IsError() {
-		return errors.Errorf("Containership Cloud responded with status %d: %s", resp.StatusCode(), resp.Body())
-	}
-
-	return nil
+func listOrganizations() ([]apitypes.Organization, error) {
+	path := "/v3/organizations"
+	orgs := make([]apitypes.Organization, 0)
+	return orgs, apiClient.GetResource(path, &orgs)
 }
 
-func listOrganizations() ([]types.Organization, error) {
-	url := fmt.Sprintf("%s/v3/organizations", viper.Get("apiBaseURL"))
-	orgs := make([]types.Organization, 0)
-	return orgs, getResource(url, &orgs)
+func getOrganization(id string) (*apitypes.Organization, error) {
+	path := fmt.Sprintf("/v3/organizations/%s", id)
+	var org apitypes.Organization
+	return &org, apiClient.GetResource(path, &org)
 }
 
-func getOrganization(id string) (*types.Organization, error) {
-	url := fmt.Sprintf("%s/v3/organizations/%s", viper.Get("apiBaseURL"), id)
-	var org types.Organization
-	return &org, getResource(url, &org)
+func listClusters(orgID string) ([]provisiontypes.CKECluster, error) {
+	path := fmt.Sprintf("/v3/organizations/%s/clusters", orgID)
+	clusters := make([]provisiontypes.CKECluster, 0)
+	return clusters, provisionClient.GetResource(path, &clusters)
+}
+
+func getCluster(orgID string, clusterID string) (*provisiontypes.CKECluster, error) {
+	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s", orgID, clusterID)
+	var cluster provisiontypes.CKECluster
+	return &cluster, provisionClient.GetResource(path, &cluster)
 }
 
 // TODO this function is beyond terrible
@@ -65,20 +53,26 @@ func outputResponse(resp interface{}) {
 	case "json":
 		j, err := json.MarshalIndent(resp, "", "  ")
 		if err != nil {
-			fmt.Printf("Error formatting JSON: %v", err)
+			fmt.Printf("Error formatting JSON: %v\n", err)
 			return
 		}
 
 		fmt.Println(string(j))
 
 	case "yaml":
-		//y, err := yaml.JSONToYAML([]byte(resp))
-		//if err != nil {
-		//fmt.Println("(Error converting to YAML)")
-		//return
-		//}
+		j, err := json.Marshal(resp)
+		if err != nil {
+			fmt.Println("(Error in intermediate parsing to JSON: %v\n", err)
+			return
+		}
 
-		//fmt.Println(string(y))
+		y, err := yaml.JSONToYAML([]byte(j))
+		if err != nil {
+			fmt.Printf("Error converting to YAML: %v\n", err)
+			return
+		}
+
+		fmt.Println(string(y))
 
 	case "jsonpath":
 		fallthrough
@@ -117,41 +111,41 @@ TODO this is a long description`,
 				outputResponse(resp)
 			}
 
+		case "cluster", "clusters":
+			if organizationID == "" {
+				fmt.Println("organization is required")
+				return
+			}
+
+			var resp interface{}
+			var err error
+			if len(args) == 2 {
+				clusterId := args[1]
+				resp, err = getCluster(organizationID, clusterId)
+			} else {
+				resp, err = listClusters(organizationID)
+			}
+
+			if err != nil {
+				fmt.Println(err)
+			} else {
+				outputResponse(resp)
+			}
+
 			/*
-				case "cluster", "clusters":
-					if organizationID == "" {
-						fmt.Println("organization is required")
+				case "nodepool", "nodepools", "np", "nps":
+					if organizationID == "" || clusterID == "" {
+						fmt.Println("organization and cluster are required")
 						return
 					}
 
-					var resp interface{}
-					var err error
-					if len(args) == 2 {
-						clusterId := args[1]
-						resp, err = getCluster(orgId, clusterId)
-					} else {
-						resp, err = listClusters(orgId)
-					}
+					resp, err := getNodePools(organizationID, clusterID)
 
 					if err != nil {
 						fmt.Println(err)
 					} else {
 						outputResponse(resp)
 					}
-
-						case "nodepool", "nodepools", "np", "nps":
-							if organizationID == "" || clusterID == "" {
-								fmt.Println("organization and cluster are required")
-								return
-							}
-
-							resp, err := getNodePools(organizationID, clusterID)
-
-							if err != nil {
-								fmt.Println(err)
-							} else {
-								outputResponse(resp)
-							}
 			*/
 
 		default:
