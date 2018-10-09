@@ -8,7 +8,6 @@ swagger generate model -f pkg/cloud/api/cloud-api-swagger.yaml \
     -m types
 
 # Provision API
-# TODO
-#swagger generate model -f pkg/cloud/api/cloud-provision-swagger.yaml \
-    #-t pkg/cloud/api/provision \
-    #-m types
+swagger generate model -f pkg/cloud/api/cloud-provision-swagger.yaml \
+    -t pkg/cloud/api/provision \
+    -m types
