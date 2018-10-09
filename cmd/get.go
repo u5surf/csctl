@@ -99,8 +99,8 @@ TODO this is a long description`,
 			var resp interface{}
 			var err error
 			if len(args) == 2 {
-				orgId := args[1]
-				resp, err = getOrganization(orgId)
+				orgID := args[1]
+				resp, err = getOrganization(orgID)
 			} else {
 				resp, err = listOrganizations()
 			}
@@ -120,8 +120,8 @@ TODO this is a long description`,
 			var resp interface{}
 			var err error
 			if len(args) == 2 {
-				clusterId := args[1]
-				resp, err = getCluster(organizationID, clusterId)
+				clusterID := args[1]
+				resp, err = getCluster(organizationID, clusterID)
 			} else {
 				resp, err = listClusters(organizationID)
 			}
@@ -149,7 +149,7 @@ TODO this is a long description`,
 			*/
 
 		default:
-			fmt.Println("Error: invalid resource specified: %q", resource)
+			fmt.Println("Error: invalid resource specified: %q\n", resource)
 		}
 	},
 }

@@ -69,3 +69,27 @@ func (c *Client) GetResource(path string, output interface{}) error {
 
 	return nil
 }
+
+func (c *Client) DeleteResource(path string) error {
+	token := viper.GetString("token")
+	if token == "" {
+		return errors.New("please provide a token")
+	}
+
+	url, _ := c.service.baseURL.Parse(path)
+
+	authHeader := fmt.Sprintf("JWT %s", token)
+
+	resp, err := resty.R().SetHeader("Authorization", authHeader).
+		Delete(url.String())
+
+	if err != nil {
+		return errors.Wrap(err, "error deleting resource")
+	}
+
+	if resp.IsError() {
+		return errors.Errorf("Containership Cloud responded with status %d: %s", resp.StatusCode(), resp.Body())
+	}
+
+	return nil
+}
