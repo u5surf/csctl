@@ -21,6 +21,22 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 
 paths:
+  /account:
+    get:
+      summary: Get user account info
+      operationId: getAccount
+      tags:
+        - account
+      responses:
+        "200":
+          description: User account info
+          schema:
+            $ref: "#/definitions/Account"
+        default:
+          description: unexpected error TODO
+          schema:
+            $ref: "#/definitions/Error"
+
   /organizations:
     get:
       summary: List all organizations
@@ -38,6 +54,44 @@ paths:
             $ref: "#/definitions/Error"
 
 definitions:
+  Account:
+    title: A user account
+    type: object
+    required:
+      - id
+      - created_at
+      - updated_at
+      - name
+      - enabled
+      - email
+      - phone
+      - avatar_url
+    properties:
+      id:
+        title: Account ID
+        $ref: "#/definitions/UUID"
+      created_at:
+        title: Timestamp at which the account was created
+        type: string
+      updated_at:
+        title: Timestamp at which the account was updated
+        type: string
+      name:
+        title: User name
+        type: string
+      enabled:
+        title: Flag indicating if the account is enabled
+        type: boolean
+      email:
+        title: Email associated with the account
+        type: string
+      phone:
+        title: Phone number associated with the account
+        type: string
+      avatar_url:
+        title: Avatar URL associated with the account
+        type: string
+
   Organization:
     title: A Containership organization
     type: object
@@ -50,18 +104,14 @@ definitions:
       - locked
     properties:
       id:
-        title: Account ID
-        type: string
-        minLength: 36
-        maxLength: 36
+        title: Organization ID
+        $ref: "#/definitions/UUID"
       name:
         title: Name of the organization (typically a company name)
         type: string
       owner_id:
         title: User ID of the organization owner
-        type: string
-        minLength: 36
-        maxLength: 36
+        $ref: "#/definitions/UUID"
       created_at:
         title: Timestamp at which the organization was created
         type: string
@@ -72,10 +122,27 @@ definitions:
         title: Flag indicating if the organization is locked
         description: If this flag is set to true, support must be contacted in order to re-enable access.
         type: boolean
+
   Organizations:
     type: array
     items:
       $ref: "#/definitions/Organization"
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+
+  UUID:
+    title: UUID
+    type: string
+    minLength: 36
+    maxLength: 36
   Error:
     required:
       - code

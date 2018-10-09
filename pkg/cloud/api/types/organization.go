@@ -21,11 +21,9 @@ type Organization struct {
 	// Required: true
 	CreatedAt *string `json:"created_at"`
 
-	// Account ID
+	// Organization ID
 	// Required: true
-	// Max Length: 36
-	// Min Length: 36
-	ID *string `json:"id"`
+	ID UUID `json:"id"`
 
 	// Flag indicating if the organization is locked
 	//
@@ -39,9 +37,7 @@ type Organization struct {
 
 	// User ID of the organization owner
 	// Required: true
-	// Max Length: 36
-	// Min Length: 36
-	OwnerID *string `json:"owner_id"`
+	OwnerID UUID `json:"owner_id"`
 
 	// Timestamp at which the organization was updated
 	// Required: true
@@ -93,15 +89,10 @@ func (m *Organization) validateCreatedAt(formats strfmt.Registry) error {
 
 func (m *Organization) validateID(formats strfmt.Registry) error {
 
-	if err := validate.Required("id", "body", m.ID); err != nil {
-		return err
-	}
-
-	if err := validate.MinLength("id", "body", string(*m.ID), 36); err != nil {
-		return err
-	}
-
-	if err := validate.MaxLength("id", "body", string(*m.ID), 36); err != nil {
+	if err := m.ID.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("id")
+		}
 		return err
 	}
 
@@ -128,15 +119,10 @@ func (m *Organization) validateName(formats strfmt.Registry) error {
 
 func (m *Organization) validateOwnerID(formats strfmt.Registry) error {
 
-	if err := validate.Required("owner_id", "body", m.OwnerID); err != nil {
-		return err
-	}
-
-	if err := validate.MinLength("owner_id", "body", string(*m.OwnerID), 36); err != nil {
-		return err
-	}
-
-	if err := validate.MaxLength("owner_id", "body", string(*m.OwnerID), 36); err != nil {
+	if err := m.OwnerID.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("owner_id")
+		}
 		return err
 	}
 

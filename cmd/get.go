@@ -42,6 +42,12 @@ func getCluster(orgID string, clusterID string) (*provisiontypes.CKECluster, err
 	return &cluster, provisionClient.GetResource(path, &cluster)
 }
 
+func getAccount() (*apitypes.Account, error) {
+	path := "/v3/account"
+	var account apitypes.Account
+	return &account, apiClient.GetResource(path, &account)
+}
+
 // TODO this function is beyond terrible
 func outputResponse(resp interface{}) {
 	switch outputFormat {
@@ -95,7 +101,7 @@ TODO this is a long description`,
 	Run: func(cmd *cobra.Command, args []string) {
 		resource := args[0]
 		switch resource {
-		case "org", "orgs", "organization", "organizations":
+		case "organization", "organizations", "org", "orgs":
 			var resp interface{}
 			var err error
 			if len(args) == 2 {
@@ -126,6 +132,16 @@ TODO this is a long description`,
 				resp, err = listClusters(organizationID)
 			}
 
+			if err != nil {
+				fmt.Println(err)
+			} else {
+				outputResponse(resp)
+			}
+
+		case "account", "acct", "user", "usr":
+			// Accounts are essentially users
+			// A user can only get their own account
+			resp, err := getAccount()
 			if err != nil {
 				fmt.Println(err)
 			} else {
