@@ -79,7 +79,7 @@ definitions:
         title: Provisioning engine
         type: string
       configuration:
-        title: TODO
+        title: Cluster configuration
         $ref: "#/definitions/CKEClusterConfiguration"
       status:
         title: Cluster status
@@ -87,17 +87,21 @@ definitions:
       provision_service_version:
         title: Version of the provision service used to provision this cluster
         type: string
+
   CKEClusters:
     type: array
     items:
       $ref: "#/definitions/CKECluster"
+
   CKEClusterConfiguration:
     type: object
     required:
       - provider
     properties:
       provider:
+        title: TODO
         type: object
+
   CKEClusterStatus:
     type: object
     required:
@@ -114,11 +118,86 @@ definitions:
         title: Percent complete, if applicable
         type: number
         format: float
+
+  NodePool:
+    type: object
+    required:
+      - id
+      - status
+      - os
+      - name
+      - count
+      - docker_version
+      - kubernetes_mode
+      - kubernetes_version
+      - etcd
+      - etcd_version
+      - is_schedulable
+    properties:
+      id:
+        title: Node Pool ID
+        $ref: "#/definitions/UUID"
+      status:
+        title: Node Pool status
+        $ref: "#/definitions/NodePoolStatus"
+      os:
+        title: Operating System
+        type: string
+      name:
+        title: Name of this node pool
+        type: string
+      count:
+        title: Number of nodes in this node pool
+        type: number
+        format: integer
+      docker_version:
+        title: Docker version running on this node pool
+        type: string
+      kubernetes_mode:
+        title: Kubernetes mode (master or worker) for this node pool
+        type: string
+        enum: [master, worker]
+      kubernetes_version:
+        title: Kubernetes version running on this node pool
+        type: string
+      etcd:
+        title: Flag indicating whether etcd is running on this node pool
+        type: boolean
+      etcd_version:
+        title: etcd version running on this node, if applicable
+        type: string
+      is_schedulable:
+        title: Flag indicating whether this node pool can be scheduled on
+        type: boolean
+
+  NodePoolStatus:
+    type: object
+    required:
+      - type
+      - message
+    properties:
+      type:
+        title: Type of status
+        type: string
+      message:
+        title: Human-readable message
+        type: string
+      percent:
+        title: Percent complete, if applicable
+        type: number
+        format: float
+
+  NodePools:
+    type: array
+    items:
+      $ref: "#/definitions/NodePool"
+
   UUID:
     title: UUID
     type: string
     minLength: 36
     maxLength: 36
+
   Error:
     required:
       - code

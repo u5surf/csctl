@@ -17,7 +17,7 @@ import (
 // swagger:model CKECluster
 type CKECluster struct {
 
-	// TODO
+	// Cluster configuration
 	// Required: true
 	Configuration *CKEClusterConfiguration `json:"configuration"`
 

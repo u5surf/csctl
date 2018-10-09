@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	"github.com/ghodss/yaml"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	//"github.com/olekukonko/tablewriter"
-	//"github.com/pkg/errors"
 
 	provisiontypes "github.com/containership/csctl/pkg/cloud/api/provision/types"
 	apitypes "github.com/containership/csctl/pkg/cloud/api/types"
@@ -16,6 +16,7 @@ import (
 // Flags
 var (
 	outputFormat string
+	mineOnly     bool
 )
 
 func listOrganizations() ([]apitypes.Organization, error) {
@@ -40,6 +41,18 @@ func getCluster(orgID string, clusterID string) (*provisiontypes.CKECluster, err
 	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s", orgID, clusterID)
 	var cluster provisiontypes.CKECluster
 	return &cluster, provisionClient.GetResource(path, &cluster)
+}
+
+func listNodePools(orgID string, clusterID string) ([]provisiontypes.NodePool, error) {
+	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s/node-pools", orgID, clusterID)
+	nps := make([]provisiontypes.NodePool, 0)
+	return nps, provisionClient.GetResource(path, &nps)
+}
+
+func getNodePool(orgID string, clusterID string, nodePoolID string) (*provisiontypes.NodePool, error) {
+	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s/node-pools/%s", orgID, clusterID, nodePoolID)
+	var np provisiontypes.NodePool
+	return &np, provisionClient.GetResource(path, &np)
 }
 
 func getAccount() (*apitypes.Account, error) {
@@ -88,6 +101,39 @@ func outputResponse(resp interface{}) {
 	}
 }
 
+// TODO hack
+func filterByOwner(list interface{}, ownerID apitypes.UUID) ([]interface{}, error) {
+	var res []interface{}
+	switch l := list.(type) {
+	case []apitypes.Organization:
+		for _, o := range l {
+			if o.OwnerID == ownerID {
+				res = append(res, o)
+			}
+		}
+	case []provisiontypes.CKECluster:
+		for _, o := range l {
+			// TODO typecast hack
+			if string(o.OwnerID) == string(ownerID) {
+				res = append(res, o)
+			}
+		}
+	default:
+		return nil, errors.Errorf("cannot filter by owner on type %T", l)
+	}
+
+	return res, nil
+}
+
+func filterMine(list interface{}) ([]interface{}, error) {
+	me, err := getAccount()
+	if err != nil {
+		return nil, errors.Wrap(err, "error getting account")
+	}
+
+	return filterByOwner(list, me.ID)
+}
+
 // getCmd represents the get command
 var getCmd = &cobra.Command{
 	Use:   "get <resource>",
@@ -111,6 +157,11 @@ TODO this is a long description`,
 				resp, err = listOrganizations()
 			}
 
+			// TODO gross
+			if err == nil && mineOnly {
+				resp, err = filterMine(resp)
+			}
+
 			if err != nil {
 				fmt.Println(err)
 			} else {
@@ -132,6 +183,11 @@ TODO this is a long description`,
 				resp, err = listClusters(organizationID)
 			}
 
+			// TODO gross
+			if err == nil && mineOnly {
+				resp, err = filterMine(resp)
+			}
+
 			if err != nil {
 				fmt.Println(err)
 			} else {
@@ -148,21 +204,26 @@ TODO this is a long description`,
 				outputResponse(resp)
 			}
 
-			/*
-				case "nodepool", "nodepools", "np", "nps":
-					if organizationID == "" || clusterID == "" {
-						fmt.Println("organization and cluster are required")
-						return
-					}
+		case "nodepool", "nodepools", "np", "nps":
+			if organizationID == "" || clusterID == "" {
+				fmt.Println("organization and cluster are required")
+				return
+			}
 
-					resp, err := getNodePools(organizationID, clusterID)
+			var resp interface{}
+			var err error
+			if len(args) == 2 {
+				nodePoolID := args[1]
+				resp, err = getNodePool(organizationID, clusterID, nodePoolID)
+			} else {
+				resp, err = listNodePools(organizationID, clusterID)
+			}
 
-					if err != nil {
-						fmt.Println(err)
-					} else {
-						outputResponse(resp)
-					}
-			*/
+			if err != nil {
+				fmt.Println(err)
+			} else {
+				outputResponse(resp)
+			}
 
 		default:
 			fmt.Println("Error: invalid resource specified: %q\n", resource)
@@ -173,5 +234,6 @@ TODO this is a long description`,
 func init() {
 	rootCmd.AddCommand(getCmd)
 
-	getCmd.Flags().StringVarP(&outputFormat, "output", "o", "", "Output format")
+	getCmd.Flags().StringVarP(&outputFormat, "output", "o", "", "output format")
+	getCmd.Flags().BoolVarP(&mineOnly, "mine", "m", false, "only list resources your user owns")
 }

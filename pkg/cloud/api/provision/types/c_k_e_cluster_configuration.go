@@ -17,7 +17,7 @@ import (
 // swagger:model CKEClusterConfiguration
 type CKEClusterConfiguration struct {
 
-	// provider
+	// TODO
 	// Required: true
 	Provider interface{} `json:"provider"`
 }
