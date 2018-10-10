@@ -64,7 +64,8 @@ func (c *Client) GetResource(path string, output interface{}) error {
 	}
 
 	if resp.IsError() {
-		return errors.Errorf("Containership Cloud responded with status %d: %s", resp.StatusCode(), resp.Body())
+		return errors.Errorf("Containership %s Service responded with status %d: %s",
+			c.service.name, resp.StatusCode(), resp.Body())
 	}
 
 	return nil

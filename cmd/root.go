@@ -24,6 +24,7 @@ var (
 var (
 	apiClient       *client.Client
 	provisionClient *client.Client
+	proxyClient     *client.ProxyClient
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -37,6 +38,7 @@ This is a long description`,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		apiClient = client.NewAPI()
 		provisionClient = client.NewProvision()
+		proxyClient = client.NewProxy()
 	},
 }
 
@@ -67,6 +69,7 @@ func init() {
 
 	viper.SetDefault("apiBaseURL", "https://api.containership.io")
 	viper.SetDefault("provisionBaseURL", "https://provision.containership.io")
+	viper.SetDefault("proxyBaseURL", "https://proxy.containership.io")
 }
 
 // initConfig reads in config file and ENV variables if set.

@@ -55,6 +55,19 @@ func getNodePool(orgID string, clusterID string, nodePoolID string) (*provisiont
 	return &np, provisionClient.GetResource(path, &np)
 }
 
+// TODO hack
+func listNodes(orgID string, clusterID string) ([]interface{}, error) {
+	path := "/api/v1/nodes"
+	nodes := make([]interface{}, 0)
+	return nodes, proxyClient.KubernetesGet(orgID, clusterID, path, &nodes)
+}
+
+func getNode(orgID string, clusterID string, nodeID string) (*interface{}, error) {
+	path := fmt.Sprintf("/api/v1/nodes/%s", nodeID)
+	var node interface{}
+	return &node, proxyClient.KubernetesGet(orgID, clusterID, path, &node)
+}
+
 func getAccount() (*apitypes.Account, error) {
 	path := "/v3/account"
 	var account apitypes.Account
@@ -217,6 +230,27 @@ TODO this is a long description`,
 				resp, err = getNodePool(organizationID, clusterID, nodePoolID)
 			} else {
 				resp, err = listNodePools(organizationID, clusterID)
+			}
+
+			if err != nil {
+				fmt.Println(err)
+			} else {
+				outputResponse(resp)
+			}
+
+		case "node", "nodes", "no", "nos":
+			if organizationID == "" || clusterID == "" {
+				fmt.Println("organization and cluster are required")
+				return
+			}
+
+			var resp interface{}
+			var err error
+			if len(args) == 2 {
+				nodeID := args[1]
+				resp, err = getNode(organizationID, clusterID, nodeID)
+			} else {
+				resp, err = listNodes(organizationID, clusterID)
 			}
 
 			if err != nil {
