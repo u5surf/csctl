@@ -13,13 +13,20 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// CKEClusterConfiguration c k e cluster configuration
+// CKEClusterConfiguration The cluster configuration described here is not complete.
+// Some fields are opaque / unlisted due to differences between providers.
+// Only fields relevant to end users are described.
+//
 // swagger:model CKEClusterConfiguration
 type CKEClusterConfiguration struct {
 
-	// TODO
+	// Provider information
 	// Required: true
 	Provider interface{} `json:"provider"`
+
+	// Provider resources
+	// Required: true
+	Resource interface{} `json:"resource"`
 }
 
 // Validate validates this c k e cluster configuration
@@ -27,6 +34,10 @@ func (m *CKEClusterConfiguration) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateProvider(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateResource(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -39,6 +50,15 @@ func (m *CKEClusterConfiguration) Validate(formats strfmt.Registry) error {
 func (m *CKEClusterConfiguration) validateProvider(formats strfmt.Registry) error {
 
 	if err := validate.Required("provider", "body", m.Provider); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *CKEClusterConfiguration) validateResource(formats strfmt.Registry) error {
+
+	if err := validate.Required("resource", "body", m.Resource); err != nil {
 		return err
 	}
 

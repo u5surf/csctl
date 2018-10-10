@@ -33,7 +33,7 @@ paths:
           schema:
             $ref: "#/definitions/CKEClusters"
         default:
-          description: unexpected error TODO
+          description: Unexpected error
           schema:
             $ref: "#/definitions/Error"
 
@@ -95,11 +95,19 @@ definitions:
 
   CKEClusterConfiguration:
     type: object
+    description: |
+      The cluster configuration described here is not complete.
+      Some fields are opaque / unlisted due to differences between providers.
+      Only fields relevant to end users are described.
     required:
       - provider
+      - resource
     properties:
       provider:
-        title: TODO
+        title: Provider information
+        type: object
+      resource:
+        title: Provider resources
         type: object
 
   CKEClusterStatus:

@@ -33,7 +33,7 @@ paths:
           schema:
             $ref: "#/definitions/Account"
         default:
-          description: unexpected error TODO
+          description: Unexpected error
           schema:
             $ref: "#/definitions/Error"
 
@@ -49,7 +49,7 @@ paths:
           schema:
             $ref: "#/definitions/Organizations"
         default:
-          description: unexpected error TODO
+          description: Unexpected error
           schema:
             $ref: "#/definitions/Error"
 
