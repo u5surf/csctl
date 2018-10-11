@@ -3,11 +3,11 @@
 set -e
 
 # Cloud API
-swagger generate model -f pkg/cloud/api/cloud-api-swagger.yaml \
-    -t pkg/cloud/api \
+swagger generate model -f cloud/api/swagger.yaml \
+    -t cloud/api \
     -m types
 
 # Provision API
-swagger generate model -f pkg/cloud/api/cloud-provision-swagger.yaml \
-    -t pkg/cloud/api/provision \
+swagger generate model -f cloud/provision/swagger.yaml \
+    -t cloud/provision \
     -m types

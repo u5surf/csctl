@@ -9,8 +9,8 @@ import (
 	"github.com/spf13/cobra"
 	//"github.com/olekukonko/tablewriter"
 
-	provisiontypes "github.com/containership/csctl/pkg/cloud/api/provision/types"
-	apitypes "github.com/containership/csctl/pkg/cloud/api/types"
+	apitypes "github.com/containership/csctl/cloud/api/types"
+	provisiontypes "github.com/containership/csctl/cloud/provision/types"
 )
 
 // Flags
