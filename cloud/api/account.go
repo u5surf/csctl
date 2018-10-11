@@ -4,10 +4,12 @@ import (
 	"github.com/containership/csctl/cloud/api/types"
 )
 
+// AccountGetter is the getter for account
 type AccountGetter interface {
 	Account() AccountInterface
 }
 
+// AccountInterface is the interface for account
 type AccountInterface interface {
 	Get() (*types.Account, error)
 }
@@ -16,10 +18,10 @@ type AccountInterface interface {
 type account struct {
 	// TODO make REST client
 	// client rest.Interface
-	client *APIClient
+	client *Client
 }
 
-func newAccount(c *APIClient) *account {
+func newAccount(c *Client) *account {
 	return &account{
 		// TODO make REST client
 		// client: c.RESTClient(),
@@ -27,6 +29,7 @@ func newAccount(c *APIClient) *account {
 	}
 }
 
+// Get gets an account
 func (c *account) Get() (result *types.Account, err error) {
 	// TODO RESTClient
 	path := "/v3/account"

@@ -7,24 +7,29 @@ import (
 	"github.com/containership/csctl/cloud/provision"
 )
 
+// Clientset is a set of clients for interacting with Containership Cloud
 type Clientset struct {
-	api       *api.APIClient
-	provision *provision.ProvisionClient
+	api       *api.Client
+	provision *provision.Client
 	//proxy     *proxy.ProxyClient
 }
 
+// Config is the configuration for a Clientset
 type Config struct {
 	Token string
 }
 
-func (c *Clientset) API() *api.APIClient {
+// API returns an instance of the API client
+func (c *Clientset) API() *api.Client {
 	return c.api
 }
 
-func (c *Clientset) Provision() *provision.ProvisionClient {
+// Provision returns an instance of the Provision client
+func (c *Clientset) Provision() *provision.Client {
 	return c.provision
 }
 
+// New constructs a new Clientset
 func New(cfg *Config) (*Clientset, error) {
 	api, err := api.New(&api.Config{
 		Token: cfg.Token,

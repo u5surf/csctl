@@ -18,10 +18,10 @@ fmt-check: ## Check the file format
 	@gofmt -s -e -d ${GO_FILES}
 
 lint: ## Lint the files
-	@golint -set_exit_status ${GO_FILES}
+	@golint -set_exit_status ${PKG_LIST}
 
 test: ## Run unit tests
-	@go test -short ${GO_FILES}
+	@go test -short ${PKG_LIST}
 
 vet: ## Vet the files
 	@go vet ${PKG_LIST}

@@ -6,13 +6,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-/*
-func deleteCluster(orgID string, clusterID string) error {
-	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s", orgID, clusterID)
-	return provisionClient.DeleteResource(path)
-}
-*/
-
 // deleteCmd represents the delete command
 var deleteCmd = &cobra.Command{
 	Use:   "delete",
@@ -35,21 +28,19 @@ TODO this is a long description`,
 				fmt.Printf("Organization %s successfully deleted\n", id)
 			}
 
-			/*
-				case "cluster", "clusters":
-					if organizationID == "" {
-						fmt.Println("organization is required")
-						return
-					}
+		case "cluster", "clusters":
+			if organizationID == "" {
+				fmt.Println("organization is required")
+				return
+			}
 
-					clusterID := args[1]
-					err := deleteCluster(organizationID, clusterID)
-					if err != nil {
-						fmt.Println(err)
-					} else {
-						fmt.Printf("Cluster %s successfully deleted\n", clusterID)
-					}
-			*/
+			clusterID := args[1]
+			err := clientset.Provision().CKEClusters(organizationID).Delete(clusterID)
+			if err != nil {
+				fmt.Println(err)
+			} else {
+				fmt.Printf("Cluster %s successfully deleted\n", clusterID)
+			}
 
 		default:
 			fmt.Printf("Error: invalid resource specified: %q\n", resource)

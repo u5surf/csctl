@@ -7,7 +7,6 @@ import (
 	"github.com/ghodss/yaml"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
-	//"github.com/olekukonko/tablewriter"
 
 	apitypes "github.com/containership/csctl/cloud/api/types"
 	provisiontypes "github.com/containership/csctl/cloud/provision/types"
@@ -19,27 +18,14 @@ var (
 	mineOnly     bool
 )
 
-/*
-// TODO hack
-func listNodes(orgID string, clusterID string) ([]interface{}, error) {
-	path := "/api/v1/nodes"
-	nodes := make([]interface{}, 0)
-	return nodes, proxyClient.KubernetesGet(orgID, clusterID, path, &nodes)
-}
-
-func getNode(orgID string, clusterID string, nodeID string) (*interface{}, error) {
-	path := fmt.Sprintf("/api/v1/nodes/%s", nodeID)
-	var node interface{}
-	return &node, proxyClient.KubernetesGet(orgID, clusterID, path, &node)
-}
-*/
-
 // TODO this function is beyond terrible
+//   - Make an OutputFormatter type
 func outputResponse(resp interface{}) {
 	switch outputFormat {
 	case "", "table":
 		// Default
 		// TODO just dump raw response (json blob) for now
+		// TODO this doesn't actually work atm
 		fmt.Println(resp)
 
 	case "json":
@@ -67,6 +53,7 @@ func outputResponse(resp interface{}) {
 		fmt.Println(string(y))
 
 	case "jsonpath":
+		// TODO do this soon because it allows trivial implementation of -oname, -oid, etc
 		fallthrough
 	default:
 		// TODO
@@ -74,7 +61,8 @@ func outputResponse(resp interface{}) {
 	}
 }
 
-// TODO hack
+// filterByOwner takes a list of resources and filters it by owner ID.
+// TODO this is super hacky atm
 func filterByOwner(list interface{}, ownerID apitypes.UUID) ([]interface{}, error) {
 	var res []interface{}
 	switch l := list.(type) {
@@ -98,6 +86,7 @@ func filterByOwner(list interface{}, ownerID apitypes.UUID) ([]interface{}, erro
 	return res, nil
 }
 
+// filterMine takes a list of resources and filters it by owner ID of the authorized user.
 func filterMine(list interface{}) ([]interface{}, error) {
 	me, err := clientset.API().Account().Get()
 	if err != nil {
@@ -119,6 +108,9 @@ TODO this is a long description`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 		resource := args[0]
+		// TODO make a Command type that knows about aliases
+		// TODO lots of de-duplication to be done
+		// TODO accept names as well as IDs
 		switch resource {
 		case "organization", "organizations", "org", "orgs":
 			var resp interface{}
@@ -196,29 +188,6 @@ TODO this is a long description`,
 			} else {
 				outputResponse(resp)
 			}
-
-			/*
-				case "node", "nodes", "no", "nos":
-					if organizationID == "" || clusterID == "" {
-						fmt.Println("organization and cluster are required")
-						return
-					}
-
-					var resp interface{}
-					var err error
-					if len(args) == 2 {
-						nodeID := args[1]
-						resp, err = getNode(organizationID, clusterID, nodeID)
-					} else {
-						resp, err = listNodes(organizationID, clusterID)
-					}
-
-					if err != nil {
-						fmt.Println(err)
-					} else {
-						outputResponse(resp)
-					}
-			*/
 
 		default:
 			fmt.Printf("Error: invalid resource specified: %q\n", resource)

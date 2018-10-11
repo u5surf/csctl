@@ -9,12 +9,14 @@ import (
 	"github.com/spf13/viper"
 )
 
-type APIInterface interface {
+// Interface is the interface for API
+type Interface interface {
 	OrganizationsGetter
 	AccountGetter
 }
 
-type APIClient struct {
+// Client is the API client
+type Client struct {
 	name string
 	// TODO make REST client and remove baseURL below
 	// restClient RESTClient
@@ -22,36 +24,42 @@ type APIClient struct {
 	token   string
 }
 
+// Config is the configuration for API client
 type Config struct {
 	Token   string
 	BaseURL url.URL
 }
 
+// New constructs a new API client
 // TODO don't depend on env / viper here
 // Semi-weird because config comes through clientset
-func New(cfg *Config) (*APIClient, error) {
+func New(cfg *Config) (*Client, error) {
 	baseURL, err := url.Parse(viper.GetString("apiBaseURL"))
 	if err != nil {
 		return nil, errors.Wrap(err, "parsing apiBaseURL")
 	}
 
-	return &APIClient{
+	return &Client{
 		name:    "API",
 		baseURL: baseURL,
 		token:   cfg.Token,
 	}, nil
 }
 
-func (c *APIClient) Organizations() OrganizationInterface {
+// Organizations returns the organizations interface
+func (c *Client) Organizations() OrganizationInterface {
 	return newOrganizations(c)
 }
 
-func (c *APIClient) Account() AccountInterface {
+// Account returns the account interface
+func (c *Client) Account() AccountInterface {
 	return newAccount(c)
 }
 
+// GetResource gets a resource at the given path and stores the result in output
+// or returns an error
 // TODO RESTClient
-func (c *APIClient) GetResource(path string, output interface{}) error {
+func (c *Client) GetResource(path string, output interface{}) error {
 	url, _ := c.baseURL.Parse(path)
 
 	authHeader := fmt.Sprintf("JWT %s", c.token)
@@ -72,7 +80,8 @@ func (c *APIClient) GetResource(path string, output interface{}) error {
 	return nil
 }
 
-func (c *APIClient) DeleteResource(path string) error {
+// DeleteResource deletes the resource at the given path or returns an error
+func (c *Client) DeleteResource(path string) error {
 	url, _ := c.baseURL.Parse(path)
 
 	authHeader := fmt.Sprintf("JWT %s", c.token)
