@@ -43,7 +43,6 @@ func (c *organizations) Get(id string) (*types.Organization, error) {
 	path := fmt.Sprintf("/v3/organizations/%s", id)
 	var out types.Organization
 	return &out, c.client.GetResource(path, &out)
-	return nil, nil
 }
 
 func (c *organizations) Delete(id string) error {

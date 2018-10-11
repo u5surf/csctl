@@ -45,7 +45,6 @@ func (c *ckeClusters) Get(id string) (*types.CKECluster, error) {
 	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s", c.organizationID, id)
 	var out types.CKECluster
 	return &out, c.client.GetResource(path, &out)
-	return nil, nil
 }
 
 func (c *ckeClusters) Delete(id string) error {

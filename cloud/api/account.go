@@ -32,5 +32,4 @@ func (c *account) Get() (result *types.Account, err error) {
 	path := "/v3/account"
 	var out types.Account
 	return &out, c.client.GetResource(path, &out)
-	return nil, nil
 }

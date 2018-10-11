@@ -9,7 +9,6 @@ import (
 	"github.com/spf13/cobra"
 	//"github.com/olekukonko/tablewriter"
 
-	//"github.com/containership/csctl/cloud/api"
 	apitypes "github.com/containership/csctl/cloud/api/types"
 	provisiontypes "github.com/containership/csctl/cloud/provision/types"
 )
@@ -55,7 +54,7 @@ func outputResponse(resp interface{}) {
 	case "yaml":
 		j, err := json.Marshal(resp)
 		if err != nil {
-			fmt.Println("(Error in intermediate parsing to JSON: %v\n", err)
+			fmt.Printf("Error in intermediate parsing to JSON: %v\n", err)
 			return
 		}
 
@@ -222,7 +221,7 @@ TODO this is a long description`,
 			*/
 
 		default:
-			fmt.Println("Error: invalid resource specified: %q\n", resource)
+			fmt.Printf("Error: invalid resource specified: %q\n", resource)
 		}
 	},
 }

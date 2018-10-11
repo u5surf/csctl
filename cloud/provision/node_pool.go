@@ -47,7 +47,6 @@ func (c *nodePools) Get(id string) (*types.NodePool, error) {
 	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s/node-pools/%s", c.organizationID, c.clusterID, id)
 	var out types.NodePool
 	return &out, c.client.GetResource(path, &out)
-	return nil, nil
 }
 
 func (c *nodePools) Delete(id string) error {
