@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/containership/csctl/cloud/client"
+	"github.com/containership/csctl/cloud"
 )
 
 // Flags / config options
@@ -22,9 +22,7 @@ var (
 )
 
 var (
-	apiClient       *client.Client
-	provisionClient *client.Client
-	proxyClient     *client.ProxyClient
+	clientset *cloud.Clientset
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -36,9 +34,15 @@ var rootCmd = &cobra.Command{
 This is a long description`,
 
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		apiClient = client.NewAPI()
-		provisionClient = client.NewProvision()
-		proxyClient = client.NewProxy()
+		token := viper.GetString("token")
+		if token == "" {
+			// TODO better error handling
+			panic("please provide a token")
+		}
+
+		clientset, _ = cloud.New(&cloud.Config{
+			Token: viper.GetString("token"),
+		})
 	},
 }
 

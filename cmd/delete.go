@@ -6,15 +6,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func deleteOrganization(id string) error {
-	path := fmt.Sprintf("/v3/organizations/%s", id)
-	return apiClient.DeleteResource(path)
-}
-
+/*
 func deleteCluster(orgID string, clusterID string) error {
 	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s", orgID, clusterID)
 	return provisionClient.DeleteResource(path)
 }
+*/
 
 // deleteCmd represents the delete command
 var deleteCmd = &cobra.Command{
@@ -30,27 +27,29 @@ TODO this is a long description`,
 		resource := args[0]
 		switch resource {
 		case "org", "orgs", "organization", "organizations":
-			orgID := args[1]
-			err := deleteOrganization(orgID)
+			id := args[1]
+			err := clientset.API().Organizations().Delete(id)
 			if err != nil {
 				fmt.Println(err)
 			} else {
-				fmt.Printf("Organization %s successfully deleted\n", orgID)
+				fmt.Printf("Organization %s successfully deleted\n", id)
 			}
 
-		case "cluster", "clusters":
-			if organizationID == "" {
-				fmt.Println("organization is required")
-				return
-			}
+			/*
+				case "cluster", "clusters":
+					if organizationID == "" {
+						fmt.Println("organization is required")
+						return
+					}
 
-			clusterID := args[1]
-			err := deleteCluster(organizationID, clusterID)
-			if err != nil {
-				fmt.Println(err)
-			} else {
-				fmt.Printf("Cluster %s successfully deleted\n", clusterID)
-			}
+					clusterID := args[1]
+					err := deleteCluster(organizationID, clusterID)
+					if err != nil {
+						fmt.Println(err)
+					} else {
+						fmt.Printf("Cluster %s successfully deleted\n", clusterID)
+					}
+			*/
 
 		default:
 			fmt.Printf("Error: invalid resource specified: %q\n", resource)

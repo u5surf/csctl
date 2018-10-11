@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 	//"github.com/olekukonko/tablewriter"
 
+	//"github.com/containership/csctl/cloud/api"
 	apitypes "github.com/containership/csctl/cloud/api/types"
 	provisiontypes "github.com/containership/csctl/cloud/provision/types"
 )
@@ -19,42 +20,7 @@ var (
 	mineOnly     bool
 )
 
-func listOrganizations() ([]apitypes.Organization, error) {
-	path := "/v3/organizations"
-	orgs := make([]apitypes.Organization, 0)
-	return orgs, apiClient.GetResource(path, &orgs)
-}
-
-func getOrganization(id string) (*apitypes.Organization, error) {
-	path := fmt.Sprintf("/v3/organizations/%s", id)
-	var org apitypes.Organization
-	return &org, apiClient.GetResource(path, &org)
-}
-
-func listClusters(orgID string) ([]provisiontypes.CKECluster, error) {
-	path := fmt.Sprintf("/v3/organizations/%s/clusters", orgID)
-	clusters := make([]provisiontypes.CKECluster, 0)
-	return clusters, provisionClient.GetResource(path, &clusters)
-}
-
-func getCluster(orgID string, clusterID string) (*provisiontypes.CKECluster, error) {
-	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s", orgID, clusterID)
-	var cluster provisiontypes.CKECluster
-	return &cluster, provisionClient.GetResource(path, &cluster)
-}
-
-func listNodePools(orgID string, clusterID string) ([]provisiontypes.NodePool, error) {
-	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s/node-pools", orgID, clusterID)
-	nps := make([]provisiontypes.NodePool, 0)
-	return nps, provisionClient.GetResource(path, &nps)
-}
-
-func getNodePool(orgID string, clusterID string, nodePoolID string) (*provisiontypes.NodePool, error) {
-	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s/node-pools/%s", orgID, clusterID, nodePoolID)
-	var np provisiontypes.NodePool
-	return &np, provisionClient.GetResource(path, &np)
-}
-
+/*
 // TODO hack
 func listNodes(orgID string, clusterID string) ([]interface{}, error) {
 	path := "/api/v1/nodes"
@@ -67,12 +33,7 @@ func getNode(orgID string, clusterID string, nodeID string) (*interface{}, error
 	var node interface{}
 	return &node, proxyClient.KubernetesGet(orgID, clusterID, path, &node)
 }
-
-func getAccount() (*apitypes.Account, error) {
-	path := "/v3/account"
-	var account apitypes.Account
-	return &account, apiClient.GetResource(path, &account)
-}
+*/
 
 // TODO this function is beyond terrible
 func outputResponse(resp interface{}) {
@@ -139,7 +100,7 @@ func filterByOwner(list interface{}, ownerID apitypes.UUID) ([]interface{}, erro
 }
 
 func filterMine(list interface{}) ([]interface{}, error) {
-	me, err := getAccount()
+	me, err := clientset.API().Account().Get()
 	if err != nil {
 		return nil, errors.Wrap(err, "error getting account")
 	}
@@ -164,13 +125,12 @@ TODO this is a long description`,
 			var resp interface{}
 			var err error
 			if len(args) == 2 {
-				orgID := args[1]
-				resp, err = getOrganization(orgID)
+				id := args[1]
+				resp, err = clientset.API().Organizations().Get(id)
 			} else {
-				resp, err = listOrganizations()
+				resp, err = clientset.API().Organizations().List()
 			}
 
-			// TODO gross
 			if err == nil && mineOnly {
 				resp, err = filterMine(resp)
 			}
@@ -191,9 +151,9 @@ TODO this is a long description`,
 			var err error
 			if len(args) == 2 {
 				clusterID := args[1]
-				resp, err = getCluster(organizationID, clusterID)
+				resp, err = clientset.Provision().CKEClusters(organizationID).Get(clusterID)
 			} else {
-				resp, err = listClusters(organizationID)
+				resp, err = clientset.Provision().CKEClusters(organizationID).List()
 			}
 
 			// TODO gross
@@ -210,7 +170,7 @@ TODO this is a long description`,
 		case "account", "acct", "user", "usr":
 			// Accounts are essentially users
 			// A user can only get their own account
-			resp, err := getAccount()
+			resp, err := clientset.API().Account().Get()
 			if err != nil {
 				fmt.Println(err)
 			} else {
@@ -227,9 +187,9 @@ TODO this is a long description`,
 			var err error
 			if len(args) == 2 {
 				nodePoolID := args[1]
-				resp, err = getNodePool(organizationID, clusterID, nodePoolID)
+				resp, err = clientset.Provision().NodePools(organizationID, clusterID).Get(nodePoolID)
 			} else {
-				resp, err = listNodePools(organizationID, clusterID)
+				resp, err = clientset.Provision().NodePools(organizationID, clusterID).List()
 			}
 
 			if err != nil {
@@ -238,26 +198,28 @@ TODO this is a long description`,
 				outputResponse(resp)
 			}
 
-		case "node", "nodes", "no", "nos":
-			if organizationID == "" || clusterID == "" {
-				fmt.Println("organization and cluster are required")
-				return
-			}
+			/*
+				case "node", "nodes", "no", "nos":
+					if organizationID == "" || clusterID == "" {
+						fmt.Println("organization and cluster are required")
+						return
+					}
 
-			var resp interface{}
-			var err error
-			if len(args) == 2 {
-				nodeID := args[1]
-				resp, err = getNode(organizationID, clusterID, nodeID)
-			} else {
-				resp, err = listNodes(organizationID, clusterID)
-			}
+					var resp interface{}
+					var err error
+					if len(args) == 2 {
+						nodeID := args[1]
+						resp, err = getNode(organizationID, clusterID, nodeID)
+					} else {
+						resp, err = listNodes(organizationID, clusterID)
+					}
 
-			if err != nil {
-				fmt.Println(err)
-			} else {
-				outputResponse(resp)
-			}
+					if err != nil {
+						fmt.Println(err)
+					} else {
+						outputResponse(resp)
+					}
+			*/
 
 		default:
 			fmt.Println("Error: invalid resource specified: %q\n", resource)
