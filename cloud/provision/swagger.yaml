@@ -21,12 +21,17 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 
 paths:
-  /clusters:
+  /organizations/{organization_id}/clusters:
     get:
-      summary: List all CKE clusters
-      operationId: listOrganizations
+      summary: List all CKE clusters for a given organization
+      operationId: listClusters
       tags:
         - clusters
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
       responses:
         "200":
           description: A list of CKE clusters
@@ -67,7 +72,7 @@ definitions:
         title: Organization ID of the organization the cluster belongs to
         $ref: "#/definitions/UUID"
       owner_id:
-        title: User ID of the cluster owner
+        title: Account ID of the cluster owner
         $ref: "#/definitions/UUID"
       provider_id:
         title: ID of the provider through which the cluster is provisioned

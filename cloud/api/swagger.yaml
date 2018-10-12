@@ -37,6 +37,27 @@ paths:
           schema:
             $ref: "#/definitions/Error"
 
+  /organizations/{organization_id}/clusters:
+    get:
+      summary: List all clusters (attached or provisioned through Containership) for a given organization
+      operationId: listClusters
+      tags:
+        - clusters
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: A list of clusters
+          schema:
+            $ref: "#/definitions/Clusters"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
   /organizations:
     get:
       summary: List all organizations
@@ -92,6 +113,61 @@ definitions:
         title: Avatar URL associated with the account
         type: string
 
+  Cluster:
+    title: A cluster attached or provisioned through Containership
+    type: object
+    required:
+      - created_at
+      - updated_at
+      - id
+      - organization_id
+      - name
+      - owner_id
+      - api_server_address
+      - worker_nodes_address
+      - environment
+      - version
+      - provider_name
+    properties:
+      created_at:
+        title: Timestamp at which the cluster was created
+        type: string
+      updated_at:
+        title: Timestamp at which the cluster was updated
+        type: string
+      id:
+        title: Cluster ID
+        $ref: "#/definitions/UUID"
+      organization_id:
+        title: Organization ID of the organization the cluster belongs to
+        $ref: "#/definitions/UUID"
+      name:
+        title: Cluster name
+        type: string
+      owner_id:
+        title: Account ID of the cluster owner
+        $ref: "#/definitions/UUID"
+      api_server_address:
+        title: API server address
+        type: string
+      worker_nodes_address:
+        title: Worker nodes address
+        type: string
+      environment:
+        title: Cluster environment
+        type: string
+      version:
+        title: Kubernetes version
+        type: string
+      provider_name:
+        title: Name of the provider through which the cluster is provisioned
+        type: string
+
+  Clusters:
+    type: array
+    items:
+      $ref: "#/definitions/Cluster"
+
   Organization:
     title: A Containership organization
     type: object
@@ -127,6 +203,7 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/Organization"
+
   Error:
     required:
       - code

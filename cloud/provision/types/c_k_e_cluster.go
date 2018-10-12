@@ -37,7 +37,7 @@ type CKECluster struct {
 	// Required: true
 	OrganizationID UUID `json:"organization_id"`
 
-	// User ID of the cluster owner
+	// Account ID of the cluster owner
 	// Required: true
 	OwnerID UUID `json:"owner_id"`
 
