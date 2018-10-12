@@ -9,8 +9,9 @@ import (
 // Interface is the interface for API
 type Interface interface {
 	RESTClient() rest.Interface
-	OrganizationsGetter
 	AccountGetter
+	ClustersGetter
+	OrganizationsGetter
 }
 
 // Client is the API client
@@ -37,12 +38,17 @@ func (c *Client) RESTClient() rest.Interface {
 	return c.restClient
 }
 
-// Organizations returns the organizations interface
-func (c *Client) Organizations() OrganizationInterface {
-	return newOrganizations(c)
-}
-
 // Account returns the account interface
 func (c *Client) Account() AccountInterface {
 	return newAccount(c)
+}
+
+// Clusters returns the clusters interface
+func (c *Client) Clusters(organizationID string) ClusterInterface {
+	return newClusters(c, organizationID)
+}
+
+// Organizations returns the organizations interface
+func (c *Client) Organizations() OrganizationInterface {
+	return newOrganizations(c)
 }
