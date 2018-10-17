@@ -36,9 +36,14 @@ This is a long description`,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		token := viper.GetString("token")
 		if token == "" {
-			// TODO better error handling
-			panic("please provide a token")
+			// TODO better error handling (but also: just implement auth!)
+			panic("please specify a token in your config file")
 		}
+
+		// Subcommands are responsible for deciding if these flags are needed or not
+		// TODO consider scoping flags like this better
+		organizationID = viper.GetString("organization")
+		clusterID = viper.GetString("organization")
 
 		clientset, _ = cloud.New(&cloud.Config{
 			Token: viper.GetString("token"),
@@ -61,16 +66,15 @@ func init() {
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.csctl.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is ~/.containership/csctl.yaml)")
 
-	rootCmd.PersistentFlags().StringVar(&organizationID, "organization", "", "Organization")
-	// TODO alias and binding not working as expected
-	viper.RegisterAlias("organization", "org")
-	viper.BindPFlag("organization", rootCmd.Flags().Lookup("organization"))
+	rootCmd.PersistentFlags().StringVar(&organizationID, "organization", "", "organization to use")
+	viper.BindPFlag("organization", rootCmd.PersistentFlags().Lookup("organization"))
 
-	rootCmd.PersistentFlags().StringVar(&clusterID, "cluster", "", "Cluster")
-	viper.BindPFlag("cluster", rootCmd.Flags().Lookup("cluster"))
+	rootCmd.PersistentFlags().StringVar(&clusterID, "cluster", "", "cluster to use")
+	viper.BindPFlag("cluster", rootCmd.PersistentFlags().Lookup("cluster"))
 
+	// Defaults
 	viper.SetDefault("apiBaseURL", "https://api.containership.io")
 	viper.SetDefault("provisionBaseURL", "https://provision.containership.io")
 	viper.SetDefault("proxyBaseURL", "https://proxy.containership.io")
