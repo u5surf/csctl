@@ -43,7 +43,7 @@ This is a long description`,
 		// Subcommands are responsible for deciding if these flags are needed or not
 		// TODO consider scoping flags like this better
 		organizationID = viper.GetString("organization")
-		clusterID = viper.GetString("organization")
+		clusterID = viper.GetString("cluster")
 
 		clientset, _ = cloud.New(&cloud.Config{
 			Token: viper.GetString("token"),
