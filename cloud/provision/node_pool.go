@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/containership/csctl/cloud/provision/types"
+	"github.com/containership/csctl/cloud/rest"
 )
 
 // NodePoolsGetter is the getter for node pools
@@ -22,18 +23,14 @@ type NodePoolInterface interface {
 
 // nodePools implements NodePoolInterface
 type nodePools struct {
-	// TODO make REST client
-	// client rest.Interface
-	client         *Client
+	client         rest.Interface
 	organizationID string
 	clusterID      string
 }
 
 func newNodePools(c *Client, organizationID, clusterID string) *nodePools {
 	return &nodePools{
-		// TODO make REST client
-		// client: c.RESTClient(),
-		client:         c,
+		client:         c.RESTClient(),
 		organizationID: organizationID,
 		clusterID:      clusterID,
 	}
@@ -47,23 +44,20 @@ func (c *nodePools) Create(*types.NodePool) (*types.NodePool, error) {
 
 // Get gets a node pool
 func (c *nodePools) Get(id string) (*types.NodePool, error) {
-	// TODO RESTClient
 	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s/node-pools/%s", c.organizationID, c.clusterID, id)
 	var out types.NodePool
-	return &out, c.client.GetResource(path, &out)
+	return &out, c.client.Get(path, &out)
 }
 
 // Delete deletes a node pool
 func (c *nodePools) Delete(id string) error {
-	// TODO RESTClient
 	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s/node-pools/%s", c.organizationID, c.clusterID, id)
-	return c.client.DeleteResource(path)
+	return c.client.Delete(path)
 }
 
 // List lists all node pools
 func (c *nodePools) List() ([]types.NodePool, error) {
-	// TODO RESTClient
 	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s/node-pools", c.organizationID, c.clusterID)
 	out := make([]types.NodePool, 0)
-	return out, c.client.GetResource(path, &out)
+	return out, c.client.Get(path, &out)
 }

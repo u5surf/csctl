@@ -2,9 +2,11 @@ package cloud
 
 import (
 	"github.com/pkg/errors"
+	"github.com/spf13/viper"
 
 	"github.com/containership/csctl/cloud/api"
 	"github.com/containership/csctl/cloud/provision"
+	"github.com/containership/csctl/cloud/rest"
 )
 
 // Clientset is a set of clients for interacting with Containership Cloud
@@ -31,15 +33,17 @@ func (c *Clientset) Provision() *provision.Client {
 
 // New constructs a new Clientset
 func New(cfg *Config) (*Clientset, error) {
-	api, err := api.New(&api.Config{
-		Token: cfg.Token,
+	api, err := api.New(&rest.Config{
+		BaseURL: viper.GetString("apiBaseURL"),
+		Token:   cfg.Token,
 	})
 	if err != nil {
 		return nil, errors.Wrap(err, "constructing API client")
 	}
 
-	provision, err := provision.New(&provision.Config{
-		Token: cfg.Token,
+	provision, err := provision.New(&rest.Config{
+		BaseURL: viper.GetString("provisionBaseURL"),
+		Token:   cfg.Token,
 	})
 	if err != nil {
 		return nil, errors.Wrap(err, "constructing provision client")

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/containership/csctl/cloud/api/types"
+	"github.com/containership/csctl/cloud/rest"
 )
 
 // OrganizationsGetter is the getter for organizations
@@ -22,16 +23,12 @@ type OrganizationInterface interface {
 
 // organizations implements OrganizationInterface
 type organizations struct {
-	// TODO make REST client
-	// client rest.Interface
-	client *Client
+	client rest.Interface
 }
 
 func newOrganizations(c *Client) *organizations {
 	return &organizations{
-		// TODO make REST client
-		// client: c.RESTClient(),
-		client: c,
+		client: c.RESTClient(),
 	}
 }
 
@@ -43,23 +40,20 @@ func (c *organizations) Create(*types.Organization) (*types.Organization, error)
 
 // Get gets an organization
 func (c *organizations) Get(id string) (*types.Organization, error) {
-	// TODO RESTClient
 	path := fmt.Sprintf("/v3/organizations/%s", id)
 	var out types.Organization
-	return &out, c.client.GetResource(path, &out)
+	return &out, c.client.Get(path, &out)
 }
 
 // Delete deletes an organization
 func (c *organizations) Delete(id string) error {
-	// TODO RESTClient
 	path := fmt.Sprintf("/v3/organizations/%s", id)
-	return c.client.DeleteResource(path)
+	return c.client.Delete(path)
 }
 
 // List lists all organizations
 func (c *organizations) List() ([]types.Organization, error) {
-	// TODO RESTClient
 	path := "/v3/organizations"
 	out := make([]types.Organization, 0)
-	return out, c.client.GetResource(path, &out)
+	return out, c.client.Get(path, &out)
 }
