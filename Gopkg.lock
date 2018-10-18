@@ -50,87 +50,98 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:f729ab4863cde69a2afe8703ed0f12050eb2f46d3a18e972dd953e42b118217a"
+  branch = "master"
+  digest = "1:e9ffb9315dce0051beb757d0f0fc25db57c4da654efc4eada4ea109c2d9da815"
+  name = "github.com/globalsign/mgo"
+  packages = [
+    "bson",
+    "internal/json",
+  ]
+  pruneopts = ""
+  revision = "eeefdecb41b842af6dc652aaea4026e8403e62df"
+
+[[projects]]
+  digest = "1:1a3295dc941bb4b1eb160dc19766994d3b82c37deba34680000e93e44feb54e0"
   name = "github.com/go-openapi/analysis"
   packages = [
     ".",
     "internal",
   ]
   pruneopts = ""
-  revision = "7c1bef8f6d9fa6148ce0d8a0ebf5339a084a6639"
-  version = "0.16.0"
+  revision = "c701774f4e604d952e4e8c56dee260be696e33c3"
+  version = "v0.17.0"
 
 [[projects]]
-  digest = "1:ee273c95c1414ef11bd4da259b40e83f41c1d5a6bee7d1b54a05ef5f3565fd92"
+  digest = "1:24fc3668d065e515396e7c89decee9aea6babfdfa104fcaad12c2ecabd428171"
   name = "github.com/go-openapi/errors"
   packages = ["."]
   pruneopts = ""
-  revision = "b2b2befaf267d082d779bcef52d682a47c779517"
-  version = "0.16.0"
+  revision = "d9664f9fab8994271e573ed69cf2adfc09b7a800"
+  version = "v0.17.0"
 
 [[projects]]
-  digest = "1:e116a4866bffeec941056a1fcfd37e520fad1ee60e4e3579719f19a43c392e10"
+  digest = "1:c8052dcf3ec378a9a6bc4f00ecc10d6d5eb3cc1f8faaf6b2f70f047e8881d446"
   name = "github.com/go-openapi/jsonpointer"
   packages = ["."]
   pruneopts = ""
-  revision = "3a0015ad55fa9873f41605d3e8f28cd279c32ab2"
-  version = "0.16.0"
+  revision = "ef5f0afec364d3b9396b7b77b43dbe26bf1f8004"
+  version = "v0.17.0"
 
 [[projects]]
-  digest = "1:3830527ef0f4f9b268d9286661c0f52f9115f8aefd9f45ee7352516f93489ac9"
+  digest = "1:1824e5330b35b2a2418d06aa55629cc59ad454b72e338aa125ba8ff98f16298b"
   name = "github.com/go-openapi/jsonreference"
   packages = ["."]
   pruneopts = ""
-  revision = "3fb327e6747da3043567ee86abd02bb6376b6be2"
-  version = "0.16.0"
+  revision = "8483a886a90412cd6858df4ea3483dce9c8e35a3"
+  version = "v0.17.0"
 
 [[projects]]
-  digest = "1:c4a8c916364abeda1c5cf36684320298bbf4d87718b0b2bd9c4ca663157fdc75"
+  digest = "1:5cafc6762b1b7fe5ba5dd290c087bab2f88abb9c93dd1d5ae1bc259952c0387e"
   name = "github.com/go-openapi/loads"
   packages = ["."]
   pruneopts = ""
-  revision = "2a2b323bab96e6b1fdee110e57d959322446e9c9"
-  version = "0.16.0"
+  revision = "150d36912387ec2f607be674c5be309ddccc0eed"
+  version = "v0.17.0"
 
 [[projects]]
-  digest = "1:192fee0d231cd2f1f8529d5e92a230e5996850de327ffd2e5c6d635f5c6004ac"
+  digest = "1:f797743ba6bd5da181d715e03030bdb9f3d46614d9cdaee2776fe27de8099a05"
   name = "github.com/go-openapi/runtime"
   packages = ["."]
   pruneopts = ""
-  revision = "9a3091f566c0811ef4d54b535179bc0fc484a11f"
-  version = "0.16.0"
+  revision = "231d7876b7019dbcbfc97a7ba764379497b67c1d"
+  version = "v0.17.0"
 
 [[projects]]
-  digest = "1:222a38a6f9a0bac95fa14fb97b0bf4734dd652a3341306aa79dda33980d91f42"
+  digest = "1:d4680b89600466e543754c838cbc987ed58b962417a88600881cd0ed88d6b4cc"
   name = "github.com/go-openapi/spec"
   packages = ["."]
   pruneopts = ""
-  revision = "384415f06ee238aae1df5caad877de6ceac3a5c4"
-  version = "0.16.0"
+  revision = "5bae59e25b21498baea7f9d46e9c147ec106a42e"
+  version = "v0.17.0"
 
 [[projects]]
-  digest = "1:0ed6231aa5c218c8cd8b7516fcdd0cf5df14b32c7fb026e89ff41d82f5a3c0fc"
+  digest = "1:d8d63c2504c5eefe770be2901eed9856b54088ae0a1fad62606b707caf697a20"
   name = "github.com/go-openapi/strfmt"
   packages = ["."]
   pruneopts = ""
-  revision = "913ee058e387ac83a67e2d9f13acecdcd5769fc6"
-  version = "0.16.0"
+  revision = "35fe47352985e13cc75f13120d70d26fd764ed51"
+  version = "v0.17.0"
 
 [[projects]]
-  digest = "1:a8255150a79fa9cc785561966bacda7ff5b386abed1b5f5a9a784660407df836"
+  digest = "1:062de20b7d299ae95c902a5c472c4bc87a2f3ae707751fe155ecf640d99074b4"
   name = "github.com/go-openapi/swag"
   packages = ["."]
   pruneopts = ""
-  revision = "becd2f08beafcca035645a8a101e0e3e18140458"
-  version = "0.16.0"
+  revision = "5899d5c5e619fda5fa86e14795a835f473ca284c"
+  version = "v0.17.0"
 
 [[projects]]
-  digest = "1:1aa909166ceb33ae1236c70e5b67e4776aa9ae19aabcce3eef19cfdb69492305"
+  digest = "1:3e3802ad256a6bc362935373649a355abe1d1e419bb920f65507abfac3675ae4"
   name = "github.com/go-openapi/validate"
   packages = ["."]
   pruneopts = ""
-  revision = "7c1911976134d3a24d0c03127505163c9f16aa3b"
-  version = "0.16.0"
+  revision = "d2eab7d93009e9215fc85b2faa2c2f2a98c2af48"
+  version = "v0.17.0"
 
 [[projects]]
   digest = "1:026c7e5a8bc417cdc0fa3126ef46ba82cd6dcbde4c43e825bb8496b8a33180fc"
@@ -139,6 +150,22 @@
   pruneopts = ""
   revision = "d4920dcf5b7689548a6db640278a9b35a5b48ec6"
   version = "v1.9.1"
+
+[[projects]]
+  digest = "1:6e73003ecd35f4487a5e88270d3ca0a81bc80dc88053ac7e4dcfec5fba30d918"
+  name = "github.com/gogo/protobuf"
+  packages = ["proto"]
+  pruneopts = ""
+  revision = "636bf0302bc95575d69441b25a2603156ffdddf1"
+  version = "v1.1.1"
+
+[[projects]]
+  branch = "master"
+  digest = "1:107b233e45174dbab5b1324201d092ea9448e58243ab9f039e4c0f332e121e3a"
+  name = "github.com/golang/glog"
+  packages = ["."]
+  pruneopts = ""
+  revision = "23def4e6c14b4da8ac2ed8007337bc5eb5007998"
 
 [[projects]]
   digest = "1:d14365c51dd1d34d5c79833ec91413bfbb166be978724f15701e17080dc06dec"
@@ -196,12 +223,12 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:b86fd3f2785711897f8956e8fc1da6cc826f876be0875a8a45b57e05a8b2b287"
+  digest = "1:bcc46a0fbd9e933087bef394871256b5c60269575bb661935874729c65bbbf60"
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
   pruneopts = ""
-  revision = "fe40af7a9c397fa3ddba203c38a5042c5d0475ad"
-  version = "v1.1.1"
+  revision = "3536a929edddb9a5b34bd6861dc4a9647cb459fe"
+  version = "v1.1.2"
 
 [[projects]]
   digest = "1:894aef961c056b6d85d12bac890bf60c44e99b46292888bfa66caf529f804457"
@@ -288,23 +315,22 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:db4fdf03f745823eff6c2f06cd50eb447a7b77f307079cf5220e1621a1d63593"
+  digest = "1:6543c75ddc1efc0041202dd49378ee2e5711b7cc82c2845c0437eef6276cc984"
   name = "golang.org/x/net"
   packages = [
-    "context",
     "idna",
     "publicsuffix",
   ]
   pruneopts = ""
-  revision = "f5e5bdd778241bfefa8627f7124c39cd6ad8d74f"
+  revision = "04a2e542c03f1d053ab3e4d6e5abcd4b66e2be8e"
 
 [[projects]]
   branch = "master"
-  digest = "1:69e22fc503ccbebfa61f4eb1799d905b7100f86458a62589103541f3dd15dd36"
+  digest = "1:2ed0bf267e44950120acd95570227e28184573ffb099bd85b529ee148e004ddb"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = ""
-  revision = "af653ce8b74f808d092db8ca9741fbb63d2a469d"
+  revision = "fa43e7bc11baaae89f3f902b2b4d832b68234844"
 
 [[projects]]
   digest = "1:5acd3512b047305d49e8763eef7ba423901e85d5dd2fd1e71778a0ea8de10bd4"
@@ -331,23 +357,42 @@
   version = "v0.3.0"
 
 [[projects]]
-  branch = "v2"
-  digest = "1:f54ba71a035aac92ced3e902d2bff3734a15d1891daff73ec0f90ef236750139"
-  name = "gopkg.in/mgo.v2"
-  packages = [
-    "bson",
-    "internal/json",
-  ]
-  pruneopts = ""
-  revision = "9856a29383ce1c59f308dd1cf0363a79b5bef6b5"
-
-[[projects]]
   digest = "1:f0620375dd1f6251d9973b5f2596228cc8042e887cd7f827e4220bc1ce8c30e2"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
   pruneopts = ""
   revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
   version = "v2.2.1"
+
+[[projects]]
+  branch = "master"
+  digest = "1:8fb3dce56e8628b29f59012f88795004a3360f55b3bc59ff640e0f39075cbf01"
+  name = "k8s.io/apimachinery"
+  packages = [
+    "pkg/conversion",
+    "pkg/conversion/queryparams",
+    "pkg/runtime",
+    "pkg/runtime/schema",
+    "pkg/util/errors",
+    "pkg/util/json",
+    "pkg/util/naming",
+    "pkg/util/runtime",
+    "pkg/util/sets",
+    "third_party/forked/golang/reflect",
+  ]
+  pruneopts = ""
+  revision = "60666be32c5de527b69dabe8e4400b4f0aa897de"
+
+[[projects]]
+  digest = "1:5d4153d12c3aed2c90a94262520d2498d5afa4d692554af55e65a7c5af0bc399"
+  name = "k8s.io/client-go"
+  packages = [
+    "tools/clientcmd/api",
+    "tools/clientcmd/api/v1",
+  ]
+  pruneopts = ""
+  revision = "1638f8970cefaa404ff3a62950f88b08292b2696"
+  version = "v9.0.0"
 
 [solve-meta]
   analyzer-name = "dep"
@@ -364,6 +409,7 @@
     "github.com/spf13/cobra",
     "github.com/spf13/viper",
     "github.com/stretchr/testify/assert",
+    "k8s.io/client-go/tools/clientcmd/api/v1",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -19,6 +19,8 @@ var (
 	// TODO support names, not just IDs, and resolve appropriately
 	organizationID string
 	clusterID      string
+
+	userToken string
 )
 
 var (
@@ -34,8 +36,8 @@ var rootCmd = &cobra.Command{
 This is a long description`,
 
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		token := viper.GetString("token")
-		if token == "" {
+		userToken = viper.GetString("token")
+		if userToken == "" {
 			// TODO better error handling (but also: just implement auth!)
 			panic("please specify a token in your config file")
 		}
@@ -46,7 +48,7 @@ This is a long description`,
 		clusterID = viper.GetString("cluster")
 
 		clientset, _ = cloud.New(&cloud.Config{
-			Token: viper.GetString("token"),
+			Token: userToken,
 		})
 	},
 }
