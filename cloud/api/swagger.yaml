@@ -58,6 +58,31 @@ paths:
           schema:
             $ref: "#/definitions/Error"
 
+  /organizations/{organization_id}/clusters/{cluster_id}:
+    get:
+      summary: Get a cluster
+      operationId: getCluster
+      tags:
+        - cluster
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+        - in: path
+          name: cluster_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: A cluster
+          schema:
+            $ref: "#/definitions/Cluster"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
   /organizations:
     get:
       summary: List all organizations
@@ -69,6 +94,81 @@ paths:
           description: A list of organizations
           schema:
             $ref: "#/definitions/Organizations"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+  /organizations/{organization_id}:
+    get:
+      summary: Get an organizations
+      operationId: getOrganization
+      tags:
+        - organization
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: An organization
+          schema:
+            $ref: "#/definitions/Organization"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+  /organizations/{organization_id}/clusters/{cluster_id}/plugins:
+    get:
+      summary: List all plugins for a cluster
+      operationId: listPlugins
+      tags:
+        - plugins
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+        - in: path
+          name: cluster_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: A list of plugins
+          schema:
+            $ref: "#/definitions/Plugins"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+  /organizations/{organization_id}/clusters/{cluster_id}/plugins/{plugin_id}:
+    get:
+      summary: Get a plugin
+      operationId: getPlugin
+      tags:
+        - plugins
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+        - in: path
+          name: cluster_id
+          required: true
+          type: string
+        - in: path
+          name: plugin_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: A plugin
+          schema:
+            $ref: "#/definitions/Plugin"
         default:
           description: Unexpected error
           schema:
@@ -203,6 +303,53 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/Organization"
+
+  Plugin:
+    title: A Containership plugin
+    type: object
+    required:
+      - created_at
+      - updated_at
+      - id
+      - type
+      - implementation
+      - version
+      - organization_id
+      - cluster_id
+      - configuration
+    properties:
+      created_at:
+        title: Timestamp at which the plugin was created
+        type: string
+      updated_at:
+        title: Timestamp at which the plugin was updated
+        type: string
+      id:
+        title: Plugin ID
+        $ref: "#/definitions/UUID"
+      type:
+        title: Plugin type, e.g. metrics
+        type: string
+      implementation:
+        title: Plugin implementation, e.g. prometheus
+        type: string
+      version:
+        title: Plugin version
+        type: string
+      organization_id:
+        title: Organization ID
+        type: string
+      cluster_id:
+        title: Cluster ID
+        type: string
+      configuration:
+        title: Plugin configuration (varies per-plugin)
+        type: object
+
+  Plugins:
+    type: array
+    items:
+      $ref: "#/definitions/Plugin"
 
   Error:
     required:

@@ -141,8 +141,8 @@ TODO this is a long description`,
 			var resp interface{}
 			var err error
 			if len(args) == 2 {
-				clusterID := args[1]
-				resp, err = clientset.Provision().CKEClusters(organizationID).Get(clusterID)
+				id := args[1]
+				resp, err = clientset.Provision().CKEClusters(organizationID).Get(id)
 			} else {
 				resp, err = clientset.Provision().CKEClusters(organizationID).List()
 			}
@@ -177,10 +177,31 @@ TODO this is a long description`,
 			var resp interface{}
 			var err error
 			if len(args) == 2 {
-				nodePoolID := args[1]
-				resp, err = clientset.Provision().NodePools(organizationID, clusterID).Get(nodePoolID)
+				id := args[1]
+				resp, err = clientset.Provision().NodePools(organizationID, clusterID).Get(id)
 			} else {
 				resp, err = clientset.Provision().NodePools(organizationID, clusterID).List()
+			}
+
+			if err != nil {
+				fmt.Println(err)
+			} else {
+				outputResponse(resp)
+			}
+
+		case "plugin", "plugins", "plug", "plugs", "plgn", "plgns":
+			if organizationID == "" || clusterID == "" {
+				fmt.Println("organization and cluster are required")
+				return
+			}
+
+			var resp interface{}
+			var err error
+			if len(args) == 2 {
+				id := args[1]
+				resp, err = clientset.API().Plugins(organizationID, clusterID).Get(id)
+			} else {
+				resp, err = clientset.API().Plugins(organizationID, clusterID).List()
 			}
 
 			if err != nil {

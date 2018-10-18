@@ -12,6 +12,7 @@ type Interface interface {
 	AccountGetter
 	ClustersGetter
 	OrganizationsGetter
+	PluginsGetter
 }
 
 // Client is the API client
@@ -51,4 +52,9 @@ func (c *Client) Clusters(organizationID string) ClusterInterface {
 // Organizations returns the organizations interface
 func (c *Client) Organizations() OrganizationInterface {
 	return newOrganizations(c)
+}
+
+// Plugin returns the plugins interface
+func (c *Client) Plugins(organizationID, clusterID string) PluginInterface {
+	return newPlugins(c, organizationID, clusterID)
 }
