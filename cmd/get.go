@@ -3,10 +3,14 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+	"strings"
 
 	"github.com/ghodss/yaml"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+
+	"k8s.io/client-go/util/jsonpath"
 
 	apitypes "github.com/containership/csctl/cloud/api/types"
 	provisiontypes "github.com/containership/csctl/cloud/provision/types"
@@ -21,14 +25,14 @@ var (
 // TODO this function is beyond terrible
 //   - Make an OutputFormatter type
 func outputResponse(resp interface{}) {
-	switch outputFormat {
-	case "", "table":
+	switch {
+	case outputFormat == "" || outputFormat == "table":
 		// Default
 		// TODO just dump raw response (json blob) for now
 		// TODO this doesn't actually work atm
 		fmt.Println(resp)
 
-	case "json":
+	case outputFormat == "json":
 		j, err := json.MarshalIndent(resp, "", "  ")
 		if err != nil {
 			fmt.Printf("Error formatting JSON: %v\n", err)
@@ -37,7 +41,7 @@ func outputResponse(resp interface{}) {
 
 		fmt.Println(string(j))
 
-	case "yaml":
+	case outputFormat == "yaml":
 		j, err := json.Marshal(resp)
 		if err != nil {
 			fmt.Printf("Error in intermediate parsing to JSON: %v\n", err)
@@ -52,12 +56,39 @@ func outputResponse(resp interface{}) {
 
 		fmt.Println(string(y))
 
-	case "jsonpath":
-		// TODO do this soon because it allows trivial implementation of -oname, -oid, etc
-		fallthrough
+	case strings.HasPrefix(outputFormat, "jsonpath"):
+		fields := strings.SplitN(outputFormat, "=", 2)
+		if len(fields) != 2 {
+			fmt.Println("Please specify jsonpath using -ojsonpath=<path>")
+			return
+		}
+
+		template := fields[1]
+		outputJSONPath(template, resp)
+
+	case outputFormat == "id":
+		// TODO validate that this field is valid for given resource
+		outputJSONPath("{.id}", resp)
+
 	default:
-		// TODO
-		fmt.Printf("(output format %s not supported)", outputFormat)
+		// TODO handle this using cobra itself?
+		fmt.Printf("Error: output format %s not supported", outputFormat)
+	}
+}
+
+// outputJSONPath parses the data provided for the given jsonpath template string
+// and outputs the result to stdout or outputs an error if one occurs
+func outputJSONPath(template string, data interface{}) {
+	jp := jsonpath.New("")
+	err := jp.Parse(template)
+	if err != nil {
+		fmt.Printf("Error parsing jsonpath: %s", err)
+		return
+	}
+
+	err = jp.Execute(os.Stdout, data)
+	if err != nil {
+		fmt.Printf("Error executing jsonpath: %s", err)
 	}
 }
 
