@@ -54,7 +54,7 @@ func (c *Client) Organizations() OrganizationInterface {
 	return newOrganizations(c)
 }
 
-// Plugin returns the plugins interface
+// Plugins returns the plugins interface
 func (c *Client) Plugins(organizationID, clusterID string) PluginInterface {
 	return newPlugins(c, organizationID, clusterID)
 }
