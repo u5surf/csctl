@@ -1,5 +1,7 @@
 # csctl
 
+[![Build Status](https://travis-ci.org/containership/csctl.svg?branch=master)](https://travis-ci.org/containership/csctl)
+
 `csctl` is a command line interface for Containership Cloud.
 
 This repository also contains the go client for interacting with Containership Cloud.

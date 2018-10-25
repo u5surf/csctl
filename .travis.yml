@@ -1,0 +1,27 @@
+language: go
+
+go:
+  - 1.11.x
+
+before_install:
+  - go get -u github.com/golang/dep/cmd/dep
+  - go get -u golang.org/x/lint/golint
+
+install:
+  - make dep
+
+jobs:
+  include:
+    - stage: "Tests"
+      name: "Format Check"
+      script: make fmt-check
+    - script: make vet
+      name: "Vet"
+    - script: make lint
+      name: "Lint"
+    - script: make test
+      name: "Unit Test"
+
+    - stage: "Build"
+      name: "Default Build"
+      script: make
