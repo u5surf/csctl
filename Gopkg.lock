@@ -387,8 +387,10 @@
   digest = "1:5d4153d12c3aed2c90a94262520d2498d5afa4d692554af55e65a7c5af0bc399"
   name = "k8s.io/client-go"
   packages = [
+    "third_party/forked/golang/template",
     "tools/clientcmd/api",
     "tools/clientcmd/api/v1",
+    "util/jsonpath",
   ]
   pruneopts = ""
   revision = "1638f8970cefaa404ff3a62950f88b08292b2696"
@@ -410,6 +412,7 @@
     "github.com/spf13/viper",
     "github.com/stretchr/testify/assert",
     "k8s.io/client-go/tools/clientcmd/api/v1",
+    "k8s.io/client-go/util/jsonpath",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
