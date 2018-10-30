@@ -15,3 +15,6 @@ vendor
 
 # Binary
 csctl
+
+# Code coverage
+coverage.txt

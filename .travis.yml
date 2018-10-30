@@ -19,9 +19,12 @@ jobs:
       name: "Vet"
     - script: make lint
       name: "Lint"
-    - script: make test
-      name: "Unit Test"
+    - script: make coverage
+      name: "Unit Test and Coverage"
 
     - stage: "Build"
       name: "Default Build"
       script: make
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

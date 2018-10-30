@@ -23,13 +23,17 @@ fmt-check: ## Check the file format
 lint: ## Lint the files
 	@golint -set_exit_status ${PKG_LIST}
 
+.PHONY: vet
+vet: ## Vet the files
+	@go vet ${PKG_LIST}
+
 .PHONY: test
 test: ## Run unit tests
 	@go test -short ${PKG_LIST}
 
-.PHONY: vet
-vet: ## Vet the files
-	@go vet ${PKG_LIST}
+.PHONY: coverage
+coverage: ## Run unit tests with coverage checking / codecov integration
+	@go test -short -coverprofile=coverage.txt -covermode=count ${PKG_LIST}
 
 ## Read about data race https://golang.org/doc/articles/race_detector.html
 ## to not test file for race use `// +build !race` at top
