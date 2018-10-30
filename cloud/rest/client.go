@@ -8,9 +8,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-func main() {
-}
-
 // Interface is the set of REST actions available
 type Interface interface {
 	Get(path string, output interface{}) error
