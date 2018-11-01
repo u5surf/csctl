@@ -1,19 +1,16 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
 
-	"github.com/ghodss/yaml"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
-	"k8s.io/client-go/util/jsonpath"
-
 	apitypes "github.com/containership/csctl/cloud/api/types"
 	provisiontypes "github.com/containership/csctl/cloud/provision/types"
+	"github.com/containership/csctl/resource"
 )
 
 // Flags
@@ -22,109 +19,45 @@ var (
 	mineOnly     bool
 )
 
-// TODO this function is beyond terrible
-//   - Make an OutputFormatter type
-func outputResponse(resp interface{}) {
+func outputResponse(d resource.Displayable) {
+	var err error
 	switch {
 	case outputFormat == "" || outputFormat == "table":
-		// Default
-		// TODO just dump raw response (json blob) for now
-		// TODO this doesn't actually work atm
-		fmt.Println(resp)
+		err = d.Table(os.Stdout)
 
 	case outputFormat == "json":
-		j, err := json.MarshalIndent(resp, "", "  ")
-		if err != nil {
-			fmt.Printf("Error formatting JSON: %v\n", err)
-			return
-		}
-
-		fmt.Println(string(j))
+		err = d.JSON(os.Stdout)
 
 	case outputFormat == "yaml":
-		j, err := json.Marshal(resp)
-		if err != nil {
-			fmt.Printf("Error in intermediate parsing to JSON: %v\n", err)
-			return
-		}
-
-		y, err := yaml.JSONToYAML([]byte(j))
-		if err != nil {
-			fmt.Printf("Error converting to YAML: %v\n", err)
-			return
-		}
-
-		fmt.Println(string(y))
+		err = d.YAML(os.Stdout)
 
 	case strings.HasPrefix(outputFormat, "jsonpath"):
 		fields := strings.SplitN(outputFormat, "=", 2)
 		if len(fields) != 2 {
-			fmt.Println("Please specify jsonpath using -ojsonpath=<path>")
-			return
+			err = errors.New("Please specify jsonpath using -ojsonpath=<path>")
+			break
 		}
 
 		template := fields[1]
-		outputJSONPath(template, resp)
-
-	case outputFormat == "id":
-		// TODO validate that this field is valid for given resource
-		outputJSONPath("{.id}", resp)
+		err = d.JSONPath(os.Stdout, template)
 
 	default:
 		// TODO handle this using cobra itself?
-		fmt.Printf("Error: output format %s not supported", outputFormat)
+		err = errors.Errorf("output format %s not supported", outputFormat)
 	}
-}
 
-// outputJSONPath parses the data provided for the given jsonpath template string
-// and outputs the result to stdout or outputs an error if one occurs
-func outputJSONPath(template string, data interface{}) {
-	jp := jsonpath.New("")
-	err := jp.Parse(template)
 	if err != nil {
-		fmt.Printf("Error parsing jsonpath: %s", err)
-		return
-	}
-
-	err = jp.Execute(os.Stdout, data)
-	if err != nil {
-		fmt.Printf("Error executing jsonpath: %s", err)
+		fmt.Println(err)
 	}
 }
 
-// filterByOwner takes a list of resources and filters it by owner ID.
-// TODO this is super hacky atm
-func filterByOwner(list interface{}, ownerID apitypes.UUID) ([]interface{}, error) {
-	var res []interface{}
-	switch l := list.(type) {
-	case []apitypes.Organization:
-		for _, o := range l {
-			if o.OwnerID == ownerID {
-				res = append(res, o)
-			}
-		}
-	case []provisiontypes.CKECluster:
-		for _, o := range l {
-			// TODO typecast hack
-			if string(o.OwnerID) == string(ownerID) {
-				res = append(res, o)
-			}
-		}
-	default:
-		return nil, errors.Errorf("cannot filter by owner on type %T", l)
-	}
-
-	return res, nil
-}
-
-// filterMine takes a list of resources and filters it by owner ID of the authorized user.
-func filterMine(list interface{}) ([]interface{}, error) {
+func getMyAccountID() (string, error) {
 	me, err := clientset.API().Account().Get()
 	if err != nil {
-		return nil, errors.Wrap(err, "error getting account")
+		return "", errors.Wrap(err, "retrieving account")
 	}
 
-	return filterByOwner(list, me.ID)
+	return string(me.ID), nil
 }
 
 // getCmd represents the get command
@@ -138,111 +71,134 @@ TODO this is a long description`,
 	Args: cobra.RangeArgs(1, 2),
 
 	Run: func(cmd *cobra.Command, args []string) {
-		resource := args[0]
-		// TODO make a Command type that knows about aliases
-		// TODO lots of de-duplication to be done
-		// TODO accept names as well as IDs
-		switch resource {
-		case "organization", "organizations", "org", "orgs":
-			var resp interface{}
+		resourceName := args[0]
+		switch {
+		case resource.Organizations().HasAlias(resourceName):
+			var resp = make([]apitypes.Organization, 1)
 			var err error
 			if len(args) == 2 {
-				id := args[1]
-				resp, err = clientset.API().Organizations().Get(id)
+				var v *apitypes.Organization
+				v, err = clientset.API().Organizations().Get(args[1])
+				resp[0] = *v
 			} else {
 				resp, err = clientset.API().Organizations().List()
 			}
 
-			if err == nil && mineOnly {
-				resp, err = filterMine(resp)
-			}
-
 			if err != nil {
 				fmt.Println(err)
-			} else {
-				outputResponse(resp)
+				return
 			}
 
-		case "cluster", "clusters":
+			orgs := resource.NewOrganizations(resp)
+
+			if mineOnly {
+				me, err := getMyAccountID()
+				if err != nil {
+					fmt.Println(err)
+					return
+				}
+
+				orgs.FilterByOwnerID(me)
+			}
+
+			outputResponse(orgs)
+
+		case resource.CKEClusters().HasAlias(resourceName):
 			if organizationID == "" {
 				fmt.Println("organization is required")
 				return
 			}
 
-			var resp interface{}
+			var resp = make([]provisiontypes.CKECluster, 1)
 			var err error
 			if len(args) == 2 {
-				id := args[1]
-				resp, err = clientset.Provision().CKEClusters(organizationID).Get(id)
+				var v *provisiontypes.CKECluster
+				v, err = clientset.Provision().CKEClusters(organizationID).Get(args[1])
+				resp[0] = *v
 			} else {
 				resp, err = clientset.Provision().CKEClusters(organizationID).List()
 			}
 
-			// TODO gross
-			if err == nil && mineOnly {
-				resp, err = filterMine(resp)
-			}
-
 			if err != nil {
 				fmt.Println(err)
-			} else {
-				outputResponse(resp)
+				return
 			}
 
-		case "account", "acct", "user", "usr":
-			// Accounts are essentially users
+			clusters := resource.NewCKEClusters(resp)
+
+			if mineOnly {
+				me, err := getMyAccountID()
+				if err != nil {
+					fmt.Println(err)
+					return
+				}
+
+				clusters.FilterByOwnerID(me)
+			}
+
+			outputResponse(clusters)
+
+		case resource.Accounts().HasAlias(resourceName):
 			// A user can only get their own account
-			resp, err := clientset.API().Account().Get()
+			var resp = make([]apitypes.Account, 1)
+			v, err := clientset.API().Account().Get()
+			resp[0] = *v
 			if err != nil {
 				fmt.Println(err)
-			} else {
-				outputResponse(resp)
+				return
 			}
 
-		case "nodepool", "nodepools", "np", "nps":
+			accounts := resource.NewAccounts(resp)
+			outputResponse(accounts)
+
+		case resource.NodePools().HasAlias(resourceName):
 			if organizationID == "" || clusterID == "" {
 				fmt.Println("organization and cluster are required")
 				return
 			}
 
-			var resp interface{}
+			var resp = make([]provisiontypes.NodePool, 1)
 			var err error
 			if len(args) == 2 {
-				id := args[1]
-				resp, err = clientset.Provision().NodePools(organizationID, clusterID).Get(id)
+				var v *provisiontypes.NodePool
+				v, err = clientset.Provision().NodePools(organizationID, clusterID).Get(args[1])
+				resp[0] = *v
 			} else {
 				resp, err = clientset.Provision().NodePools(organizationID, clusterID).List()
 			}
 
 			if err != nil {
 				fmt.Println(err)
-			} else {
-				outputResponse(resp)
 			}
 
-		case "plugin", "plugins", "plug", "plugs", "plgn", "plgns":
+			nps := resource.NewNodePools(resp)
+			outputResponse(nps)
+
+		case resource.Plugins().HasAlias(resourceName):
 			if organizationID == "" || clusterID == "" {
 				fmt.Println("organization and cluster are required")
 				return
 			}
 
-			var resp interface{}
+			var resp = make([]apitypes.Plugin, 1)
 			var err error
 			if len(args) == 2 {
-				id := args[1]
-				resp, err = clientset.API().Plugins(organizationID, clusterID).Get(id)
+				var v *apitypes.Plugin
+				v, err = clientset.API().Plugins(organizationID, clusterID).Get(args[1])
+				resp[0] = *v
 			} else {
 				resp, err = clientset.API().Plugins(organizationID, clusterID).List()
 			}
 
 			if err != nil {
 				fmt.Println(err)
-			} else {
-				outputResponse(resp)
 			}
 
+			plugs := resource.NewPlugins(resp)
+			outputResponse(plugs)
+
 		default:
-			fmt.Printf("Error: invalid resource specified: %q\n", resource)
+			fmt.Printf("Error: invalid resource name specified: %q\n", resourceName)
 		}
 	},
 }
