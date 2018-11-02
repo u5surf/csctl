@@ -8,28 +8,32 @@ import (
 	"github.com/containership/csctl/resource/table"
 )
 
-type organizations struct {
+// Organizations is a list of the associated cloud resource with additional functionality
+type Organizations struct {
 	resource
 	filterable
 	items []types.Organization
 }
 
-func NewOrganizations(items []types.Organization) *organizations {
-	return &organizations{
+// NewOrganizations constructs a new Organizations wrapping the given cloud type
+func NewOrganizations(items []types.Organization) *Organizations {
+	return &Organizations{
 		resource: resource{
 			name:    "organization",
-			plural:  "organizations",
+			plural:  "Organizations",
 			aliases: []string{"org", "orgs"},
 		},
 		items: items,
 	}
 }
 
-func Organizations() *organizations {
+// Organization constructs a new Organizations with no underlying items, useful for
+// interacting with the metadata itself.
+func Organization() *Organizations {
 	return NewOrganizations(nil)
 }
 
-func (o *organizations) columns() []string {
+func (o *Organizations) columns() []string {
 	return []string{
 		"Name",
 		"ID",
@@ -38,7 +42,8 @@ func (o *organizations) columns() []string {
 	}
 }
 
-func (o *organizations) Table(w io.Writer) error {
+// Table outputs the table representation to the given writer
+func (o *Organizations) Table(w io.Writer) error {
 	table := table.New(w, o.columns())
 
 	for _, org := range o.items {
@@ -55,19 +60,23 @@ func (o *organizations) Table(w io.Writer) error {
 	return nil
 }
 
-func (o *organizations) JSON(w io.Writer) error {
+// JSON outputs the JSON representation to the given writer
+func (o *Organizations) JSON(w io.Writer) error {
 	return displayJSON(w, o.items)
 }
 
-func (o *organizations) YAML(w io.Writer) error {
+// YAML outputs the YAML representation to the given writer
+func (o *Organizations) YAML(w io.Writer) error {
 	return displayYAML(w, o.items)
 }
 
-func (o *organizations) JSONPath(w io.Writer, template string) error {
+// JSONPath outputs the executed JSONPath template to the given writer
+func (o *Organizations) JSONPath(w io.Writer, template string) error {
 	return displayJSONPath(w, template, o.items)
 }
 
-func (o *organizations) FilterByOwnerID(id string) {
+// FilterByOwnerID filters the underlying items by owner ID
+func (o *Organizations) FilterByOwnerID(id string) {
 	filtered := make([]types.Organization, 0)
 	for _, cluster := range o.items {
 		if string(cluster.OwnerID) == id {

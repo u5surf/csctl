@@ -8,14 +8,16 @@ import (
 	"github.com/containership/csctl/resource/table"
 )
 
-type ckeClusters struct {
+// CKEClusters is a list of the associated cloud resource with additional functionality
+type CKEClusters struct {
 	resource
 	filterable
 	items []types.CKECluster
 }
 
-func NewCKEClusters(items []types.CKECluster) *ckeClusters {
-	return &ckeClusters{
+// NewCKEClusters constructs a new CKEClusters wrapping the given cloud type
+func NewCKEClusters(items []types.CKECluster) *CKEClusters {
+	return &CKEClusters{
 		resource: resource{
 			name:   "cluster",
 			plural: "clusters",
@@ -24,11 +26,13 @@ func NewCKEClusters(items []types.CKECluster) *ckeClusters {
 	}
 }
 
-func CKEClusters() *ckeClusters {
+// CKECluster constructs a new CKEClusters with no underlying items, useful for
+// interacting with the metadata itself.
+func CKECluster() *CKEClusters {
 	return NewCKEClusters(nil)
 }
 
-func (c *ckeClusters) columns() []string {
+func (c *CKEClusters) columns() []string {
 	return []string{
 		"ID",
 		"Provider Name",
@@ -38,7 +42,8 @@ func (c *ckeClusters) columns() []string {
 	}
 }
 
-func (c *ckeClusters) Table(w io.Writer) error {
+// Table outputs the table representation to the given writer
+func (c *CKEClusters) Table(w io.Writer) error {
 	table := table.New(w, c.columns())
 
 	for _, cluster := range c.items {
@@ -56,19 +61,23 @@ func (c *ckeClusters) Table(w io.Writer) error {
 	return nil
 }
 
-func (c *ckeClusters) JSON(w io.Writer) error {
+// JSON outputs the JSON representation to the given writer
+func (c *CKEClusters) JSON(w io.Writer) error {
 	return displayJSON(w, c.items)
 }
 
-func (c *ckeClusters) YAML(w io.Writer) error {
+// YAML outputs the YAML representation to the given writer
+func (c *CKEClusters) YAML(w io.Writer) error {
 	return displayYAML(w, c.items)
 }
 
-func (c *ckeClusters) JSONPath(w io.Writer, template string) error {
+// JSONPath outputs the executed JSONPath template to the given writer
+func (c *CKEClusters) JSONPath(w io.Writer, template string) error {
 	return displayJSONPath(w, template, c.items)
 }
 
-func (c *ckeClusters) FilterByOwnerID(id string) {
+// FilterByOwnerID filters the underlying items by owner ID
+func (c *CKEClusters) FilterByOwnerID(id string) {
 	filtered := make([]types.CKECluster, 0)
 	for _, cluster := range c.items {
 		if string(cluster.OwnerID) == id {

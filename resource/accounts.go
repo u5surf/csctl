@@ -8,13 +8,15 @@ import (
 	"github.com/containership/csctl/resource/table"
 )
 
-type accounts struct {
+// Accounts is a list of the associated cloud resource with additional functionality
+type Accounts struct {
 	resource
 	items []types.Account
 }
 
-func NewAccounts(items []types.Account) *accounts {
-	return &accounts{
+// NewAccounts constructs a new Accounts wrapping the given cloud type
+func NewAccounts(items []types.Account) *Accounts {
+	return &Accounts{
 		resource: resource{
 			name:    "account",
 			aliases: []string{"acct"},
@@ -23,11 +25,13 @@ func NewAccounts(items []types.Account) *accounts {
 	}
 }
 
-func Accounts() *accounts {
+// Account constructs a new Accounts with no underlying items, useful for
+// interacting with the metadata itself.
+func Account() *Accounts {
 	return NewAccounts(nil)
 }
 
-func (a *accounts) columns() []string {
+func (a *Accounts) columns() []string {
 	return []string{
 		"Name",
 		"ID",
@@ -35,7 +39,8 @@ func (a *accounts) columns() []string {
 	}
 }
 
-func (a *accounts) Table(w io.Writer) error {
+// Table outputs the table representation to the given writer
+func (a *Accounts) Table(w io.Writer) error {
 	table := table.New(w, a.columns())
 
 	for _, acct := range a.items {
@@ -51,14 +56,17 @@ func (a *accounts) Table(w io.Writer) error {
 	return nil
 }
 
-func (a *accounts) JSON(w io.Writer) error {
+// JSON outputs the JSON representation to the given writer
+func (a *Accounts) JSON(w io.Writer) error {
 	return displayJSON(w, a.items)
 }
 
-func (a *accounts) YAML(w io.Writer) error {
+// YAML outputs the YAML representation to the given writer
+func (a *Accounts) YAML(w io.Writer) error {
 	return displayYAML(w, a.items)
 }
 
-func (a *accounts) JSONPath(w io.Writer, template string) error {
+// JSONPath outputs the executed JSONPath template to the given writer
+func (a *Accounts) JSONPath(w io.Writer, template string) error {
 	return displayJSONPath(w, template, a.items)
 }

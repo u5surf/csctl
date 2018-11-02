@@ -10,6 +10,8 @@ import (
 	"k8s.io/client-go/util/jsonpath"
 )
 
+// Displayable is the interface for resources that can be displayed (printed to an io.Writer)
+// in various formats.
 type Displayable interface {
 	columns() []string
 

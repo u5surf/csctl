@@ -73,7 +73,7 @@ TODO this is a long description`,
 	Run: func(cmd *cobra.Command, args []string) {
 		resourceName := args[0]
 		switch {
-		case resource.Organizations().HasAlias(resourceName):
+		case resource.Organization().HasAlias(resourceName):
 			var resp = make([]apitypes.Organization, 1)
 			var err error
 			if len(args) == 2 {
@@ -103,7 +103,7 @@ TODO this is a long description`,
 
 			outputResponse(orgs)
 
-		case resource.CKEClusters().HasAlias(resourceName):
+		case resource.CKECluster().HasAlias(resourceName):
 			if organizationID == "" {
 				fmt.Println("organization is required")
 				return
@@ -138,7 +138,7 @@ TODO this is a long description`,
 
 			outputResponse(clusters)
 
-		case resource.Accounts().HasAlias(resourceName):
+		case resource.Account().HasAlias(resourceName):
 			// A user can only get their own account
 			var resp = make([]apitypes.Account, 1)
 			v, err := clientset.API().Account().Get()
@@ -151,7 +151,7 @@ TODO this is a long description`,
 			accounts := resource.NewAccounts(resp)
 			outputResponse(accounts)
 
-		case resource.NodePools().HasAlias(resourceName):
+		case resource.NodePool().HasAlias(resourceName):
 			if organizationID == "" || clusterID == "" {
 				fmt.Println("organization and cluster are required")
 				return
@@ -174,7 +174,7 @@ TODO this is a long description`,
 			nps := resource.NewNodePools(resp)
 			outputResponse(nps)
 
-		case resource.Plugins().HasAlias(resourceName):
+		case resource.Plugin().HasAlias(resourceName):
 			if organizationID == "" || clusterID == "" {
 				fmt.Println("organization and cluster are required")
 				return

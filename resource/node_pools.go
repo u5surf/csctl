@@ -7,13 +7,15 @@ import (
 	"github.com/containership/csctl/resource/table"
 )
 
-type nodePools struct {
+// NodePools is a list of the associated cloud resource with additional functionality
+type NodePools struct {
 	resource
 	items []types.NodePool
 }
 
-func NewNodePools(items []types.NodePool) *nodePools {
-	return &nodePools{
+// NewNodePools constructs a new NodePools wrapping the given cloud type
+func NewNodePools(items []types.NodePool) *NodePools {
+	return &NodePools{
 		resource: resource{
 			name:    "nodepool",
 			plural:  "nodepools",
@@ -23,11 +25,13 @@ func NewNodePools(items []types.NodePool) *nodePools {
 	}
 }
 
-func NodePools() *nodePools {
+// NodePool constructs a new NodePools with no underlying items, useful for
+// interacting with the metadata itself.
+func NodePool() *NodePools {
 	return NewNodePools(nil)
 }
 
-func (p *nodePools) columns() []string {
+func (p *NodePools) columns() []string {
 	return []string{
 		"Name",
 		"ID",
@@ -38,13 +42,16 @@ func (p *nodePools) columns() []string {
 	}
 }
 
-func (p *nodePools) Table(w io.Writer) error {
+// Table outputs the table representation to the given writer
+func (p *NodePools) Table(w io.Writer) error {
 	table := table.New(w, p.columns())
 
 	for _, np := range p.items {
-		etcdVersion := *np.EtcdVersion
-		if etcdVersion == "" {
+		var etcdVersion string
+		if np.EtcdVersion == nil || *np.EtcdVersion == "" {
 			etcdVersion = "N/A"
+		} else {
+			etcdVersion = *np.EtcdVersion
 		}
 
 		table.Append([]string{
@@ -62,14 +69,17 @@ func (p *nodePools) Table(w io.Writer) error {
 	return nil
 }
 
-func (p *nodePools) JSON(w io.Writer) error {
+// JSON outputs the JSON representation to the given writer
+func (p *NodePools) JSON(w io.Writer) error {
 	return displayJSON(w, p.items)
 }
 
-func (p *nodePools) YAML(w io.Writer) error {
+// YAML outputs the YAML representation to the given writer
+func (p *NodePools) YAML(w io.Writer) error {
 	return displayYAML(w, p.items)
 }
 
-func (p *nodePools) JSONPath(w io.Writer, template string) error {
+// JSONPath outputs the executed JSONPath template to the given writer
+func (p *NodePools) JSONPath(w io.Writer, template string) error {
 	return displayJSONPath(w, template, p.items)
 }

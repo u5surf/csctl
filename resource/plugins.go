@@ -8,28 +8,32 @@ import (
 	"github.com/containership/csctl/resource/table"
 )
 
-type plugins struct {
+// Plugins is a list of the associated cloud resource with additional functionality
+type Plugins struct {
 	resource
 	filterable
 	items []types.Plugin
 }
 
-func NewPlugins(items []types.Plugin) *plugins {
-	return &plugins{
+// NewPlugins constructs a new Plugins wrapping the given cloud type
+func NewPlugins(items []types.Plugin) *Plugins {
+	return &Plugins{
 		resource: resource{
 			name:    "plugin",
-			plural:  "plugins",
+			plural:  "Plugins",
 			aliases: []string{"plug", "plugs", "plgn", "plgns"},
 		},
 		items: items,
 	}
 }
 
-func Plugins() *plugins {
+// Plugin constructs a new Plugins with no underlying items, useful for
+// interacting with the metadata itself.
+func Plugin() *Plugins {
 	return NewPlugins(nil)
 }
 
-func (p *plugins) columns() []string {
+func (p *Plugins) columns() []string {
 	return []string{
 		"ID",
 		"Type",
@@ -39,7 +43,8 @@ func (p *plugins) columns() []string {
 	}
 }
 
-func (p *plugins) Table(w io.Writer) error {
+// Table outputs the table representation to the given writer
+func (p *Plugins) Table(w io.Writer) error {
 	table := table.New(w, p.columns())
 
 	for _, plug := range p.items {
@@ -57,14 +62,17 @@ func (p *plugins) Table(w io.Writer) error {
 	return nil
 }
 
-func (p *plugins) JSON(w io.Writer) error {
+// JSON outputs the JSON representation to the given writer
+func (p *Plugins) JSON(w io.Writer) error {
 	return displayJSON(w, p.items)
 }
 
-func (p *plugins) YAML(w io.Writer) error {
+// YAML outputs the YAML representation to the given writer
+func (p *Plugins) YAML(w io.Writer) error {
 	return displayYAML(w, p.items)
 }
 
-func (p *plugins) JSONPath(w io.Writer, template string) error {
+// JSONPath outputs the executed JSONPath template to the given writer
+func (p *Plugins) JSONPath(w io.Writer, template string) error {
 	return displayJSONPath(w, template, p.items)
 }
