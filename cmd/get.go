@@ -197,6 +197,41 @@ TODO this is a long description`,
 			plugs := resource.NewPlugins(resp)
 			outputResponse(plugs)
 
+		case resource.Template().HasAlias(resourceName):
+			if organizationID == "" {
+				fmt.Println("organization is required")
+				return
+			}
+
+			var resp = make([]provisiontypes.Template, 1)
+			var err error
+			if len(args) == 2 {
+				var v *provisiontypes.Template
+				v, err = clientset.Provision().Templates(organizationID).Get(args[1])
+				resp[0] = *v
+			} else {
+				resp, err = clientset.Provision().Templates(organizationID).List()
+			}
+
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+
+			templates := resource.NewTemplates(resp)
+
+			if mineOnly {
+				me, err := getMyAccountID()
+				if err != nil {
+					fmt.Println(err)
+					return
+				}
+
+				templates.FilterByOwnerID(me)
+			}
+
+			outputResponse(templates)
+
 		default:
 			fmt.Printf("Error: invalid resource name specified: %q\n", resourceName)
 		}

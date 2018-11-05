@@ -10,6 +10,7 @@ import (
 type Interface interface {
 	RESTClient() rest.Interface
 	CKEClustersGetter
+	TemplatesGetter
 	NodePoolsGetter
 }
 
@@ -40,6 +41,11 @@ func (c *Client) RESTClient() rest.Interface {
 // CKEClusters returns the CKE clusters interface
 func (c *Client) CKEClusters(organizationID string) CKEClusterInterface {
 	return newCKEClusters(c, organizationID)
+}
+
+// Templates returns the templates interface
+func (c *Client) Templates(organizationID string) TemplateInterface {
+	return newTemplates(c, organizationID)
 }
 
 // NodePools returns the node pools interface
