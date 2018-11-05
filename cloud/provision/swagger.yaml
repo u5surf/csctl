@@ -42,6 +42,77 @@ paths:
           schema:
             $ref: "#/definitions/Error"
 
+  /organizations/{organization_id}/clusters/{cluster_id}:
+    get:
+      summary: Get a CKE cluster
+      operationId: getCluster
+      tags:
+        - cluster
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+        - in: path
+          name: cluster_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: A CKE cluster
+          schema:
+            $ref: "#/definitions/CKEClusters"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+  /organizations/{organization_id}/templates:
+    get:
+      summary: List all provisioning templates for a given organization
+      operationId: listTemplates
+      tags:
+        - templates
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: A list of provisioning templates
+          schema:
+            $ref: "#/definitions/Templates"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+  /organizations/{organization_id}/templates/{template_id}:
+    get:
+      summary: Get a provisioning template
+      operationId: getTemplate
+      tags:
+        - template
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+        - in: path
+          name: template_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: A provisioning template
+          schema:
+            $ref: "#/definitions/Template"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
 definitions:
   CKECluster:
     title: A Containership Kubernetes Engine (CKE) cluster
@@ -161,8 +232,8 @@ definitions:
         type: string
       count:
         title: Number of nodes in this node pool
-        type: number
-        format: integer
+        type: integer
+        format: int32
       docker_version:
         title: Docker version running on this node pool
         type: string
@@ -221,3 +292,112 @@ definitions:
         format: int32
       message:
         type: string
+
+  Template:
+    type: object
+    required:
+      - created_at
+      - updated_at
+      - id
+      - organization_id
+      - owner_id
+      - engine
+      - description
+      - provider_name
+      - configuration
+    properties:
+      created_at:
+        title: Timestamp at which the cluster was created
+        type: string
+      updated_at:
+        title: Timestamp at which the cluster was updated
+        type: string
+      id:
+        title: Cluster ID
+        $ref: "#/definitions/UUID"
+      organization_id:
+        title: Organization ID of the organization the cluster belongs to
+        $ref: "#/definitions/UUID"
+      owner_id:
+        title: Account ID of the cluster owner
+        $ref: "#/definitions/UUID"
+      engine:
+        title: Engine to use for provisioning (deprecated - always containership_kubernetes_engine)
+        type: string
+        enum: [containership_kubernetes_engine]
+      description:
+        title: Description of this template
+        type: string
+      provider_name:
+        title: Cloud provider name
+        type: string
+        enum: [digital_ocean, azure, google, amazon_web_services, packet]
+      configuration:
+        title: Template configuration
+        $ref: '#/definitions/TemplateConfiguration'
+
+  Templates:
+    type: array
+    items:
+      $ref: '#/definitions/Template'
+
+  TemplateConfiguration:
+    type: object
+    required:
+      - resource
+      - variable
+    properties:
+      resource:
+        title: Provider-specific cloud resources
+        type: object
+      variable:
+        title: Provider-agnostic cloud resources
+        $ref: '#/definitions/TemplateVariableMap'
+
+  TemplateVariableMap:
+    description: Map of variable resource name to object
+    type: object
+    additionalProperties:
+      $ref: '#/definitions/TemplateVariableDefault'
+
+  TemplateVariableDefault:
+    type: object
+    required:
+      - default
+    properties:
+      default:
+        $ref: '#/definitions/TemplateNodePool'
+
+  TemplateNodePool:
+    type: object
+    required:
+      - name
+      - count
+      - kubernetes_mode
+      - kubernetes_version
+    properties:
+      name:
+        description: Name of this node pool
+        type: string
+      type:
+        description: Type of this resource (always node_pool)
+        type: string
+        enum: [node_pool]
+      count:
+        description: Number of nodes in this node pool
+        type: integer
+        format: int32
+        minimum: 1
+      kubernetes_mode:
+        description: Kubernetes mode of this node pool (master or worker)
+        type: string
+        enum: [master, worker]
+      kubernetes_version:
+        description: Kubernetes version of this node pool (excluding leading 'v')
+        type: string
+      etcd:
+        description: true if etcd runs on this node pool, else false (required if kubernetes_mode == master)
+        type: boolean
+      is_schedulable:
+        description: true if this node pool is schedulable, else false (required if kubernetes_mode == master)
+        type: boolean

@@ -21,7 +21,7 @@ type NodePool struct {
 
 	// Number of nodes in this node pool
 	// Required: true
-	Count *int64 `json:"count"`
+	Count *int32 `json:"count"`
 
 	// Docker version running on this node pool
 	// Required: true
