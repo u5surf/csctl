@@ -14,7 +14,7 @@ type TemplatesGetter interface {
 
 // TemplateInterface is the interface for templates
 type TemplateInterface interface {
-	Create(*types.Template) (*types.Template, error)
+	Create(*types.Template) error
 	Get(id string) (*types.Template, error)
 	Delete(id string) error
 	// TODO list options implemented client-side
@@ -35,9 +35,9 @@ func newTemplates(c *Client, organizationID string) *templates {
 }
 
 // Create creates a template
-func (t *templates) Create(*types.Template) (*types.Template, error) {
-	// TODO
-	return nil, nil
+func (t *templates) Create(template *types.Template) error {
+	path := fmt.Sprintf("/v3/organizations/%s/templates", t.organizationID)
+	return t.client.Post(path, template)
 }
 
 // Get gets a template

@@ -12,6 +12,7 @@ import (
 type Interface interface {
 	Get(path string, output interface{}) error
 	Delete(path string) error
+	Post(path string, body interface{}) error
 }
 
 // Client is a basic HTTP client for REST operations
@@ -81,6 +82,30 @@ func (c *Client) Delete(path string) error {
 
 	resp, err := resty.R().SetHeader("Authorization", authHeader).
 		Delete(url.String())
+
+	if err != nil {
+		return errors.Wrap(err, "error deleting resource")
+	}
+
+	if resp.IsError() {
+		return errors.Errorf("server responded with status %d: %s", resp.StatusCode(), resp.Body())
+	}
+
+	return nil
+}
+
+// TODO need to return response
+func (c *Client) Post(path string, body interface{}) error {
+	url, err := c.baseURL.Parse(path)
+	if err != nil {
+		return errors.Wrapf(err, "parsing path %q", path)
+	}
+
+	authHeader := fmt.Sprintf("JWT %s", c.token)
+
+	resp, err := resty.R().SetHeader("Authorization", authHeader).
+		SetBody(body).
+		Post(url.String())
 
 	if err != nil {
 		return errors.Wrap(err, "error deleting resource")

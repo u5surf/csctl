@@ -296,11 +296,6 @@ definitions:
   Template:
     type: object
     required:
-      - created_at
-      - updated_at
-      - id
-      - organization_id
-      - owner_id
       - engine
       - description
       - provider_name

@@ -60,7 +60,7 @@ func (c *Templates) Table(w io.Writer) error {
 			*tmpl.ProviderName,
 			masterVersion,
 			string(tmpl.OwnerID),
-			convert.UnixTimeMSToString(*tmpl.CreatedAt),
+			convert.UnixTimeMSToString(tmpl.CreatedAt),
 		})
 	}
 
