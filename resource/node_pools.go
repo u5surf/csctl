@@ -36,6 +36,7 @@ func (p *NodePools) columns() []string {
 		"Name",
 		"ID",
 		"Mode",
+		"Status",
 		"Kubernetes Version",
 		"Etcd Version",
 		"Docker Version",
@@ -54,10 +55,19 @@ func (p *NodePools) Table(w io.Writer) error {
 			etcdVersion = *np.EtcdVersion
 		}
 
+		var status string
+		if np.Status == nil || np.Status.Type == nil ||
+			*np.Status.Type == "" {
+			status = "UNKNOWN"
+		} else {
+			status = *np.Status.Type
+		}
+
 		table.Append([]string{
 			*np.Name,
 			string(np.ID),
 			*np.KubernetesMode,
+			status,
 			*np.KubernetesVersion,
 			etcdVersion,
 			*np.DockerVersion,
