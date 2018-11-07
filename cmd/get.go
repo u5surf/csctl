@@ -232,6 +232,31 @@ TODO this is a long description`,
 
 			outputResponse(templates)
 
+		case resource.Provider().HasAlias(resourceName):
+			if organizationID == "" {
+				fmt.Println("organization is required")
+				return
+			}
+
+			var resp = make([]apitypes.Provider, 1)
+			var err error
+			if len(args) == 2 {
+				var v *apitypes.Provider
+				v, err = clientset.API().Providers(organizationID).Get(args[1])
+				resp[0] = *v
+			} else {
+				resp, err = clientset.API().Providers(organizationID).List()
+			}
+
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+
+			providers := resource.NewProviders(resp)
+
+			outputResponse(providers)
+
 		default:
 			fmt.Printf("Error: invalid resource name specified: %q\n", resourceName)
 		}

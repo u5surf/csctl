@@ -120,6 +120,52 @@ paths:
           schema:
             $ref: "#/definitions/Error"
 
+  /organizations/{organization_id}/providers:
+    get:
+      summary: List all providers for a given organization
+      operationId: listProviders
+      tags:
+        - providers
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: A list of providers
+          schema:
+            $ref: "#/definitions/Providers"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+  /organizations/{organization_id}/providers/{provider_id}:
+    get:
+      summary: Get a provider
+      operationId: getProvider
+      tags:
+        - provider
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+        - in: path
+          name: provider_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: A provider
+          schema:
+            $ref: "#/definitions/Provider"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
   /organizations/{organization_id}/clusters/{cluster_id}/plugins:
     get:
       summary: List all plugins for a cluster
@@ -267,6 +313,41 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/Cluster"
+
+  Provider:
+    title: A set of cloud provider credentials
+    type: object
+    required:
+      - created_at
+      - updated_at
+      - id
+      - organization_id
+      - provider
+      - description
+    properties:
+      created_at:
+        title: Timestamp at which the provider was created
+        type: string
+      updated_at:
+        title: Timestamp at which the provider was updated
+        type: string
+      id:
+        title: Provider ID
+        $ref: "#/definitions/UUID"
+      organization_id:
+        title: Organization ID of the organization the provider belongs to
+        $ref: "#/definitions/UUID"
+      provider:
+        title: Provider name
+        type: string
+      description:
+        title: Provider description
+        type: string
+
+  Providers:
+    type: array
+    items:
+      $ref: "#/definitions/Provider"
 
   Organization:
     title: A Containership organization
