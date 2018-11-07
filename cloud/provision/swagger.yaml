@@ -344,10 +344,50 @@ definitions:
     properties:
       resource:
         title: Provider-specific cloud resources
-        type: object
+        $ref: '#/definitions/TemplateResource'
       variable:
         title: Provider-agnostic cloud resources
         $ref: '#/definitions/TemplateVariableMap'
+
+  TemplateResource:
+    type: object
+    properties:
+      digitalocean_droplet:
+        $ref: '#/definitions/DigitalOceanDropletMap'
+
+  DigitalOceanDropletMap:
+    description: Map of node pool name to DigitalOcean droplet configuration
+    type: object
+    additionalProperties:
+        $ref: '#/definitions/DigitalOceanDropletConfiguration'
+
+  DigitalOceanDropletConfiguration:
+    description: Configuration for a DigitalOcean droplet
+    type: object
+    required:
+      - image
+      - private_networking
+      - region
+      - size
+    properties:
+      backups:
+        description: Enable droplet backups if true
+        type: boolean
+      image:
+        description: Image to use for droplet
+        type: string
+      monitoring:
+        description: Enable monitoring for droplet
+        type: boolean
+      private_networking:
+        description: Enable private networking for droplet
+        type: boolean
+      region:
+        description: Region for this droplet
+        type: string
+      size:
+        description: Droplet size
+        type: string
 
   TemplateVariableMap:
     description: Map of variable resource name to object
@@ -367,12 +407,16 @@ definitions:
     type: object
     required:
       - name
+      - type
       - count
       - kubernetes_mode
       - kubernetes_version
     properties:
       name:
         description: Name of this node pool
+        type: string
+      type:
+        description: Resource type (always node_pool)
         type: string
       type:
         description: Type of this resource (always node_pool)

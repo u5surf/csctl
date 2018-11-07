@@ -19,7 +19,7 @@ type TemplateConfiguration struct {
 
 	// Provider-specific cloud resources
 	// Required: true
-	Resource interface{} `json:"resource"`
+	Resource *TemplateResource `json:"resource"`
 
 	// Provider-agnostic cloud resources
 	// Required: true
@@ -48,6 +48,15 @@ func (m *TemplateConfiguration) validateResource(formats strfmt.Registry) error 
 
 	if err := validate.Required("resource", "body", m.Resource); err != nil {
 		return err
+	}
+
+	if m.Resource != nil {
+		if err := m.Resource.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("resource")
+			}
+			return err
+		}
 	}
 
 	return nil

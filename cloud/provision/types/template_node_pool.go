@@ -44,8 +44,9 @@ type TemplateNodePool struct {
 	Name *string `json:"name"`
 
 	// Type of this resource (always node_pool)
+	// Required: true
 	// Enum: [node_pool]
-	Type string `json:"type,omitempty"`
+	Type *string `json:"type"`
 }
 
 // Validate validates this template node pool
@@ -180,12 +181,12 @@ func (m *TemplateNodePool) validateTypeEnum(path, location string, value string)
 
 func (m *TemplateNodePool) validateType(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.Type) { // not required
-		return nil
+	if err := validate.Required("type", "body", m.Type); err != nil {
+		return err
 	}
 
 	// value enum
-	if err := m.validateTypeEnum("type", "body", m.Type); err != nil {
+	if err := m.validateTypeEnum("type", "body", *m.Type); err != nil {
 		return err
 	}
 
