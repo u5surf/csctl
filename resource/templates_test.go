@@ -23,6 +23,7 @@ var (
 					KubernetesMode:    strptr("master"),
 					KubernetesVersion: &tmplK8sVersion,
 					Name:              strptr("master-pool"),
+					Type:              strptr("node_pool"),
 				},
 			},
 		},
@@ -32,7 +33,7 @@ var (
 		ID:            types.UUID("1234"),
 		ProviderName:  strptr("google"),
 		OwnerID:       types.UUID("1234"),
-		CreatedAt:     &tmplTime,
+		CreatedAt:     tmplTime,
 		Configuration: &tmplConfig,
 	}
 
@@ -40,7 +41,7 @@ var (
 		ID:           types.UUID("1234"),
 		ProviderName: strptr("digital_ocean"),
 		OwnerID:      types.UUID("1234"),
-		CreatedAt:    &tmplTime,
+		CreatedAt:    tmplTime,
 	}
 
 	tmpls = []types.Template{
@@ -49,7 +50,7 @@ var (
 			ID:            types.UUID("4321"),
 			ProviderName:  strptr("amazon_web_services"),
 			OwnerID:       types.UUID("4321"),
-			CreatedAt:     &tmplTime,
+			CreatedAt:     tmplTime,
 			Configuration: &tmplConfig,
 		},
 	}
