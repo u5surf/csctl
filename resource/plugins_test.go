@@ -10,26 +10,21 @@ import (
 )
 
 var (
-	plug1       = "test1"
-	plug2       = "test2"
-	plugType    = "logs"
-	plugImpl    = "kubernetes"
-	plugVersion = "v1.0.0"
-	plugTime    = "1517001176920"
+	plugTime = "1517001176920"
 
 	plugs = []types.Plugin{
 		{
 			ID:             types.UUID("1234"),
-			Type:           &plugType,
-			Implementation: &plugImpl,
-			Version:        &plugVersion,
+			Type:           strptr("logs"),
+			Implementation: strptr("kubernetes"),
+			Version:        strptr("v1.0.0"),
 			CreatedAt:      &plugTime,
 		},
 		{
 			ID:             types.UUID("4321"),
-			Type:           &plugType,
-			Implementation: &plugImpl,
-			Version:        &plugVersion,
+			Type:           strptr("metrics"),
+			Implementation: strptr("prometheus"),
+			Version:        strptr("2.0.0"),
 			CreatedAt:      &plugTime,
 		},
 	}

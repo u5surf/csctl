@@ -10,18 +10,16 @@ import (
 )
 
 var (
-	acct1    = "test1"
-	acct2    = "test2"
 	acctTime = "1517001176920"
 
 	accts = []types.Account{
 		{
-			Name:      &acct1,
+			Name:      strptr("test1"),
 			ID:        types.UUID("1234"),
 			CreatedAt: &acctTime,
 		},
 		{
-			Name:      &acct2,
+			Name:      strptr("test2"),
 			ID:        types.UUID("4321"),
 			CreatedAt: &acctTime,
 		},

@@ -10,19 +10,17 @@ import (
 )
 
 var (
-	org1    = "test1"
-	org2    = "test2"
 	orgTime = "1517001176920"
 
 	orgs = []types.Organization{
 		{
-			Name:      &org1,
+			Name:      strptr("test1"),
 			ID:        types.UUID("1234"),
 			OwnerID:   types.UUID("1234"),
 			CreatedAt: &orgTime,
 		},
 		{
-			Name:      &org2,
+			Name:      strptr("test2"),
 			ID:        types.UUID("4321"),
 			OwnerID:   types.UUID("4321"),
 			CreatedAt: &orgTime,

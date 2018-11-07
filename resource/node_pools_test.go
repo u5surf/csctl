@@ -10,28 +10,25 @@ import (
 )
 
 var (
-	np1     = "test1"
-	np2     = "test2"
-	master  = "master"
-	worker  = "worker"
-	version = "v1.0.0"
+	etcdVersion   = "3.2.24"
+	dockerVersion = "18.6.1"
 
 	nps = []types.NodePool{
 		{
-			Name:              &np1,
+			Name:              strptr("test1"),
 			ID:                types.UUID("1234"),
-			KubernetesMode:    &master,
-			KubernetesVersion: &version,
-			EtcdVersion:       &version,
-			DockerVersion:     &version,
+			KubernetesMode:    strptr("master"),
+			KubernetesVersion: strptr("1.12.1"),
+			EtcdVersion:       &etcdVersion,
+			DockerVersion:     &dockerVersion,
 		},
 		{
-			Name:              &np2,
+			Name:              strptr("test2"),
 			ID:                types.UUID("4321"),
-			KubernetesMode:    &worker,
-			KubernetesVersion: &version,
+			KubernetesMode:    strptr("worker"),
+			KubernetesVersion: strptr("1.11.1"),
 			EtcdVersion:       nil,
-			DockerVersion:     &version,
+			DockerVersion:     &dockerVersion,
 		},
 	}
 )

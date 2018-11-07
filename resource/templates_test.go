@@ -10,23 +10,19 @@ import (
 )
 
 var (
-	tmplProvider       = "digitalocean"
-	tmplTime           = "1517001176920"
-	tmplK8sVersion     = "v1.12.1"
-	tmplMasterCount    = int32(3)
-	tmplMasterPoolName = "master-pool"
-	tmplMaster         = types.TemplateNodePoolKubernetesModeMaster
+	tmplTime       = "1517001176920"
+	tmplK8sVersion = "1.12.1"
 
 	tmplConfig = types.TemplateConfiguration{
 		Variable: types.TemplateVariableMap{
 			"np0": types.TemplateVariableDefault{
 				Default: &types.TemplateNodePool{
-					Count:             &tmplMasterCount,
+					Count:             int32ptr(3),
 					Etcd:              true,
 					IsSchedulable:     true,
-					KubernetesMode:    &tmplMaster,
+					KubernetesMode:    strptr("master"),
 					KubernetesVersion: &tmplK8sVersion,
-					Name:              &tmplMasterPoolName,
+					Name:              strptr("master-pool"),
 				},
 			},
 		},
@@ -34,7 +30,7 @@ var (
 
 	tmplGood = types.Template{
 		ID:            types.UUID("1234"),
-		ProviderName:  &tmplProvider,
+		ProviderName:  strptr("google"),
 		OwnerID:       types.UUID("1234"),
 		CreatedAt:     &tmplTime,
 		Configuration: &tmplConfig,
@@ -42,7 +38,7 @@ var (
 
 	tmplNoConfig = types.Template{
 		ID:           types.UUID("1234"),
-		ProviderName: &tmplProvider,
+		ProviderName: strptr("digital_ocean"),
 		OwnerID:      types.UUID("1234"),
 		CreatedAt:    &tmplTime,
 	}
@@ -51,7 +47,7 @@ var (
 		tmplGood,
 		{
 			ID:            types.UUID("4321"),
-			ProviderName:  &tmplProvider,
+			ProviderName:  strptr("amazon_web_services"),
 			OwnerID:       types.UUID("4321"),
 			CreatedAt:     &tmplTime,
 			Configuration: &tmplConfig,

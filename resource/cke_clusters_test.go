@@ -10,25 +10,23 @@ import (
 )
 
 var (
-	provider       = "digitalocean"
-	status         = "RUNNING"
 	ckeClusterTime = "1517001176920"
 
 	ckeClusters = []types.CKECluster{
 		{
 			ID:           types.UUID("1234"),
-			ProviderName: &provider,
+			ProviderName: strptr("google"),
 			Status: &types.CKEClusterStatus{
-				Type: &status,
+				Type: strptr("RUNNING"),
 			},
 			OwnerID:   types.UUID("1234"),
 			CreatedAt: &ckeClusterTime,
 		},
 		{
 			ID:           types.UUID("4321"),
-			ProviderName: &provider,
+			ProviderName: strptr("amazon_web_services"),
 			Status: &types.CKEClusterStatus{
-				Type: &status,
+				Type: strptr("PROVISIONING"),
 			},
 			OwnerID:   types.UUID("4321"),
 			CreatedAt: &ckeClusterTime,
