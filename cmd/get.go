@@ -8,8 +8,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
-	apitypes "github.com/containership/csctl/cloud/api/types"
-	provisiontypes "github.com/containership/csctl/cloud/provision/types"
 	"github.com/containership/csctl/resource"
 )
 
@@ -62,210 +60,18 @@ func getMyAccountID() (string, error) {
 
 // getCmd represents the get command
 var getCmd = &cobra.Command{
-	Use:   "get <resource>",
+	Use:   "get",
 	Short: "Get a resource",
 	Long: `Get a resource
 
 TODO this is a long description`,
 
-	Args: cobra.RangeArgs(1, 2),
-
-	Run: func(cmd *cobra.Command, args []string) {
-		resourceName := args[0]
-		switch {
-		case resource.Organization().HasAlias(resourceName):
-			var resp = make([]apitypes.Organization, 1)
-			var err error
-			if len(args) == 2 {
-				var v *apitypes.Organization
-				v, err = clientset.API().Organizations().Get(args[1])
-				resp[0] = *v
-			} else {
-				resp, err = clientset.API().Organizations().List()
-			}
-
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-
-			orgs := resource.NewOrganizations(resp)
-
-			if mineOnly {
-				me, err := getMyAccountID()
-				if err != nil {
-					fmt.Println(err)
-					return
-				}
-
-				orgs.FilterByOwnerID(me)
-			}
-
-			outputResponse(orgs)
-
-		case resource.CKECluster().HasAlias(resourceName):
-			if organizationID == "" {
-				fmt.Println("organization is required")
-				return
-			}
-
-			var resp = make([]provisiontypes.CKECluster, 1)
-			var err error
-			if len(args) == 2 {
-				var v *provisiontypes.CKECluster
-				v, err = clientset.Provision().CKEClusters(organizationID).Get(args[1])
-				resp[0] = *v
-			} else {
-				resp, err = clientset.Provision().CKEClusters(organizationID).List()
-			}
-
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-
-			clusters := resource.NewCKEClusters(resp)
-
-			if mineOnly {
-				me, err := getMyAccountID()
-				if err != nil {
-					fmt.Println(err)
-					return
-				}
-
-				clusters.FilterByOwnerID(me)
-			}
-
-			outputResponse(clusters)
-
-		case resource.Account().HasAlias(resourceName):
-			// A user can only get their own account
-			var resp = make([]apitypes.Account, 1)
-			v, err := clientset.API().Account().Get()
-			resp[0] = *v
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-
-			accounts := resource.NewAccounts(resp)
-			outputResponse(accounts)
-
-		case resource.NodePool().HasAlias(resourceName):
-			if organizationID == "" || clusterID == "" {
-				fmt.Println("organization and cluster are required")
-				return
-			}
-
-			var resp = make([]provisiontypes.NodePool, 1)
-			var err error
-			if len(args) == 2 {
-				var v *provisiontypes.NodePool
-				v, err = clientset.Provision().NodePools(organizationID, clusterID).Get(args[1])
-				resp[0] = *v
-			} else {
-				resp, err = clientset.Provision().NodePools(organizationID, clusterID).List()
-			}
-
-			if err != nil {
-				fmt.Println(err)
-			}
-
-			nps := resource.NewNodePools(resp)
-			outputResponse(nps)
-
-		case resource.Plugin().HasAlias(resourceName):
-			if organizationID == "" || clusterID == "" {
-				fmt.Println("organization and cluster are required")
-				return
-			}
-
-			var resp = make([]apitypes.Plugin, 1)
-			var err error
-			if len(args) == 2 {
-				var v *apitypes.Plugin
-				v, err = clientset.API().Plugins(organizationID, clusterID).Get(args[1])
-				resp[0] = *v
-			} else {
-				resp, err = clientset.API().Plugins(organizationID, clusterID).List()
-			}
-
-			if err != nil {
-				fmt.Println(err)
-			}
-
-			plugs := resource.NewPlugins(resp)
-			outputResponse(plugs)
-
-		case resource.Template().HasAlias(resourceName):
-			if organizationID == "" {
-				fmt.Println("organization is required")
-				return
-			}
-
-			var resp = make([]provisiontypes.Template, 1)
-			var err error
-			if len(args) == 2 {
-				var v *provisiontypes.Template
-				v, err = clientset.Provision().Templates(organizationID).Get(args[1])
-				resp[0] = *v
-			} else {
-				resp, err = clientset.Provision().Templates(organizationID).List()
-			}
-
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-
-			templates := resource.NewTemplates(resp)
-
-			if mineOnly {
-				me, err := getMyAccountID()
-				if err != nil {
-					fmt.Println(err)
-					return
-				}
-
-				templates.FilterByOwnerID(me)
-			}
-
-			outputResponse(templates)
-
-		case resource.Provider().HasAlias(resourceName):
-			if organizationID == "" {
-				fmt.Println("organization is required")
-				return
-			}
-
-			var resp = make([]apitypes.Provider, 1)
-			var err error
-			if len(args) == 2 {
-				var v *apitypes.Provider
-				v, err = clientset.API().Providers(organizationID).Get(args[1])
-				resp[0] = *v
-			} else {
-				resp, err = clientset.API().Providers(organizationID).List()
-			}
-
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-
-			providers := resource.NewProviders(resp)
-
-			outputResponse(providers)
-
-		default:
-			fmt.Printf("Error: invalid resource name specified: %q\n", resourceName)
-		}
-	},
+	Args: cobra.NoArgs,
 }
 
 func init() {
 	rootCmd.AddCommand(getCmd)
 
-	getCmd.Flags().StringVarP(&outputFormat, "output", "o", "", "output format")
-	getCmd.Flags().BoolVarP(&mineOnly, "mine", "m", false, "only list resources your user owns")
+	getCmd.PersistentFlags().StringVarP(&outputFormat, "output", "o", "", "output format")
+	getCmd.PersistentFlags().BoolVarP(&mineOnly, "mine", "m", false, "only list resources your user owns")
 }

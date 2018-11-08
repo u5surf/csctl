@@ -19,7 +19,7 @@ var createTemplateCmd = &cobra.Command{
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		organizationID = viper.GetString("organization")
 		if organizationID == "" {
-			return errors.New("Please specify an organization via --organization or config file")
+			return errors.New("please specify an organization via --organization or config file")
 		}
 
 		return nil
@@ -29,8 +29,7 @@ var createTemplateCmd = &cobra.Command{
 func init() {
 	createCmd.AddCommand(createTemplateCmd)
 
-	createTemplateCmd.PersistentFlags().StringVar(&organizationID, "organization", "", "organization to use")
-	viper.BindPFlag("organization", createTemplateCmd.PersistentFlags().Lookup("organization"))
+	bindCommandToOrganizationScope(createTemplateCmd, true)
 
 	// No defaulting is performed here because the logic in many cases is nontrivial,
 	// and we'd like to be consistent with where and how we default.

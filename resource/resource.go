@@ -5,6 +5,7 @@ type resourceInterface interface {
 
 	Name() string
 	Plural() string
+	Aliases() []string
 	HasAlias(name string) bool
 }
 
@@ -22,6 +23,10 @@ func (r *resource) Name() string {
 
 func (r *resource) Plural() string {
 	return r.plural
+}
+
+func (r *resource) Aliases() []string {
+	return append(r.aliases, r.name, r.plural)
 }
 
 func (r *resource) HasAlias(name string) bool {

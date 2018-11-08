@@ -8,6 +8,7 @@ import (
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 
 	"github.com/containership/csctl/cloud"
@@ -28,6 +29,54 @@ var (
 	clientset *cloud.Clientset
 )
 
+func orgScopedPreRunE(cmd *cobra.Command, args []string) error {
+	organizationID = viper.GetString("organization")
+	if organizationID == "" {
+		return errors.New("please specify an organization via --organization or config file")
+	}
+
+	return nil
+}
+
+func clusterScopedPreRunE(cmd *cobra.Command, args []string) error {
+	if err := orgScopedPreRunE(cmd, args); err != nil {
+		return err
+	}
+
+	clusterID = viper.GetString("cluster")
+	if clusterID == "" {
+		return errors.New("please specify a cluster via --cluster or config file")
+	}
+
+	return nil
+}
+
+func bindCommandToOrganizationScope(cmd *cobra.Command, persistent bool) {
+	var flagset *pflag.FlagSet
+	if persistent {
+		flagset = cmd.PersistentFlags()
+	} else {
+		flagset = cmd.Flags()
+	}
+
+	flagset.StringVar(&organizationID, "organization", "", "organization to use")
+	viper.BindPFlag("organization", flagset.Lookup("organization"))
+}
+
+func bindCommandToClusterScope(cmd *cobra.Command, persistent bool) {
+	bindCommandToOrganizationScope(cmd, persistent)
+
+	var flagset *pflag.FlagSet
+	if persistent {
+		flagset = cmd.PersistentFlags()
+	} else {
+		flagset = cmd.Flags()
+	}
+
+	flagset.StringVar(&clusterID, "cluster", "", "cluster to use")
+	viper.BindPFlag("cluster", flagset.Lookup("cluster"))
+}
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "csctl",
@@ -35,16 +84,13 @@ var rootCmd = &cobra.Command{
 	Long: `TODO
 
 This is a long description`,
+	SilenceUsage: true,
 
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		userToken = viper.GetString("token")
 		if userToken == "" {
 			return errors.New("please specify a token in your config file")
 		}
-
-		// Subcommands are responsible for deciding if these flags are needed or not
-		// TODO consider scoping flags like this better
-		clusterID = viper.GetString("cluster")
 
 		var err error
 		clientset, err = cloud.New(&cloud.Config{
@@ -59,7 +105,6 @@ This is a long description`,
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
 		os.Exit(1)
 	}
 }
@@ -71,9 +116,6 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is ~/.containership/csctl.yaml)")
-
-	rootCmd.PersistentFlags().StringVar(&clusterID, "cluster", "", "cluster to use")
-	viper.BindPFlag("cluster", rootCmd.PersistentFlags().Lookup("cluster"))
 
 	// Defaults
 	viper.SetDefault("apiBaseURL", "https://api.containership.io")
