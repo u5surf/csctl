@@ -6,6 +6,7 @@ import (
 	"path"
 
 	homedir "github.com/mitchellh/go-homedir"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -35,21 +36,22 @@ var rootCmd = &cobra.Command{
 
 This is a long description`,
 
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		userToken = viper.GetString("token")
 		if userToken == "" {
-			// TODO better error handling (but also: just implement auth!)
-			panic("please specify a token in your config file")
+			return errors.New("please specify a token in your config file")
 		}
 
 		// Subcommands are responsible for deciding if these flags are needed or not
 		// TODO consider scoping flags like this better
-		organizationID = viper.GetString("organization")
 		clusterID = viper.GetString("cluster")
 
-		clientset, _ = cloud.New(&cloud.Config{
+		var err error
+		clientset, err = cloud.New(&cloud.Config{
 			Token: userToken,
 		})
+
+		return err
 	},
 }
 
@@ -69,9 +71,6 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is ~/.containership/csctl.yaml)")
-
-	rootCmd.PersistentFlags().StringVar(&organizationID, "organization", "", "organization to use")
-	viper.BindPFlag("organization", rootCmd.PersistentFlags().Lookup("organization"))
 
 	rootCmd.PersistentFlags().StringVar(&clusterID, "cluster", "", "cluster to use")
 	viper.BindPFlag("cluster", rootCmd.PersistentFlags().Lookup("cluster"))

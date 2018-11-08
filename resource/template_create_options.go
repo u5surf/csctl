@@ -8,9 +8,6 @@ import (
 )
 
 type TemplateCreateOptions struct {
-	// Required
-	ProviderName string
-
 	// Defaultable
 	MasterCount int32
 	WorkerCount int32
@@ -43,10 +40,6 @@ type templateCreateOptionsInterface interface {
 */
 
 func (o *TemplateCreateOptions) DefaultAndValidate() error {
-	if err := o.validateProviderName(); err != nil {
-		return err
-	}
-
 	if err := o.defaultAndValidateMasterCount(); err != nil {
 		return errors.Wrap(err, "master count")
 	}
@@ -108,20 +101,6 @@ func (o *TemplateCreateOptions) NodePoolVariableMap() types.TemplateVariableMap 
 			},
 		},
 	}
-}
-
-func (o *TemplateCreateOptions) validateProviderName() error {
-	switch o.ProviderName {
-	case "digitalocean":
-		// This is valid for user input since DO is technically one word,
-		// but cloud expects an underscore
-		o.ProviderName = "digital_ocean"
-	case "digital_ocean", "google", "amazon_web_services", "azure", "packet":
-		break
-	case "":
-		return errors.Errorf("provider name is required")
-	}
-	return nil
 }
 
 func (o *TemplateCreateOptions) defaultAndValidateMasterCount() error {

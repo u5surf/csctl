@@ -15,6 +15,8 @@ type DigitalOceanTemplateCreateOptions struct {
 	InstanceSize string
 
 	// Not user-settable; always defaulted
+	providerName string
+
 	backups           bool
 	monitoring        bool
 	privateNetworking bool
@@ -40,12 +42,14 @@ func (o *DigitalOceanTemplateCreateOptions) DefaultAndValidate() error {
 	o.monitoring = false
 	o.privateNetworking = true
 
+	o.providerName = "digital_ocean"
+
 	return nil
 }
 
 func (o *DigitalOceanTemplateCreateOptions) Template() types.Template {
 	return types.Template{
-		ProviderName: &o.ProviderName,
+		ProviderName: &o.providerName,
 		Description:  &o.Description,
 		Engine:       &o.engine,
 
