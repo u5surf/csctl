@@ -8,9 +8,10 @@ import (
 
 	"github.com/containership/csctl/cloud/provision/types"
 	"github.com/containership/csctl/resource"
+	"github.com/containership/csctl/resource/options"
 )
 
-var doCreateTemplateOpts resource.DigitalOceanTemplateCreateOptions
+var doCreateTemplateOpts options.DigitalOceanTemplateCreate
 
 // createTemplateDigitalOceanCmd represents the createTemplateDigitalOcean command
 var createTemplateDigitalOceanCmd = &cobra.Command{
@@ -21,7 +22,7 @@ var createTemplateDigitalOceanCmd = &cobra.Command{
 	PreRunE: orgScopedPreRunE,
 
 	RunE: func(cmd *cobra.Command, args []string) error {
-		doCreateTemplateOpts.TemplateCreateOptions = createTemplateOpts
+		doCreateTemplateOpts.TemplateCreate = createTemplateOpts
 
 		if err := doCreateTemplateOpts.DefaultAndValidate(); err != nil {
 			return errors.Wrap(err, "validating options")

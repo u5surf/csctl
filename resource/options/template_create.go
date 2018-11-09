@@ -1,4 +1,4 @@
-package resource
+package options
 
 import (
 	"github.com/Masterminds/semver"
@@ -7,8 +7,8 @@ import (
 	"github.com/containership/csctl/cloud/provision/types"
 )
 
-// TemplateCreateOptions is the set of options required to create a template
-type TemplateCreateOptions struct {
+// TemplateCreate is the set of options required to create a template
+type TemplateCreate struct {
 	// Defaultable
 	MasterCount int32
 	WorkerCount int32
@@ -34,7 +34,7 @@ type TemplateCreateOptions struct {
 }
 
 // DefaultAndValidate defaults and validates all options
-func (o *TemplateCreateOptions) DefaultAndValidate() error {
+func (o *TemplateCreate) DefaultAndValidate() error {
 	if err := o.defaultAndValidateMasterCount(); err != nil {
 		return errors.Wrap(err, "master count")
 	}
@@ -73,7 +73,7 @@ func (o *TemplateCreateOptions) DefaultAndValidate() error {
 }
 
 // NodePoolVariableMap constructs the variable block for these options
-func (o *TemplateCreateOptions) NodePoolVariableMap() types.TemplateVariableMap {
+func (o *TemplateCreate) NodePoolVariableMap() types.TemplateVariableMap {
 	return types.TemplateVariableMap{
 		o.MasterNodePoolName: types.TemplateVariableDefault{
 			Default: &types.TemplateNodePool{
@@ -99,7 +99,7 @@ func (o *TemplateCreateOptions) NodePoolVariableMap() types.TemplateVariableMap 
 	}
 }
 
-func (o *TemplateCreateOptions) defaultAndValidateMasterCount() error {
+func (o *TemplateCreate) defaultAndValidateMasterCount() error {
 	if o.MasterCount == 0 {
 		o.MasterCount = 1
 		return nil
@@ -110,7 +110,7 @@ func (o *TemplateCreateOptions) defaultAndValidateMasterCount() error {
 	return nil
 }
 
-func (o *TemplateCreateOptions) defaultAndValidateWorkerCount() error {
+func (o *TemplateCreate) defaultAndValidateWorkerCount() error {
 	if o.WorkerCount == 0 {
 		o.WorkerCount = 1
 		return nil
@@ -121,21 +121,21 @@ func (o *TemplateCreateOptions) defaultAndValidateWorkerCount() error {
 	return nil
 }
 
-func (o *TemplateCreateOptions) defaultAndValidateMasterNodePoolName() error {
+func (o *TemplateCreate) defaultAndValidateMasterNodePoolName() error {
 	if o.MasterNodePoolName == "" {
 		o.MasterNodePoolName = "master-pool-0"
 	}
 	return nil
 }
 
-func (o *TemplateCreateOptions) defaultAndValidateWorkerNodePoolName() error {
+func (o *TemplateCreate) defaultAndValidateWorkerNodePoolName() error {
 	if o.WorkerNodePoolName == "" {
 		o.WorkerNodePoolName = "worker-pool-0"
 	}
 	return nil
 }
 
-func (o *TemplateCreateOptions) defaultAndValidateKubernetesVersions() error {
+func (o *TemplateCreate) defaultAndValidateKubernetesVersions() error {
 	if o.MasterKubernetesVersion == "" {
 		o.MasterKubernetesVersion = "1.12.1"
 	}
@@ -161,7 +161,7 @@ func (o *TemplateCreateOptions) defaultAndValidateKubernetesVersions() error {
 	return nil
 }
 
-func (o *TemplateCreateOptions) defaultAndValidateDescription() error {
+func (o *TemplateCreate) defaultAndValidateDescription() error {
 	if o.Description == "" {
 		o.Description = "none"
 	}

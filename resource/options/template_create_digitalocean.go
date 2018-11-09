@@ -1,4 +1,4 @@
-package resource
+package options
 
 import (
 	"github.com/pkg/errors"
@@ -6,10 +6,10 @@ import (
 	"github.com/containership/csctl/cloud/provision/types"
 )
 
-// DigitalOceanTemplateCreateOptions is the set of options required
+// DigitalOceanTemplateCreate is the set of options required
 // to create a DigitalOcean template
-type DigitalOceanTemplateCreateOptions struct {
-	TemplateCreateOptions
+type DigitalOceanTemplateCreate struct {
+	TemplateCreate
 
 	// Defaultable
 	Image        string
@@ -25,8 +25,8 @@ type DigitalOceanTemplateCreateOptions struct {
 }
 
 // DefaultAndValidate defaults and validates all options
-func (o *DigitalOceanTemplateCreateOptions) DefaultAndValidate() error {
-	if err := o.TemplateCreateOptions.DefaultAndValidate(); err != nil {
+func (o *DigitalOceanTemplateCreate) DefaultAndValidate() error {
+	if err := o.TemplateCreate.DefaultAndValidate(); err != nil {
 		return errors.Wrap(err, "validating generic create options")
 	}
 	if err := o.defaultAndValidateImage(); err != nil {
@@ -51,7 +51,7 @@ func (o *DigitalOceanTemplateCreateOptions) DefaultAndValidate() error {
 }
 
 // Template constructs a full template from these options
-func (o *DigitalOceanTemplateCreateOptions) Template() types.Template {
+func (o *DigitalOceanTemplateCreate) Template() types.Template {
 	return types.Template{
 		ProviderName: &o.providerName,
 		Description:  &o.Description,
@@ -71,7 +71,7 @@ func (o *DigitalOceanTemplateCreateOptions) Template() types.Template {
 	}
 }
 
-func (o *DigitalOceanTemplateCreateOptions) digitalOceanDropletConfiguration() types.DigitalOceanDropletConfiguration {
+func (o *DigitalOceanTemplateCreate) digitalOceanDropletConfiguration() types.DigitalOceanDropletConfiguration {
 	return types.DigitalOceanDropletConfiguration{
 		Image:  &o.Image,
 		Region: &o.Region,
@@ -83,7 +83,7 @@ func (o *DigitalOceanTemplateCreateOptions) digitalOceanDropletConfiguration() t
 	}
 }
 
-func (o *DigitalOceanTemplateCreateOptions) defaultAndValidateImage() error {
+func (o *DigitalOceanTemplateCreate) defaultAndValidateImage() error {
 	if o.Image == "" {
 		o.Image = "ubuntu-16-04-x64"
 	}
@@ -91,7 +91,7 @@ func (o *DigitalOceanTemplateCreateOptions) defaultAndValidateImage() error {
 	return nil
 }
 
-func (o *DigitalOceanTemplateCreateOptions) defaultAndValidateRegion() error {
+func (o *DigitalOceanTemplateCreate) defaultAndValidateRegion() error {
 	if o.Region == "" {
 		o.Region = "nyc1"
 	}
@@ -99,7 +99,7 @@ func (o *DigitalOceanTemplateCreateOptions) defaultAndValidateRegion() error {
 	return nil
 }
 
-func (o *DigitalOceanTemplateCreateOptions) defaultAndValidateInstanceSize() error {
+func (o *DigitalOceanTemplateCreate) defaultAndValidateInstanceSize() error {
 	if o.InstanceSize == "" {
 		o.InstanceSize = "s-1vcpu-2gb"
 	}

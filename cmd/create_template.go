@@ -3,10 +3,10 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/containership/csctl/resource"
+	"github.com/containership/csctl/resource/options"
 )
 
-var createTemplateOpts resource.TemplateCreateOptions
+var createTemplateOpts options.TemplateCreate
 
 // createTemplateCmd represents the createTemplate command
 var createTemplateCmd = &cobra.Command{
