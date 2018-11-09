@@ -15,9 +15,10 @@ var doCreateTemplateOpts options.DigitalOceanTemplateCreate
 
 // createTemplateDigitalOceanCmd represents the createTemplateDigitalOcean command
 var createTemplateDigitalOceanCmd = &cobra.Command{
-	Use:   "digitalocean",
-	Short: "Create a DigitalOcean template",
-	Args:  cobra.NoArgs,
+	Use:     "digitalocean",
+	Short:   "Create a DigitalOcean template",
+	Args:    cobra.NoArgs,
+	Aliases: []string{"do"},
 
 	PreRunE: orgScopedPreRunE,
 
