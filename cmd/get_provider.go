@@ -9,11 +9,8 @@ import (
 
 // getProviderCmd represents the getProvider command
 var getProviderCmd = &cobra.Command{
-	Use:   "provider",
-	Short: "Get a provider or list of providers",
-	Long: `TODO
-
-This is a long description`,
+	Use:     "provider",
+	Short:   "Get a provider or list of providers",
 	Aliases: resource.Provider().Aliases(),
 
 	PreRunE: orgScopedPreRunE,

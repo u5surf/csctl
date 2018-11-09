@@ -8,10 +8,6 @@ import (
 var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a resource",
-	Long: `Create a resource
-
-TODO this is a long description`,
-	Args: cobra.NoArgs,
 }
 
 func init() {

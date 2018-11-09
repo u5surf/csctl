@@ -62,11 +62,6 @@ func getMyAccountID() (string, error) {
 var getCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Get a resource",
-	Long: `Get a resource
-
-TODO this is a long description`,
-
-	Args: cobra.NoArgs,
 }
 
 func init() {

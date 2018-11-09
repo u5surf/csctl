@@ -8,9 +8,6 @@ import (
 var deleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Delete a resource",
-	Long: `Delete a resource
-
-TODO this is a long description`,
 }
 
 func init() {

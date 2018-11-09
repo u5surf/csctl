@@ -9,11 +9,8 @@ import (
 
 // getNodePoolCmd represents the getNodePool command
 var getNodePoolCmd = &cobra.Command{
-	Use:   "nodepool",
-	Short: "Get a node pool or list of node pools",
-	Long: `TODO
-
-This is a long description`,
+	Use:     "nodepool",
+	Short:   "Get a node pool or list of node pools",
 	Aliases: resource.NodePool().Aliases(),
 
 	PreRunE: clusterScopedPreRunE,
