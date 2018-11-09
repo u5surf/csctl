@@ -20,7 +20,7 @@ func NewOrganizations(items []types.Organization) *Organizations {
 	return &Organizations{
 		resource: resource{
 			name:    "organization",
-			plural:  "Organizations",
+			plural:  "organizations",
 			aliases: []string{"org", "orgs"},
 		},
 		items: items,

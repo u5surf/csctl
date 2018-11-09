@@ -20,7 +20,7 @@ func NewPlugins(items []types.Plugin) *Plugins {
 	return &Plugins{
 		resource: resource{
 			name:    "plugin",
-			plural:  "Plugins",
+			plural:  "plugins",
 			aliases: []string{"plug", "plugs", "plgn", "plgns"},
 		},
 		items: items,

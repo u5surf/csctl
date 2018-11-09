@@ -26,23 +26,9 @@ func (r *resource) Plural() string {
 }
 
 func (r *resource) Aliases() []string {
-	return append(r.aliases, r.name, r.plural)
-}
-
-func (r *resource) HasAlias(name string) bool {
-	if name == r.name {
-		return true
+	if r.plural != "" {
+		return append(r.aliases, r.plural)
 	}
 
-	if r.plural != "" && name == r.plural {
-		return true
-	}
-
-	for _, a := range r.aliases {
-		if name == a {
-			return true
-		}
-	}
-
-	return false
+	return r.aliases
 }
