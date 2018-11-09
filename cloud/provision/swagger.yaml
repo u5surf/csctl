@@ -88,6 +88,27 @@ paths:
           schema:
             $ref: "#/definitions/Error"
 
+  /organizations/{organization_id}/templates:
+    post:
+      summary: Create a template
+      operationId: createTemplate
+      tags:
+        - template
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: A list of provisioning templates
+          schema:
+            $ref: "#/definitions/CreateTemplateRequest"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
   /organizations/{organization_id}/templates/{template_id}:
     get:
       summary: Get a provisioning template
@@ -293,9 +314,38 @@ definitions:
       message:
         type: string
 
+  CreateTemplateRequest:
+    type: object
+    required:
+      - engine
+      - description
+      - provider_name
+      - configuration
+    properties:
+      engine:
+        title: Engine to use for provisioning (deprecated - always containership_kubernetes_engine)
+        type: string
+        enum: [containership_kubernetes_engine]
+      description:
+        title: Description of this template
+        type: string
+        minLength: 1
+      provider_name:
+        title: Cloud provider name
+        type: string
+        enum: [digital_ocean, azure, google, amazon_web_services, packet]
+      configuration:
+        title: Template configuration
+        $ref: '#/definitions/TemplateConfiguration'
+
   Template:
     type: object
     required:
+      - created_at
+      - updated_at
+      - id
+      - organization_id
+      - owner_id
       - engine
       - description
       - provider_name

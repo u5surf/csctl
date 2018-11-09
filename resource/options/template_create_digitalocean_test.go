@@ -25,8 +25,8 @@ func TestDOTemplate(t *testing.T) {
 	err := opts.DefaultAndValidate()
 	assert.Nil(t, err)
 
-	tmpl := opts.Template()
-	assert.Nil(t, tmpl.Validate(nil), "valid template created")
+	req := opts.CreateTemplateRequest()
+	assert.Nil(t, req.Validate(nil), "valid request created")
 }
 
 func TestDefaultAndValidateImage(t *testing.T) {

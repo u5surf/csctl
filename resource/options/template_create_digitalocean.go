@@ -50,9 +50,9 @@ func (o *DigitalOceanTemplateCreate) DefaultAndValidate() error {
 	return nil
 }
 
-// Template constructs a full template from these options
-func (o *DigitalOceanTemplateCreate) Template() types.Template {
-	return types.Template{
+// CreateTemplateRequest constructs a CreateTemplateRequest from these options
+func (o *DigitalOceanTemplateCreate) CreateTemplateRequest() types.CreateTemplateRequest {
+	return types.CreateTemplateRequest{
 		ProviderName: &o.providerName,
 		Description:  &o.Description,
 		Engine:       &o.engine,

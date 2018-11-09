@@ -24,7 +24,8 @@ type Template struct {
 	Configuration *TemplateConfiguration `json:"configuration"`
 
 	// Timestamp at which the cluster was created
-	CreatedAt string `json:"created_at,omitempty"`
+	// Required: true
+	CreatedAt *string `json:"created_at"`
 
 	// Description of this template
 	// Required: true
@@ -36,13 +37,16 @@ type Template struct {
 	Engine *string `json:"engine"`
 
 	// Cluster ID
-	ID UUID `json:"id,omitempty"`
+	// Required: true
+	ID UUID `json:"id"`
 
 	// Organization ID of the organization the cluster belongs to
-	OrganizationID UUID `json:"organization_id,omitempty"`
+	// Required: true
+	OrganizationID UUID `json:"organization_id"`
 
 	// Account ID of the cluster owner
-	OwnerID UUID `json:"owner_id,omitempty"`
+	// Required: true
+	OwnerID UUID `json:"owner_id"`
 
 	// Cloud provider name
 	// Required: true
@@ -50,7 +54,8 @@ type Template struct {
 	ProviderName *string `json:"provider_name"`
 
 	// Timestamp at which the cluster was updated
-	UpdatedAt string `json:"updated_at,omitempty"`
+	// Required: true
+	UpdatedAt *string `json:"updated_at"`
 }
 
 // Validate validates this template
@@ -58,6 +63,10 @@ func (m *Template) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateConfiguration(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCreatedAt(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -85,6 +94,10 @@ func (m *Template) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateUpdatedAt(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -104,6 +117,15 @@ func (m *Template) validateConfiguration(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Template) validateCreatedAt(formats strfmt.Registry) error {
+
+	if err := validate.Required("created_at", "body", m.CreatedAt); err != nil {
+		return err
 	}
 
 	return nil
@@ -160,10 +182,6 @@ func (m *Template) validateEngine(formats strfmt.Registry) error {
 
 func (m *Template) validateID(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.ID) { // not required
-		return nil
-	}
-
 	if err := m.ID.Validate(formats); err != nil {
 		if ve, ok := err.(*errors.Validation); ok {
 			return ve.ValidateName("id")
@@ -176,10 +194,6 @@ func (m *Template) validateID(formats strfmt.Registry) error {
 
 func (m *Template) validateOrganizationID(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.OrganizationID) { // not required
-		return nil
-	}
-
 	if err := m.OrganizationID.Validate(formats); err != nil {
 		if ve, ok := err.(*errors.Validation); ok {
 			return ve.ValidateName("organization_id")
@@ -191,10 +205,6 @@ func (m *Template) validateOrganizationID(formats strfmt.Registry) error {
 }
 
 func (m *Template) validateOwnerID(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.OwnerID) { // not required
-		return nil
-	}
 
 	if err := m.OwnerID.Validate(formats); err != nil {
 		if ve, ok := err.(*errors.Validation); ok {
@@ -252,6 +262,15 @@ func (m *Template) validateProviderName(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateProviderNameEnum("provider_name", "body", *m.ProviderName); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Template) validateUpdatedAt(formats strfmt.Registry) error {
+
+	if err := validate.Required("updated_at", "body", m.UpdatedAt); err != nil {
 		return err
 	}
 

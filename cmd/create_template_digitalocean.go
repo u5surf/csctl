@@ -29,15 +29,15 @@ var createTemplateDigitalOceanCmd = &cobra.Command{
 			return errors.Wrap(err, "validating options")
 		}
 
-		t := doCreateTemplateOpts.Template()
+		req := doCreateTemplateOpts.CreateTemplateRequest()
 
-		newTemplate, err := clientset.Provision().Templates(organizationID).Create(&t)
+		template, err := clientset.Provision().Templates(organizationID).Create(&req)
 		if err != nil {
 			return err
 		}
 
-		templates := resource.NewTemplates([]types.Template{*newTemplate})
-		return templates.Table(os.Stdout)
+		t := resource.NewTemplates([]types.Template{*template})
+		return t.Table(os.Stdout)
 	},
 }
 
