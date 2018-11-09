@@ -6,6 +6,8 @@ import (
 	"github.com/containership/csctl/cloud/provision/types"
 )
 
+// DigitalOceanTemplateCreateOptions is the set of options required
+// to create a DigitalOcean template
 type DigitalOceanTemplateCreateOptions struct {
 	TemplateCreateOptions
 
@@ -22,6 +24,7 @@ type DigitalOceanTemplateCreateOptions struct {
 	privateNetworking bool
 }
 
+// DefaultAndValidate defaults and validates all options
 func (o *DigitalOceanTemplateCreateOptions) DefaultAndValidate() error {
 	if err := o.TemplateCreateOptions.DefaultAndValidate(); err != nil {
 		return errors.Wrap(err, "validating generic create options")
@@ -47,6 +50,7 @@ func (o *DigitalOceanTemplateCreateOptions) DefaultAndValidate() error {
 	return nil
 }
 
+// Template constructs a full template from these options
 func (o *DigitalOceanTemplateCreateOptions) Template() types.Template {
 	return types.Template{
 		ProviderName: &o.providerName,
@@ -57,8 +61,8 @@ func (o *DigitalOceanTemplateCreateOptions) Template() types.Template {
 			Resource: &types.TemplateResource{
 				DigitaloceanDroplet: types.DigitalOceanDropletMap{
 					// TODO master and worker different
-					o.MasterNodePoolName: o.DigitalOceanDropletConfiguration(),
-					o.WorkerNodePoolName: o.DigitalOceanDropletConfiguration(),
+					o.MasterNodePoolName: o.digitalOceanDropletConfiguration(),
+					o.WorkerNodePoolName: o.digitalOceanDropletConfiguration(),
 				},
 			},
 
@@ -67,7 +71,7 @@ func (o *DigitalOceanTemplateCreateOptions) Template() types.Template {
 	}
 }
 
-func (o *DigitalOceanTemplateCreateOptions) DigitalOceanDropletConfiguration() types.DigitalOceanDropletConfiguration {
+func (o *DigitalOceanTemplateCreateOptions) digitalOceanDropletConfiguration() types.DigitalOceanDropletConfiguration {
 	return types.DigitalOceanDropletConfiguration{
 		Image:  &o.Image,
 		Region: &o.Region,

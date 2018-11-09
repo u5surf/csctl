@@ -7,6 +7,7 @@ import (
 	"github.com/containership/csctl/cloud/provision/types"
 )
 
+// TemplateCreateOptions is the set of options required to create a template
 type TemplateCreateOptions struct {
 	// Defaultable
 	MasterCount int32
@@ -32,13 +33,7 @@ type TemplateCreateOptions struct {
 	masterSchedulable bool
 }
 
-/*
-type templateCreateOptionsInterface interface {
-	DefaultAndValidate() error
-	NodePoolVariableMap() types.TemplateVariableMap
-}
-*/
-
+// DefaultAndValidate defaults and validates all options
 func (o *TemplateCreateOptions) DefaultAndValidate() error {
 	if err := o.defaultAndValidateMasterCount(); err != nil {
 		return errors.Wrap(err, "master count")
@@ -77,6 +72,7 @@ func (o *TemplateCreateOptions) DefaultAndValidate() error {
 	return nil
 }
 
+// NodePoolVariableMap constructs the variable block for these options
 func (o *TemplateCreateOptions) NodePoolVariableMap() types.TemplateVariableMap {
 	return types.TemplateVariableMap{
 		o.MasterNodePoolName: types.TemplateVariableDefault{
