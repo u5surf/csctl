@@ -13,14 +13,16 @@ var getTemplateCmd = &cobra.Command{
 	Short:   "Get a template or list of templates",
 	Aliases: resource.Template().Aliases(),
 
+	Args: cobra.MaximumNArgs(1),
+
 	PreRunE: orgScopedPreRunE,
 
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var resp = make([]types.Template, 1)
 		var err error
-		if len(args) == 2 {
+		if len(args) == 1 {
 			var v *types.Template
-			v, err = clientset.Provision().Templates(organizationID).Get(args[1])
+			v, err = clientset.Provision().Templates(organizationID).Get(args[0])
 			resp[0] = *v
 		} else {
 			resp, err = clientset.Provision().Templates(organizationID).List()

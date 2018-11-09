@@ -13,14 +13,16 @@ var getClusterCmd = &cobra.Command{
 	Short:   "Get a cluster or list of clusters",
 	Aliases: resource.CKECluster().Aliases(),
 
+	Args: cobra.MaximumNArgs(1),
+
 	PreRunE: orgScopedPreRunE,
 
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var resp = make([]provisiontypes.CKECluster, 1)
 		var err error
-		if len(args) == 2 {
+		if len(args) == 1 {
 			var v *provisiontypes.CKECluster
-			v, err = clientset.Provision().CKEClusters(organizationID).Get(args[1])
+			v, err = clientset.Provision().CKEClusters(organizationID).Get(args[0])
 			resp[0] = *v
 		} else {
 			resp, err = clientset.Provision().CKEClusters(organizationID).List()
