@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 
 	"github.com/containership/csctl/resource"
 )
@@ -14,22 +12,15 @@ var createTemplateOpts resource.TemplateCreateOptions
 var createTemplateCmd = &cobra.Command{
 	Use:   "template",
 	Short: "Create a cluster template for provisioning",
-	Args:  cobra.NoArgs,
 
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		organizationID = viper.GetString("organization")
-		if organizationID == "" {
-			return errors.New("please specify an organization via --organization or config file")
-		}
-
-		return nil
-	},
+	// TODO using PersistentPreRunE here to org-scope all create template
+	// subcommands would be nice, but it won't work currently because the
+	// root command is already using it and this cobra issue is open:
+	// https://github.com/spf13/cobra/issues/252
 }
 
 func init() {
 	createCmd.AddCommand(createTemplateCmd)
-
-	bindCommandToOrganizationScope(createTemplateCmd, true)
 
 	// No defaulting is performed here because the logic in many cases is nontrivial,
 	// and we'd like to be consistent with where and how we default.

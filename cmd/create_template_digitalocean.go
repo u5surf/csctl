@@ -18,6 +18,8 @@ var createTemplateDigitalOceanCmd = &cobra.Command{
 	Short: "Create a DigitalOcean template",
 	Args:  cobra.NoArgs,
 
+	PreRunE: orgScopedPreRunE,
+
 	RunE: func(cmd *cobra.Command, args []string) error {
 		doCreateTemplateOpts.TemplateCreateOptions = createTemplateOpts
 
@@ -39,6 +41,8 @@ var createTemplateDigitalOceanCmd = &cobra.Command{
 
 func init() {
 	createTemplateCmd.AddCommand(createTemplateDigitalOceanCmd)
+
+	bindCommandToOrganizationScope(createTemplateDigitalOceanCmd, false)
 
 	createTemplateDigitalOceanCmd.Flags().StringVar(&doCreateTemplateOpts.Image, "image", "", "droplet image")
 	createTemplateDigitalOceanCmd.Flags().StringVar(&doCreateTemplateOpts.Region, "region", "", "region")
