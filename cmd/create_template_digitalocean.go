@@ -1,10 +1,12 @@
 package cmd
 
 import (
-	"fmt"
+	"os"
 
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
+	"github.com/containership/csctl/cloud/provision/types"
 	"github.com/containership/csctl/resource"
 )
 
@@ -14,31 +16,24 @@ var doCreateTemplateOpts resource.DigitalOceanTemplateCreateOptions
 var createTemplateDigitalOceanCmd = &cobra.Command{
 	Use:   "digitalocean",
 	Short: "Create a DigitalOcean template",
-	Long: `TODO
+	Args:  cobra.NoArgs,
 
-TODO this is a long description`,
-	Args: cobra.NoArgs,
-
-	Run: func(cmd *cobra.Command, args []string) {
-		// TODO how to avoid setting parent field?
+	RunE: func(cmd *cobra.Command, args []string) error {
 		doCreateTemplateOpts.TemplateCreateOptions = createTemplateOpts
 
 		if err := doCreateTemplateOpts.DefaultAndValidate(); err != nil {
-
-			fmt.Printf("Error validating options: %s\n", err)
-			return
+			return errors.Wrap(err, "validating options")
 		}
 
 		t := doCreateTemplateOpts.Template()
 
-		// TODO get response
-		err := clientset.Provision().Templates(organizationID).Create(&t)
+		newTemplate, err := clientset.Provision().Templates(organizationID).Create(&t)
 		if err != nil {
-			fmt.Println(err)
-			return
+			return err
 		}
 
-		fmt.Println("Template created successfully!")
+		templates := resource.NewTemplates([]types.Template{*newTemplate})
+		return templates.Table(os.Stdout)
 	},
 }
 

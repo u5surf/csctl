@@ -16,7 +16,7 @@ var createTemplateCmd = &cobra.Command{
 	Short: "Create a cluster template for provisioning",
 	Args:  cobra.NoArgs,
 
-	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+	PreRunE: func(cmd *cobra.Command, args []string) error {
 		organizationID = viper.GetString("organization")
 		if organizationID == "" {
 			return errors.New("please specify an organization via --organization or config file")

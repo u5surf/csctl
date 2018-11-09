@@ -12,7 +12,7 @@ import (
 type Interface interface {
 	Get(path string, output interface{}) error
 	Delete(path string) error
-	Post(path string, body interface{}) error
+	Post(path string, body interface{}, output interface{}) error
 }
 
 // Client is a basic HTTP client for REST operations
@@ -94,8 +94,10 @@ func (c *Client) Delete(path string) error {
 	return nil
 }
 
-// TODO need to return response
-func (c *Client) Post(path string, body interface{}) error {
+// Post posts the body to the given path and
+// stores the response in output or returns an
+// error
+func (c *Client) Post(path string, body interface{}, output interface{}) error {
 	url, err := c.baseURL.Parse(path)
 	if err != nil {
 		return errors.Wrapf(err, "parsing path %q", path)
@@ -105,6 +107,7 @@ func (c *Client) Post(path string, body interface{}) error {
 
 	resp, err := resty.R().SetHeader("Authorization", authHeader).
 		SetBody(body).
+		SetResult(output).
 		Post(url.String())
 
 	if err != nil {
