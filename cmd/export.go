@@ -23,6 +23,8 @@ var exportCmd = &cobra.Command{
 
 	Args: cobra.ExactArgs(1),
 
+	PreRunE: clusterScopedPreRunE,
+
 	Run: func(cmd *cobra.Command, args []string) {
 		resource := args[0]
 		switch resource {
@@ -82,6 +84,8 @@ var exportCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(exportCmd)
+
+	bindCommandToClusterScope(exportCmd, false)
 
 	exportCmd.Flags().StringVarP(&filename, "filename", "f", "", "output kubeconfig to file (default is stdout)")
 }
