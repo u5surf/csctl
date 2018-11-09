@@ -3,6 +3,10 @@
   version = "0.0.3"
 
 [[constraint]]
+  name = "github.com/spf13/pflag"
+  version = "1.0.3"
+
+[[constraint]]
   name = "github.com/go-resty/resty"
   version = "1.9.1"
 
