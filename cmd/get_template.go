@@ -43,6 +43,10 @@ var getTemplateCmd = &cobra.Command{
 			templates.FilterByOwnerID(me)
 		}
 
+		// Non-CKE is deprecated. TODO consider filtering even earlier
+		// since consumers should never care about non-CKE clusters.
+		templates.FilterByEngine(types.TemplateEngineContainershipKubernetesEngine)
+
 		outputResponse(templates)
 		return nil
 	},

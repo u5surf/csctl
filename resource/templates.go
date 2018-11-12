@@ -17,6 +17,12 @@ type Templates struct {
 	items []types.Template
 }
 
+// filterFunc returns true if the item should be filtered in
+// or false if it should be excluded (removed from the slice)
+// TODO this doesn't belong here once generic filtering is implemented
+// See filter.go
+type filterFunc func(types.Template) bool
+
 // NewTemplates constructs a new Templates wrapping the given cloud type
 func NewTemplates(items []types.Template) *Templates {
 	return &Templates{
@@ -86,9 +92,22 @@ func (c *Templates) JSONPath(w io.Writer, template string) error {
 
 // FilterByOwnerID filters the underlying items by owner ID
 func (c *Templates) FilterByOwnerID(id string) {
+	c.applyFilter(func(t types.Template) bool {
+		return string(t.OwnerID) == id
+	})
+}
+
+// FilterByEngine filters the underlying items by engine
+func (c *Templates) FilterByEngine(engine string) {
+	c.applyFilter(func(t types.Template) bool {
+		return t.Engine != nil && *t.Engine == engine
+	})
+}
+
+func (c *Templates) applyFilter(f filterFunc) {
 	filtered := make([]types.Template, 0)
 	for _, tmpl := range c.items {
-		if string(tmpl.OwnerID) == id {
+		if f(tmpl) {
 			filtered = append(filtered, tmpl)
 		}
 	}
@@ -106,10 +125,6 @@ func getMasterKubernetesVersion(t *types.Template) (string, error) {
 	}
 	if t.Configuration == nil || t.Configuration.Variable == nil {
 		return "", errors.New("template configuration is nil")
-	}
-
-	if err := t.Configuration.Variable.Validate(nil); err != nil {
-		return "", errors.Wrap(err, "template variable block is invalid")
 	}
 
 	for _, np := range t.Configuration.Variable {

@@ -92,3 +92,69 @@ func TestGetKubernetesMasterVersion(t *testing.T) {
 	version, err = getMasterKubernetesVersion(&tmplNoConfig)
 	assert.NotNil(t, err)
 }
+
+func TestFilterByOwnerID(t *testing.T) {
+	me := types.UUID("f114bfb7-0f03-497c-9522-8ab74f9fb18c")
+	me1 := types.Template{
+		OwnerID:      me,
+		ProviderName: strptr("google"),
+	}
+	me2 := types.Template{
+		OwnerID:      me,
+		ProviderName: strptr("digital_ocean"),
+	}
+	notMe := types.Template{
+		OwnerID:      types.UUID("00000000-0f03-497c-9522-8ab74f9fb18c"),
+		ProviderName: strptr("google"),
+	}
+	// Not valid but shouldn't explode
+	noOwner := types.Template{
+		ProviderName: strptr("azure"),
+	}
+	tmpls := NewTemplates([]types.Template{
+		me1,
+		notMe,
+		me2,
+		noOwner,
+	})
+
+	tmpls.FilterByOwnerID(string(me))
+
+	assert.Len(t, tmpls.items, 2)
+	assert.Contains(t, tmpls.items, me1)
+	assert.Contains(t, tmpls.items, me2)
+	assert.NotContains(t, tmpls.items, notMe)
+	assert.NotContains(t, tmpls.items, noOwner)
+}
+
+func TestFilterByEngine(t *testing.T) {
+	cke1 := types.Template{
+		ID:     types.UUID("1"),
+		Engine: strptr(types.TemplateEngineContainershipKubernetesEngine),
+	}
+	cke2 := types.Template{
+		ID:     types.UUID("2"),
+		Engine: strptr(types.TemplateEngineContainershipKubernetesEngine),
+	}
+	notCKE := types.Template{
+		ID:     types.UUID("3"),
+		Engine: strptr("not_cke"),
+	}
+	nilEngine := types.Template{
+		ID: types.UUID("4"),
+	}
+	tmpls := NewTemplates([]types.Template{
+		cke1,
+		notCKE,
+		cke2,
+		nilEngine,
+	})
+
+	tmpls.FilterByEngine("containership_kubernetes_engine")
+
+	assert.Len(t, tmpls.items, 2)
+	assert.Contains(t, tmpls.items, cke1)
+	assert.Contains(t, tmpls.items, cke2)
+	assert.NotContains(t, tmpls.items, notCKE)
+	assert.NotContains(t, tmpls.items, nilEngine)
+}
