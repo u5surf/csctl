@@ -14,6 +14,7 @@ type Interface interface {
 	OrganizationsGetter
 	ProvidersGetter
 	PluginsGetter
+	PluginCatalogGetter
 }
 
 // Client is the API client
@@ -63,4 +64,9 @@ func (c *Client) Providers(organizationID string) ProviderInterface {
 // Plugins returns the plugins interface
 func (c *Client) Plugins(organizationID, clusterID string) PluginInterface {
 	return newPlugins(c, organizationID, clusterID)
+}
+
+// PluginCatalog returns the pluginsCatalog interface
+func (c *Client) PluginCatalog() PluginCatalogInterface {
+	return newPluginCatalog(c)
 }

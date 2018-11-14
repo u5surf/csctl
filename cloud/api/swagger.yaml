@@ -37,6 +37,97 @@ paths:
           schema:
             $ref: "#/definitions/Error"
 
+  /plugins:
+    get:
+      summary: Get plugin catalog
+      operationId: getPluginCatalog
+      tags:
+        - plugins-catalog
+      responses:
+        "200":
+          description: Plugin catalog info
+          schema:
+            $ref: "#/definitions/PluginCatalog"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+  /plugins/{type}:
+    get:
+      summary: Get plugin catalog filtered by plugin type
+      operationId: getPluginCatalogByType
+      tags:
+        - plugins-catalog
+      parameters:
+        - in: path
+          name: type
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Plugin catalog info
+          schema:
+            $ref: "#/definitions/PluginCatalog"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+  /plugins/{type}/implementations/{implementation}:
+    get:
+      summary: Get plugin catalog filtered by plugin type and implementation
+      operationId: getPluginCatalogByTypeAndImplementation
+      tags:
+        - plugins-catalog
+      parameters:
+        - in: path
+          name: type
+          required: true
+          type: string
+        - in: path
+          name: implementation
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Plugin catalog info
+          schema:
+            $ref: "#/definitions/PluginCatalog"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+  /plugins/{type}/implementations/{implementation}/versions/{version}:
+    get:
+      summary: Get plugin catalog filtered by plugin type, implementation, and version
+      operationId: getPluginCatalogByTypeImplementationAndVersion
+      tags:
+        - plugins-catalog
+      parameters:
+      - in: path
+        name: type
+        required: true
+        type: string
+      - in: path
+        name: implementation
+        required: true
+        type: string
+      - in: path
+        name: version
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Plugin catalog info
+          schema:
+            $ref: "#/definitions/PluginCatalog"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
   /organizations/{organization_id}/clusters:
     get:
       summary: List all clusters (attached or provisioned through Containership) for a given organization
@@ -426,6 +517,121 @@ definitions:
       configuration:
         title: Plugin configuration (varies per-plugin)
         type: object
+
+  PluginCatalog:
+    title: A Containership plugin definition
+    type: object
+    required:
+      - cloud_controller_manager
+      - cluster_management
+      - CNI
+      - CSI
+      - logs
+      - metrics
+    properties:
+      cloud_controller_manager:
+        title: Cloud Controller Manager Plugins
+        type: array
+        items:
+          $ref: "#/definitions/PluginDefinition"
+      cluster_management:
+        title: Cluster Management Plugins
+        type: array
+        items:
+          $ref: "#/definitions/PluginDefinition"
+      CNI:
+        title: Container Network Interface (CNI) Plugins
+        type: array
+        items:
+          $ref: "#/definitions/PluginDefinition"
+      CSI:
+        title: Container Storage Interface (CSI) Plugins
+        type: array
+        items:
+          $ref: "#/definitions/PluginDefinition"
+      logs:
+        title: Log Plugins
+        type: array
+        items:
+          $ref: "#/definitions/PluginDefinition"
+      metrics:
+        title: Metric Plugins
+        type: array
+        items:
+          $ref: "#/definitions/PluginDefinition"
+
+  PluginDefinition:
+    title: A Containership plugin definition
+    type: object
+    required:
+      - type
+      - implementation
+      - versions
+    properties:
+      type:
+        title: The type of plugin
+        type: string
+      implementation:
+        title: The implementation of the type of plugin
+        type: string
+      versions:
+        title: The version compatibility definition
+        type: array
+        items:
+          $ref: "#/definitions/PluginVersion"
+
+  PluginVersion:
+    title: A Containership plugin version definition
+    type: object
+    required:
+      - version
+      - compatibility
+      - configuration_schema
+    properties:
+      disabled:
+        title: If the plugin is disabled
+        type: boolean
+      configuration_schema:
+        title: needed keys
+        type: array
+        items:
+          type: string
+      version:
+        title: The plugin version
+        type: string
+      compatibility:
+        title: Kubernetes and upgrade compatibility
+        $ref: "#/definitions/PluginCompatibility"
+
+  PluginCompatibility:
+    title: A Containership plugin compatibility definition
+    type: object
+    required:
+      - kubernetes
+      - upgrades
+    properties:
+      upgrades:
+        title: The list of valid upgrade paths for the plugin
+        type: array
+        items:
+          type: string
+      kubernetes:
+        title: The definition for Kubernetes compatibility
+        $ref: "#/definitions/PluginKubernetesCompatibility"
+
+  PluginKubernetesCompatibility:
+    title: Defines the Kubernetes version that the plugin supports
+    type: object
+    required:
+      - min
+      - max
+    properties:
+      min:
+        title: The minimum Kubernetes version for the plugin
+        type: string
+      max:
+        title: The maximum Kubernetes version for the plugin
+        type: string
 
   Plugins:
     type: array
