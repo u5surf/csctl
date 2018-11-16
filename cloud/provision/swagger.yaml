@@ -67,6 +67,122 @@ paths:
           schema:
             $ref: "#/definitions/Error"
 
+  /organizations/{organization_id}/clusters/{cluster_id}/node-pools:
+    get:
+      summary: List all node pools for a given CKE cluster
+      operationId: listNodePools
+      tags:
+        - nodepools
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+        - in: path
+          name: cluster_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: A list of node pools
+          schema:
+            $ref: "#/definitions/NodePools"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+  /organizations/{organization_id}/clusters/{cluster_id}/node-pools/{node_pool_id}:
+    get:
+      summary: Get a node pool
+      operationId: getNodePool
+      tags:
+        - nodepool
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+        - in: path
+          name: cluster_id
+          required: true
+          type: string
+        - in: path
+          name: node_pool_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: A node pool
+          schema:
+            $ref: "#/definitions/NodePool"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+  /organizations/{organization_id}/clusters/{cluster_id}/node-pools/{node_pool_id}/nodes:
+    get:
+      summary: List all nodes in a given node pool
+      operationId: listNodes
+      tags:
+        - nodes
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+        - in: path
+          name: cluster_id
+          required: true
+          type: string
+        - in: path
+          name: node_pool_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: A list of nodes
+          schema:
+            $ref: "#/definitions/Nodes"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+  /organizations/{organization_id}/clusters/{cluster_id}/node-pools/{node_pool_id}/nodes/{node_id}:
+    get:
+      summary: Get a node
+      operationId: getNode
+      tags:
+        - node
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+        - in: path
+          name: cluster_id
+          required: true
+          type: string
+        - in: path
+          name: node_pool_id
+          required: true
+          type: string
+        - in: path
+          name: node_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: A node
+          schema:
+            $ref: "#/definitions/Node"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
   /organizations/{organization_id}/templates:
     get:
       summary: List all provisioning templates for a given organization
@@ -296,6 +412,49 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/NodePool"
+
+  Node:
+    type: object
+    required:
+      - id
+      - status
+      - created_at
+      - updated_at
+    properties:
+      id:
+        title: Node ID
+        $ref: "#/definitions/UUID"
+      status:
+        title: Node status
+        $ref: "#/definitions/NodeStatus"
+      created_at:
+        title: Timestamp at which the node was created
+        type: string
+      updated_at:
+        title: Timestamp at which the node was updated
+        type: string
+
+  NodeStatus:
+    type: object
+    required:
+      - type
+      - message
+    properties:
+      type:
+        title: Type of status
+        type: string
+      message:
+        title: Human-readable message
+        type: string
+      percent:
+        title: Percent complete, if applicable
+        type: number
+        format: float
+
+  Nodes:
+    type: array
+    items:
+      $ref: "#/definitions/Node"
 
   UUID:
     title: UUID
