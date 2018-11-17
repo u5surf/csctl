@@ -9,7 +9,7 @@ import (
 
 // CKEClustersGetter is the getter for CKE clusters
 type CKEClustersGetter interface {
-	CKEClusters() CKEClusterInterface
+	CKEClusters(organizationID string) CKEClusterInterface
 }
 
 // CKEClusterInterface is the interface for CKE clusters

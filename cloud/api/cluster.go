@@ -9,7 +9,7 @@ import (
 
 // ClustersGetter is the getter for clusters
 type ClustersGetter interface {
-	Clusters() ClusterInterface
+	Clusters(organizationID string) ClusterInterface
 }
 
 // ClusterInterface is the interface for clusters

@@ -9,7 +9,7 @@ import (
 
 // ProvidersGetter is the getter for providers
 type ProvidersGetter interface {
-	Providers() ProviderInterface
+	Providers(organizationID string) ProviderInterface
 }
 
 // ProviderInterface is the interface for providers

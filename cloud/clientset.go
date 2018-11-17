@@ -9,11 +9,16 @@ import (
 	"github.com/containership/csctl/cloud/rest"
 )
 
-// Clientset is a set of clients for interacting with Containership Cloud
+// Interface is the main top-level interface to cloud
+type Interface interface {
+	API() api.Interface
+	Provision() provision.Interface
+}
+
+// Clientset implements Interface
 type Clientset struct {
 	api       *api.Client
 	provision *provision.Client
-	//proxy     *proxy.ProxyClient
 }
 
 // Config is the configuration for a Clientset
@@ -22,12 +27,12 @@ type Config struct {
 }
 
 // API returns an instance of the API client
-func (c *Clientset) API() *api.Client {
+func (c *Clientset) API() api.Interface {
 	return c.api
 }
 
 // Provision returns an instance of the Provision client
-func (c *Clientset) Provision() *provision.Client {
+func (c *Clientset) Provision() provision.Interface {
 	return c.provision
 }
 

@@ -9,7 +9,7 @@ import (
 
 // NodePoolsGetter is the getter for node pools
 type NodePoolsGetter interface {
-	NodePools() NodePoolInterface
+	NodePools(organizationID, clusterID string) NodePoolInterface
 }
 
 // NodePoolInterface is the interface for node pools

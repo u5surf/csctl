@@ -27,7 +27,7 @@ var (
 )
 
 var (
-	clientset *cloud.Clientset
+	clientset cloud.Interface
 )
 
 func orgScopedPreRunE(cmd *cobra.Command, args []string) error {

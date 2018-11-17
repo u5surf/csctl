@@ -9,7 +9,7 @@ import (
 
 // TemplatesGetter is the getter for templates
 type TemplatesGetter interface {
-	Templates() TemplateInterface
+	Templates(organizationID string) TemplateInterface
 }
 
 // TemplateInterface is the interface for templates

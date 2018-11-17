@@ -9,7 +9,7 @@ import (
 
 // PluginsGetter is the getter for plugins
 type PluginsGetter interface {
-	Plugins() PluginInterface
+	Plugins(organizationID, clusterID string) PluginInterface
 }
 
 // PluginInterface is the interface for plugins

@@ -9,7 +9,7 @@ import (
 
 // NodesGetter is the getter for nodes
 type NodesGetter interface {
-	Nodes() NodeInterface
+	Nodes(organizationID, clusterID, nodePoolID string) NodeInterface
 }
 
 // NodeInterface is the interface for nodes
