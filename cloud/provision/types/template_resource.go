@@ -18,6 +18,9 @@ type TemplateResource struct {
 
 	// digitalocean droplet
 	DigitaloceanDroplet DigitalOceanDropletMap `json:"digitalocean_droplet,omitempty"`
+
+	// packet device
+	PacketDevice PacketDeviceMap `json:"packet_device,omitempty"`
 }
 
 // Validate validates this template resource
@@ -25,6 +28,10 @@ func (m *TemplateResource) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateDigitaloceanDroplet(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePacketDevice(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -43,6 +50,22 @@ func (m *TemplateResource) validateDigitaloceanDroplet(formats strfmt.Registry) 
 	if err := m.DigitaloceanDroplet.Validate(formats); err != nil {
 		if ve, ok := err.(*errors.Validation); ok {
 			return ve.ValidateName("digitalocean_droplet")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *TemplateResource) validatePacketDevice(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.PacketDevice) { // not required
+		return nil
+	}
+
+	if err := m.PacketDevice.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("packet_device")
 		}
 		return err
 	}

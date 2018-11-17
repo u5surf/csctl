@@ -29,6 +29,7 @@ func (o *DigitalOceanTemplateCreate) DefaultAndValidate() error {
 	if err := o.TemplateCreate.DefaultAndValidate(); err != nil {
 		return errors.Wrap(err, "validating generic create options")
 	}
+
 	if err := o.defaultAndValidateImage(); err != nil {
 		return errors.Wrap(err, "validating image name")
 	}
