@@ -563,6 +563,8 @@ definitions:
     properties:
       digitalocean_droplet:
         $ref: '#/definitions/DigitalOceanDropletMap'
+      packet_device:
+        $ref: '#/definitions/PacketDeviceMap'
 
   DigitalOceanDropletMap:
     description: Map of node pool name to DigitalOcean droplet configuration
@@ -596,6 +598,30 @@ definitions:
         type: string
       size:
         description: Droplet size
+        type: string
+
+  PacketDeviceMap:
+    description: Map of node pool name to Packet device configuration
+    type: object
+    additionalProperties:
+        $ref: '#/definitions/PacketDeviceConfiguration'
+
+  PacketDeviceConfiguration:
+    description: Configuration for a Packet device
+    type: object
+    required:
+      - project_id
+      - facility
+      - plan
+    properties:
+      project_id:
+        description: Packet project ID
+        $ref: '#/definitions/UUID'
+      facility:
+        description: Facility for this packet device
+        type: string
+      plan:
+        description: Plan for this packet device
         type: string
 
   TemplateVariableMap:
