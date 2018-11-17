@@ -12,6 +12,7 @@ type Interface interface {
 	CKEClustersGetter
 	TemplatesGetter
 	NodePoolsGetter
+	NodesGetter
 }
 
 // Client is the Provision client
@@ -51,4 +52,9 @@ func (c *Client) Templates(organizationID string) TemplateInterface {
 // NodePools returns the node pools interface
 func (c *Client) NodePools(organizationID, clusterID string) NodePoolInterface {
 	return newNodePools(c, organizationID, clusterID)
+}
+
+// Nodes returns the nodes interface
+func (c *Client) Nodes(organizationID, clusterID, nodePoolID string) NodeInterface {
+	return newNodes(c, organizationID, clusterID, nodePoolID)
 }

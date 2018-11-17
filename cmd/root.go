@@ -21,6 +21,7 @@ var (
 	// TODO support names, not just IDs, and resolve appropriately
 	organizationID string
 	clusterID      string
+	nodePoolID     string
 
 	userToken string
 )
@@ -51,6 +52,19 @@ func clusterScopedPreRunE(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
+func nodePoolScopedPreRunE(cmd *cobra.Command, args []string) error {
+	if err := clusterScopedPreRunE(cmd, args); err != nil {
+		return err
+	}
+
+	nodePoolID = viper.GetString("nodepool")
+	if nodePoolID == "" {
+		return errors.New("please specify a node pool via --nodepool or config file")
+	}
+
+	return nil
+}
+
 func bindCommandToOrganizationScope(cmd *cobra.Command, persistent bool) {
 	var flagset *pflag.FlagSet
 	if persistent {
@@ -75,6 +89,20 @@ func bindCommandToClusterScope(cmd *cobra.Command, persistent bool) {
 
 	flagset.StringVar(&clusterID, "cluster", "", "cluster to use")
 	viper.BindPFlag("cluster", flagset.Lookup("cluster"))
+}
+
+func bindCommandToNodePoolScope(cmd *cobra.Command, persistent bool) {
+	bindCommandToClusterScope(cmd, persistent)
+
+	var flagset *pflag.FlagSet
+	if persistent {
+		flagset = cmd.PersistentFlags()
+	} else {
+		flagset = cmd.Flags()
+	}
+
+	flagset.StringVar(&nodePoolID, "nodepool", "", "node pool to use")
+	viper.BindPFlag("nodepool", flagset.Lookup("nodepool"))
 }
 
 // rootCmd represents the base command when called without any subcommands
