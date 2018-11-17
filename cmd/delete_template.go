@@ -14,18 +14,20 @@ var deleteTemplateCmd = &cobra.Command{
 	Short:   "Delete a template",
 	Aliases: resource.Template().Aliases(),
 
-	Args: cobra.ExactArgs(1),
+	Args: cobra.MinimumNArgs(1),
 
 	PreRunE: orgScopedPreRunE,
 
 	RunE: func(cmd *cobra.Command, args []string) error {
-		id := args[0]
-		err := clientset.Provision().Templates(organizationID).Delete(id)
-		if err != nil {
-			return err
+		for _, id := range args {
+			err := clientset.Provision().Templates(organizationID).Delete(id)
+			if err != nil {
+				return err
+			}
+
+			fmt.Printf("Template %s successfully deleted\n", id)
 		}
 
-		fmt.Printf("Template %s successfully deleted\n", id)
 		return nil
 	},
 }

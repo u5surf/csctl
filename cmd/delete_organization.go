@@ -11,19 +11,21 @@ import (
 // deleteOrganizationCmd represents the deleteOrganization command
 var deleteOrganizationCmd = &cobra.Command{
 	Use:     "organization",
-	Short:   "Delete an organization",
+	Short:   "Delete one or more organizations",
 	Aliases: resource.Organization().Aliases(),
 
-	Args: cobra.ExactArgs(1),
+	Args: cobra.MinimumNArgs(1),
 
 	RunE: func(cmd *cobra.Command, args []string) error {
-		id := args[0]
-		err := clientset.API().Organizations().Delete(id)
-		if err != nil {
-			return err
+		for _, id := range args {
+			err := clientset.API().Organizations().Delete(id)
+			if err != nil {
+				return err
+			}
+
+			fmt.Printf("Organization %s successfully deleted\n", id)
 		}
 
-		fmt.Printf("Organization %s successfully deleted\n", id)
 		return nil
 	},
 }
