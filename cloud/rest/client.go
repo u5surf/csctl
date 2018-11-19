@@ -65,10 +65,7 @@ func (c *Client) Get(path string, output interface{}) error {
 	}
 
 	if resp.IsError() {
-		return HTTPError{
-			code:    resp.StatusCode(),
-			message: string(resp.Body()),
-		}
+		return httpErrorFromResponse(resp)
 	}
 
 	return nil
@@ -91,10 +88,7 @@ func (c *Client) Delete(path string) error {
 	}
 
 	if resp.IsError() {
-		return HTTPError{
-			code:    resp.StatusCode(),
-			message: string(resp.Body()),
-		}
+		return httpErrorFromResponse(resp)
 	}
 
 	return nil
@@ -121,11 +115,15 @@ func (c *Client) Post(path string, body interface{}, output interface{}) error {
 	}
 
 	if resp.IsError() {
-		return HTTPError{
-			code:    resp.StatusCode(),
-			message: string(resp.Body()),
-		}
+		return httpErrorFromResponse(resp)
 	}
 
 	return nil
+}
+
+func httpErrorFromResponse(resp *resty.Response) HTTPError {
+	return HTTPError{
+		code:    resp.StatusCode(),
+		message: string(resp.Body()),
+	}
 }

@@ -1,8 +1,10 @@
 package rest
 
 import (
+	"net/http"
 	"testing"
 
+	"github.com/go-resty/resty"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -45,4 +47,16 @@ func TestNewClient(t *testing.T) {
 		Token:   "",
 	})
 	assert.NotNil(t, err)
+}
+
+func TestHttpErrorFromResponse(t *testing.T) {
+	resp := &resty.Response{
+		RawResponse: &http.Response{
+			StatusCode: 404,
+		},
+	}
+
+	err := httpErrorFromResponse(resp)
+	assert.Error(t, err)
+	assert.True(t, err.IsNotFound())
 }
