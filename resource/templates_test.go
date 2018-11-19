@@ -85,15 +85,6 @@ func TestTemplatesTable(t *testing.T) {
 	assert.Equal(t, len(tmpls), info.numRows)
 }
 
-func TestGetKubernetesMasterVersion(t *testing.T) {
-	version, err := getMasterKubernetesVersion(&tmplGood)
-	assert.Nil(t, err)
-	assert.Equal(t, version, tmplK8sVersion)
-
-	version, err = getMasterKubernetesVersion(&tmplNoConfig)
-	assert.NotNil(t, err)
-}
-
 func TestFilterByOwnerID(t *testing.T) {
 	me := types.UUID("f114bfb7-0f03-497c-9522-8ab74f9fb18c")
 	me1 := types.Template{
@@ -158,4 +149,16 @@ func TestFilterByEngine(t *testing.T) {
 	assert.Contains(t, tmpls.items, cke2)
 	assert.NotContains(t, tmpls.items, notCKE)
 	assert.NotContains(t, tmpls.items, nilEngine)
+}
+
+func TestGetMasterKubernetesVersion(t *testing.T) {
+	v, err := getMasterKubernetesVersion(nil)
+	assert.Error(t, err, "get master version of nil template")
+
+	v, err = getMasterKubernetesVersion(&types.Template{})
+	assert.Error(t, err, "get master version of empty template")
+
+	v, err = getMasterKubernetesVersion(&tmplGood)
+	assert.Nil(t, err)
+	assert.Equal(t, v, tmplK8sVersion)
 }
