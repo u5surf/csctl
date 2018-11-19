@@ -32,6 +32,7 @@ var (
 	tmplGood = types.Template{
 		ID:            types.UUID("1234"),
 		ProviderName:  strptr("google"),
+		Description:   strptr("my template"),
 		OwnerID:       types.UUID("1234"),
 		CreatedAt:     &tmplTime,
 		Configuration: &tmplConfig,

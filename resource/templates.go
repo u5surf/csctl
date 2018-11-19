@@ -44,6 +44,7 @@ func Template() *Templates {
 func (c *Templates) columns() []string {
 	return []string{
 		"ID",
+		"Description",
 		"Provider Name",
 		"Master Version",
 		"Owner ID",
@@ -61,8 +62,14 @@ func (c *Templates) Table(w io.Writer) error {
 			return errors.Wrapf(err, "retrieving master version for template %q", string(tmpl.ID))
 		}
 
+		var desc = "none"
+		if tmpl.Description != nil && *tmpl.Description != "" {
+			desc = *tmpl.Description
+		}
+
 		table.Append([]string{
 			string(tmpl.ID),
+			desc,
 			*tmpl.ProviderName,
 			masterVersion,
 			string(tmpl.OwnerID),
