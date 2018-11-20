@@ -20,7 +20,7 @@ const (
 
 func TestNewClient(t *testing.T) {
 	// Good config
-	client, err := NewClient(&Config{
+	client, err := NewClient(Config{
 		BaseURL: containershipURL,
 		Token:   validJWT,
 	})
@@ -28,21 +28,21 @@ func TestNewClient(t *testing.T) {
 	assert.NotNil(t, client)
 
 	// BaseURL is required
-	client, err = NewClient(&Config{
+	client, err = NewClient(Config{
 		BaseURL: "",
 		Token:   validJWT,
 	})
 	assert.NotNil(t, err)
 
 	// Invalid BaseURL
-	client, err = NewClient(&Config{
+	client, err = NewClient(Config{
 		BaseURL: "invalid",
 		Token:   validJWT,
 	})
 	assert.NotNil(t, err)
 
 	// Token is required
-	client, err = NewClient(&Config{
+	client, err = NewClient(Config{
 		BaseURL: containershipURL,
 		Token:   "",
 	})

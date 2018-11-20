@@ -28,7 +28,7 @@ type Config struct {
 }
 
 // NewClient constructs a new REST client for the given config
-func NewClient(cfg *Config) (*Client, error) {
+func NewClient(cfg Config) (*Client, error) {
 	// Note that this function is used over url.Parse() because it actually
 	// validates the base URL format, whereas Parse() will not
 	baseURL, err := url.ParseRequestURI(cfg.BaseURL)

@@ -6,6 +6,10 @@ import (
 	"github.com/containership/csctl/cloud/rest"
 )
 
+const (
+	defaultBaseURL = "https://api.containership.io"
+)
+
 // Interface is the interface for API
 type Interface interface {
 	RESTClient() rest.Interface
@@ -24,7 +28,11 @@ type Client struct {
 }
 
 // New constructs a new API client
-func New(cfg *rest.Config) (*Client, error) {
+func New(cfg rest.Config) (*Client, error) {
+	if cfg.BaseURL == "" {
+		cfg.BaseURL = defaultBaseURL
+	}
+
 	restClient, err := rest.NewClient(cfg)
 	if err != nil {
 		return nil, errors.Wrap(err, "constructing REST client")

@@ -121,8 +121,10 @@ This is a long description`,
 		}
 
 		var err error
-		clientset, err = cloud.New(&cloud.Config{
-			Token: userToken,
+		clientset, err = cloud.New(cloud.Config{
+			Token:            userToken,
+			APIBaseURL:       viper.GetString("apiBaseURL"),
+			ProvisionBaseURL: viper.GetString("provisionBaseURL"),
 		})
 
 		return err
@@ -144,11 +146,6 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is ~/.containership/csctl.yaml)")
-
-	// Defaults
-	viper.SetDefault("apiBaseURL", "https://api.containership.io")
-	viper.SetDefault("provisionBaseURL", "https://provision.containership.io")
-	viper.SetDefault("proxyBaseURL", "https://proxy.containership.io")
 }
 
 // initConfig reads in config file and ENV variables if set.
