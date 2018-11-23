@@ -13,6 +13,7 @@ type Interface interface {
 	Get(path string, output interface{}) error
 	Delete(path string) error
 	Post(path string, body interface{}, output interface{}) error
+	Patch(path string, body interface{}, output interface{}) error
 }
 
 // Client is a basic HTTP client for REST operations
@@ -94,9 +95,8 @@ func (c *Client) Delete(path string) error {
 	return nil
 }
 
-// Post posts the body to the given path and
-// stores the response in output or returns an
-// error
+// Post posts the body to the given path and stores the response in output or
+// returns an error
 func (c *Client) Post(path string, body interface{}, output interface{}) error {
 	url, err := c.baseURL.Parse(path)
 	if err != nil {
@@ -109,6 +109,32 @@ func (c *Client) Post(path string, body interface{}, output interface{}) error {
 		SetBody(body).
 		SetResult(output).
 		Post(url.String())
+
+	if err != nil {
+		return errors.Wrap(err, "error deleting resource")
+	}
+
+	if resp.IsError() {
+		return httpErrorFromResponse(resp)
+	}
+
+	return nil
+}
+
+// Patch patches the body to the given path and stores the response in output or
+// returns an error
+func (c *Client) Patch(path string, body interface{}, output interface{}) error {
+	url, err := c.baseURL.Parse(path)
+	if err != nil {
+		return errors.Wrapf(err, "parsing path %q", path)
+	}
+
+	authHeader := fmt.Sprintf("JWT %s", c.token)
+
+	resp, err := resty.R().SetHeader("Authorization", authHeader).
+		SetBody(body).
+		SetResult(output).
+		Patch(url.String())
 
 	if err != nil {
 		return errors.Wrap(err, "error deleting resource")

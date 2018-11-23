@@ -121,6 +121,40 @@ paths:
           schema:
             $ref: "#/definitions/Error"
 
+  # TODO this will have to change to support multiple PATCH requests, not just scale
+  /organizations/{organization_id}/clusters/{cluster_id}/node-pools/{node_pool_id}:
+    patch:
+      summary: Scale a node pool
+      operationId: scaleNodePool
+      tags:
+        - nodepool
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+        - in: path
+          name: cluster_id
+          required: true
+          type: string
+        - in: path
+          name: node_pool_id
+          required: true
+          type: string
+        - in: body
+          name: scale_node_pool_request
+          schema:
+            $ref: '#/definitions/ScaleNodePoolRequest'
+      responses:
+        "200":
+          description: The updated node pool
+          schema:
+            $ref: "#/definitions/NodePool"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
   /organizations/{organization_id}/clusters/{cluster_id}/node-pools/{node_pool_id}/nodes:
     get:
       summary: List all nodes in a given node pool
@@ -412,6 +446,16 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/NodePool"
+
+  ScaleNodePoolRequest:
+    type: object
+    required:
+      - count
+    properties:
+      count:
+        title: Number of nodes in this node pool
+        type: integer
+        format: int32
 
   Node:
     type: object

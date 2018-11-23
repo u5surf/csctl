@@ -19,6 +19,7 @@ type NodePoolInterface interface {
 	Delete(id string) error
 	// TODO list options implemented client-side
 	List() ([]types.NodePool, error)
+	Scale(id string, req *types.ScaleNodePoolRequest) (*types.NodePool, error)
 }
 
 // nodePools implements NodePoolInterface
@@ -60,4 +61,11 @@ func (c *nodePools) List() ([]types.NodePool, error) {
 	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s/node-pools", c.organizationID, c.clusterID)
 	out := make([]types.NodePool, 0)
 	return out, c.client.Get(path, &out)
+}
+
+// Scale scales a node pool
+func (c *nodePools) Scale(id string, req *types.ScaleNodePoolRequest) (*types.NodePool, error) {
+	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s/node-pools/%s", c.organizationID, c.clusterID, id)
+	var out types.NodePool
+	return &out, c.client.Patch(path, req, &out)
 }
