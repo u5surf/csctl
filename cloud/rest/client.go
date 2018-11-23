@@ -50,80 +50,27 @@ func NewClient(cfg Config) (*Client, error) {
 // Get gets a resource at the given path and stores the result in output
 // or returns an error
 func (c *Client) Get(path string, output interface{}) error {
-	url, err := c.baseURL.Parse(path)
-	if err != nil {
-		return errors.Wrapf(err, "parsing path %q", path)
-	}
-
-	authHeader := fmt.Sprintf("JWT %s", c.token)
-
-	resp, err := resty.R().SetHeader("Authorization", authHeader).
-		SetResult(output).
-		Get(url.String())
-
-	if err != nil {
-		return errors.Wrap(err, "error requesting resource")
-	}
-
-	if resp.IsError() {
-		return httpErrorFromResponse(resp)
-	}
-
-	return nil
+	return c.execute(resty.MethodGet, path, nil, output)
 }
 
 // Delete deletes the resource at the given path or returns an error
 func (c *Client) Delete(path string) error {
-	url, err := c.baseURL.Parse(path)
-	if err != nil {
-		return errors.Wrapf(err, "parsing path %q", path)
-	}
-
-	authHeader := fmt.Sprintf("JWT %s", c.token)
-
-	resp, err := resty.R().SetHeader("Authorization", authHeader).
-		Delete(url.String())
-
-	if err != nil {
-		return errors.Wrap(err, "error deleting resource")
-	}
-
-	if resp.IsError() {
-		return httpErrorFromResponse(resp)
-	}
-
-	return nil
+	return c.execute(resty.MethodDelete, path, nil, nil)
 }
 
 // Post posts the body to the given path and stores the response in output or
 // returns an error
 func (c *Client) Post(path string, body interface{}, output interface{}) error {
-	url, err := c.baseURL.Parse(path)
-	if err != nil {
-		return errors.Wrapf(err, "parsing path %q", path)
-	}
-
-	authHeader := fmt.Sprintf("JWT %s", c.token)
-
-	resp, err := resty.R().SetHeader("Authorization", authHeader).
-		SetBody(body).
-		SetResult(output).
-		Post(url.String())
-
-	if err != nil {
-		return errors.Wrap(err, "error deleting resource")
-	}
-
-	if resp.IsError() {
-		return httpErrorFromResponse(resp)
-	}
-
-	return nil
+	return c.execute(resty.MethodPost, path, body, output)
 }
 
 // Patch patches the body to the given path and stores the response in output or
 // returns an error
 func (c *Client) Patch(path string, body interface{}, output interface{}) error {
+	return c.execute(resty.MethodPatch, path, body, output)
+}
+
+func (c *Client) execute(verb string, path string, body interface{}, output interface{}) error {
 	url, err := c.baseURL.Parse(path)
 	if err != nil {
 		return errors.Wrapf(err, "parsing path %q", path)
@@ -131,13 +78,20 @@ func (c *Client) Patch(path string, body interface{}, output interface{}) error 
 
 	authHeader := fmt.Sprintf("JWT %s", c.token)
 
-	resp, err := resty.R().SetHeader("Authorization", authHeader).
-		SetBody(body).
-		SetResult(output).
-		Patch(url.String())
+	req := resty.R().SetHeader("Authorization", authHeader)
+
+	if body != nil {
+		req.SetBody(body)
+	}
+
+	if output != nil {
+		req.SetResult(output)
+	}
+
+	resp, err := req.Execute(verb, url.String())
 
 	if err != nil {
-		return errors.Wrap(err, "error deleting resource")
+		return errors.Wrapf(err, "error %sing resource", verb)
 	}
 
 	if resp.IsError() {

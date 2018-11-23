@@ -93,8 +93,6 @@ func exactlyOneSet(v1, v2, v3 int32) bool {
 		return false
 	case v2 != countUnset && (v1 != countUnset || v3 != countUnset):
 		return false
-	case v3 != countUnset && (v1 != countUnset || v2 != countUnset):
-		return false
 	}
 
 	return true
