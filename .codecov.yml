@@ -1,3 +1,9 @@
+# TODO re-enable coverage checking for the following cmd files
 ignore:
-  - vendor
   - "cloud/*/types"
+  - "/cmd/create*"
+  - "/cmd/delete*"
+  - "/cmd/export*"
+  - "/cmd/get*"
+  - "/cmd/root*"
+  - "/cmd/version*"
