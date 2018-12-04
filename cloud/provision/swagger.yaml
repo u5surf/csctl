@@ -469,6 +469,9 @@ definitions:
       name:
         title: Name of this policy
         type: string
+      id:
+        title: AutoscalingPolicy ID
+        $ref: "#/definitions/UUID"
       metrics_backend:
         title: MetricsBackend name associated with the AutoscalingPolicy
         type: string

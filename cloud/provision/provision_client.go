@@ -16,6 +16,7 @@ type Interface interface {
 	CKEClustersGetter
 	TemplatesGetter
 	NodePoolsGetter
+	AutoscalingPoliciesGetter
 	NodesGetter
 }
 
@@ -60,6 +61,11 @@ func (c *Client) Templates(organizationID string) TemplateInterface {
 // NodePools returns the node pools interface
 func (c *Client) NodePools(organizationID, clusterID string) NodePoolInterface {
 	return newNodePools(c, organizationID, clusterID)
+}
+
+// AutoscalingPolicies returns the autoscaling policies interface
+func (c *Client) AutoscalingPolicies(organizationID, clusterID string) AutoscalingPolicyInterface {
+	return newAutoscalingPolicies(c, organizationID, clusterID)
 }
 
 // Nodes returns the nodes interface

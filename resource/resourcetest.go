@@ -11,3 +11,9 @@ func strptr(s string) *string {
 func int32ptr(i int32) *int32 {
 	return &i
 }
+
+// float32ptr is intended to be used to provide a pointer to
+// an float32 for easily building test resources
+func float32ptr(f float32) *float32 {
+	return &f
+}

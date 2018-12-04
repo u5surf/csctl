@@ -17,6 +17,9 @@ import (
 // swagger:model AutoscalingPolicy
 type AutoscalingPolicy struct {
 
+	// AutoscalingPolicy ID
+	ID UUID `json:"id,omitempty"`
+
 	// String representation of the target metric to monitor
 	//
 	// Available values are provided by the given MetricsBackend
@@ -50,6 +53,10 @@ type AutoscalingPolicy struct {
 func (m *AutoscalingPolicy) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateID(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateMetric(formats); err != nil {
 		res = append(res, err)
 	}
@@ -73,6 +80,22 @@ func (m *AutoscalingPolicy) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *AutoscalingPolicy) validateID(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ID) { // not required
+		return nil
+	}
+
+	if err := m.ID.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("id")
+		}
+		return err
+	}
+
 	return nil
 }
 
