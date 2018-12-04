@@ -457,6 +457,79 @@ definitions:
         type: integer
         format: int32
 
+  AutoscalingPolicy:
+    type: object
+    required:
+      - name
+      - policy
+      - metric
+      - poll_interval
+      - sample_period
+    properties:
+      name:
+        title: Name of this policy
+        type: string
+      metrics_backend:
+        title: MetricsBackend name associated with the AutoscalingPolicy
+        type: string
+      policy:
+        title: Scaling policy
+        $ref: "#/definitions/ScalingPolicy"
+      metric:
+        title: String representation of the target metric to monitor
+        description: Available values are provided by the given MetricsBackend
+        type: string
+      metric_configuration:
+        title: Arbitrary configuration object used to configure the metric polling
+        type: object
+      poll_interval:
+        title: Number of seconds between polling the associated MetricsBackend
+        type: integer
+        format: int32
+      sample_period:
+        title: Number of seconds the AutoscalingPolicy must alert the threshold before the policy triggers a scale up or scale down action
+        type: integer
+        format: int32
+
+  ScalingPolicy:
+    type: object
+    properties:
+      # Note that one of these is required but swagger (OpenAPI 2.0)
+      # doesn't support specifying that
+      scale_up:
+        title: Scale up policy
+        $ref: "#/definitions/ScalingPolicyConfiguration"
+      scale_down:
+        title: Scale down policy
+        $ref: "#/definitions/ScalingPolicyConfiguration"
+
+  ScalingPolicyConfiguration:
+    type: object
+    required:
+      - threshold
+      - comparison_operator
+      - adjustment_type
+      - adjustment_value
+    properties:
+      threshold:
+        title: Numerical representation of the threshold at which when the comparison evaluates to true, the associated AutoscalingGroups should scale
+        type: number
+        format: float
+      comparison_operator:
+        title: The comparison operator to use when comparing the MetricsBackend metric value to the threshold value
+        type: string
+        # TODO this breaks codegen - post process?
+        # enum: [">", "<", ">=", "<=", "==", "!="]
+      adjustment_type:
+        title: Method by which to add capacity to the AutoscalingGroup
+        description: Absolute represents an exact number of nodes, whereas percent represents a percentage (rounded up to the nearest whole number) of nodes in the pool.
+        type: string
+        enum: [absolute, percent]
+      adjustment_value:
+        title: Numerical representation of the number of nodes to scale the AutoscalingGroup down by determined by the adjustmentType
+        type: integer
+        format: int32
+
   Node:
     type: object
     required:
