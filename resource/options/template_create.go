@@ -137,7 +137,7 @@ func (o *TemplateCreate) defaultAndValidateWorkerNodePoolName() error {
 
 func (o *TemplateCreate) defaultAndValidateKubernetesVersions() error {
 	if o.MasterKubernetesVersion == "" {
-		o.MasterKubernetesVersion = "1.12.1"
+		o.MasterKubernetesVersion = "1.12.3"
 	}
 	mv, err := semver.NewVersion(o.MasterKubernetesVersion)
 	if err != nil {
