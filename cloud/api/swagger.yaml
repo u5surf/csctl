@@ -521,42 +521,41 @@ definitions:
   PluginCatalog:
     title: A Containership plugin definition
     type: object
-    required:
-      - cloud_controller_manager
-      - cluster_management
-      - CNI
-      - CSI
-      - logs
-      - metrics
     properties:
       cloud_controller_manager:
         title: Cloud Controller Manager Plugins
         type: array
+        x-omitempty: true
         items:
           $ref: "#/definitions/PluginDefinition"
       cluster_management:
         title: Cluster Management Plugins
         type: array
+        x-omitempty: true
         items:
           $ref: "#/definitions/PluginDefinition"
       CNI:
         title: Container Network Interface (CNI) Plugins
         type: array
+        x-omitempty: true
         items:
           $ref: "#/definitions/PluginDefinition"
       CSI:
         title: Container Storage Interface (CSI) Plugins
         type: array
+        x-omitempty: true
         items:
           $ref: "#/definitions/PluginDefinition"
       logs:
         title: Log Plugins
         type: array
+        x-omitempty: true
         items:
           $ref: "#/definitions/PluginDefinition"
       metrics:
         title: Metric Plugins
         type: array
+        x-omitempty: true
         items:
           $ref: "#/definitions/PluginDefinition"
 

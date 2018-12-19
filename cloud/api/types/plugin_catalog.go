@@ -12,7 +12,6 @@ import (
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
 )
 
 // PluginCatalog A Containership plugin definition
@@ -20,28 +19,22 @@ import (
 type PluginCatalog struct {
 
 	// Container Network Interface (CNI) Plugins
-	// Required: true
-	CNI []*PluginDefinition `json:"CNI"`
+	CNI []*PluginDefinition `json:"CNI,omitempty"`
 
 	// Container Storage Interface (CSI) Plugins
-	// Required: true
-	CSI []*PluginDefinition `json:"CSI"`
+	CSI []*PluginDefinition `json:"CSI,omitempty"`
 
 	// Cloud Controller Manager Plugins
-	// Required: true
-	CloudControllerManager []*PluginDefinition `json:"cloud_controller_manager"`
+	CloudControllerManager []*PluginDefinition `json:"cloud_controller_manager,omitempty"`
 
 	// Cluster Management Plugins
-	// Required: true
-	ClusterManagement []*PluginDefinition `json:"cluster_management"`
+	ClusterManagement []*PluginDefinition `json:"cluster_management,omitempty"`
 
 	// Log Plugins
-	// Required: true
-	Logs []*PluginDefinition `json:"logs"`
+	Logs []*PluginDefinition `json:"logs,omitempty"`
 
 	// Metric Plugins
-	// Required: true
-	Metrics []*PluginDefinition `json:"metrics"`
+	Metrics []*PluginDefinition `json:"metrics,omitempty"`
 }
 
 // Validate validates this plugin catalog
@@ -80,8 +73,8 @@ func (m *PluginCatalog) Validate(formats strfmt.Registry) error {
 
 func (m *PluginCatalog) validateCNI(formats strfmt.Registry) error {
 
-	if err := validate.Required("CNI", "body", m.CNI); err != nil {
-		return err
+	if swag.IsZero(m.CNI) { // not required
+		return nil
 	}
 
 	for i := 0; i < len(m.CNI); i++ {
@@ -105,8 +98,8 @@ func (m *PluginCatalog) validateCNI(formats strfmt.Registry) error {
 
 func (m *PluginCatalog) validateCSI(formats strfmt.Registry) error {
 
-	if err := validate.Required("CSI", "body", m.CSI); err != nil {
-		return err
+	if swag.IsZero(m.CSI) { // not required
+		return nil
 	}
 
 	for i := 0; i < len(m.CSI); i++ {
@@ -130,8 +123,8 @@ func (m *PluginCatalog) validateCSI(formats strfmt.Registry) error {
 
 func (m *PluginCatalog) validateCloudControllerManager(formats strfmt.Registry) error {
 
-	if err := validate.Required("cloud_controller_manager", "body", m.CloudControllerManager); err != nil {
-		return err
+	if swag.IsZero(m.CloudControllerManager) { // not required
+		return nil
 	}
 
 	for i := 0; i < len(m.CloudControllerManager); i++ {
@@ -155,8 +148,8 @@ func (m *PluginCatalog) validateCloudControllerManager(formats strfmt.Registry) 
 
 func (m *PluginCatalog) validateClusterManagement(formats strfmt.Registry) error {
 
-	if err := validate.Required("cluster_management", "body", m.ClusterManagement); err != nil {
-		return err
+	if swag.IsZero(m.ClusterManagement) { // not required
+		return nil
 	}
 
 	for i := 0; i < len(m.ClusterManagement); i++ {
@@ -180,8 +173,8 @@ func (m *PluginCatalog) validateClusterManagement(formats strfmt.Registry) error
 
 func (m *PluginCatalog) validateLogs(formats strfmt.Registry) error {
 
-	if err := validate.Required("logs", "body", m.Logs); err != nil {
-		return err
+	if swag.IsZero(m.Logs) { // not required
+		return nil
 	}
 
 	for i := 0; i < len(m.Logs); i++ {
@@ -205,8 +198,8 @@ func (m *PluginCatalog) validateLogs(formats strfmt.Registry) error {
 
 func (m *PluginCatalog) validateMetrics(formats strfmt.Registry) error {
 
-	if err := validate.Required("metrics", "body", m.Metrics); err != nil {
-		return err
+	if swag.IsZero(m.Metrics) { // not required
+		return nil
 	}
 
 	for i := 0; i < len(m.Metrics); i++ {
