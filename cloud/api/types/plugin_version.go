@@ -21,7 +21,7 @@ type PluginVersion struct {
 	// Required: true
 	Compatibility *PluginCompatibility `json:"compatibility"`
 
-	// needed keys
+	// Required configuration keys
 	// Required: true
 	ConfigurationSchema []string `json:"configuration_schema"`
 

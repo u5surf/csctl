@@ -68,7 +68,9 @@ paths:
         "200":
           description: Plugin catalog info
           schema:
-            $ref: "#/definitions/PluginCatalog"
+            type: array
+            items:
+              $ref: "#/definitions/PluginDefinition"
         default:
           description: Unexpected error
           schema:
@@ -93,7 +95,7 @@ paths:
         "200":
           description: Plugin catalog info
           schema:
-            $ref: "#/definitions/PluginCatalog"
+            $ref: "#/definitions/PluginDefinition"
         default:
           description: Unexpected error
           schema:
@@ -122,7 +124,7 @@ paths:
         "200":
           description: Plugin catalog info
           schema:
-            $ref: "#/definitions/PluginCatalog"
+            $ref: "#/definitions/PluginVersion"
         default:
           description: Unexpected error
           schema:
@@ -591,7 +593,7 @@ definitions:
         title: If the plugin is disabled
         type: boolean
       configuration_schema:
-        title: needed keys
+        title: Required configuration keys
         type: array
         items:
           type: string

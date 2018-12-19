@@ -122,6 +122,47 @@ func TestNewPluginCatalog(t *testing.T) {
 	assert.NotNil(t, pc)
 }
 
+func TestNewPluginCatalogFromDefinition(t *testing.T) {
+	pc := NewPluginCatalogFromDefinition("cni", nil)
+	assert.NotNil(t, pc, "nil definition is ok; ,result is empty catalog")
+
+	pc = NewPluginCatalogFromDefinition("cni", plugsCatalog.CNI[0])
+	assert.Equal(t, plugsCatalog.CNI[0], pc.items.CNI[0], "cni def set properly")
+
+	// We'll only do these checks once. Doesn't seem worth the effort to do it
+	// for every type, as the code is straightforward.
+	assert.Nil(t, pc.items.CSI, "only cni def is set")
+	assert.Nil(t, pc.items.CloudControllerManager, "only cni def is set")
+	assert.Nil(t, pc.items.ClusterManagement, "only cni def is set")
+	assert.Nil(t, pc.items.Logs, "only cni def is set")
+	assert.Nil(t, pc.items.Metrics, "only cni def is set")
+
+	pc = NewPluginCatalogFromDefinition("csi", plugsCatalog.CSI[0])
+	assert.Equal(t, plugsCatalog.CSI[0], pc.items.CSI[0], "csi def set properly")
+
+	pc = NewPluginCatalogFromDefinition("cloud_controller_manager", plugsCatalog.CloudControllerManager[0])
+	assert.Equal(t, plugsCatalog.CloudControllerManager[0], pc.items.CloudControllerManager[0],
+		"ccm def set properly")
+
+	pc = NewPluginCatalogFromDefinition("cluster_management", plugsCatalog.ClusterManagement[0])
+	assert.Equal(t, plugsCatalog.ClusterManagement[0], pc.items.ClusterManagement[0],
+		"cluster_management def set properly")
+
+	pc = NewPluginCatalogFromDefinition("logs", plugsCatalog.Logs[0])
+	assert.Equal(t, plugsCatalog.Logs[0], pc.items.Logs[0], "logs def set properly")
+
+	pc = NewPluginCatalogFromDefinition("metrics", plugsCatalog.Metrics[0])
+	assert.Equal(t, plugsCatalog.Metrics[0], pc.items.Metrics[0], "metrics def set properly")
+}
+
+func TestNewPluginCatalogFromVersion(t *testing.T) {
+	pc := NewPluginCatalogFromVersion("cni", "calico", nil)
+	assert.NotNil(t, pc, "nil version is ok; ,result is empty catalog")
+
+	pc = NewPluginCatalogFromVersion("cni", "calico", plugsCatalog.CNI[0].Versions[0])
+	assert.Equal(t, plugsCatalog.CNI[0].Versions[0], pc.items.CNI[0].Versions[0], "cni version set properly")
+}
+
 func TestPluginCatalogTable(t *testing.T) {
 	buf := new(bytes.Buffer)
 
