@@ -650,6 +650,80 @@ definitions:
       message:
         type: string
 
+  User:
+    title: A user belonging to an organization
+    type: object
+    required:
+      - id
+      - name
+      - email
+      - avatar_url
+      - added_at
+      - ssh_keys
+    properties:
+      id:
+        title: User ID
+        $ref: "#/definitions/UUID"
+      name:
+        title: User name
+        type: string
+      email:
+        title: User email
+        type: string
+      avatar_url:
+        title: Avatar URL
+        type: string
+      added_at:
+        title: Timestamp at which the user was created
+        type: string
+      ssh_keys:
+        title: SSH Keys
+        $ref: "#/definitions/SSHKeys"
+
+  Users:
+    type: array
+    items:
+      $ref: "#/definitions/User"
+
+  SSHKey:
+    title: An SSH key belonging to a user
+    type: object
+    required:
+      - created_at
+      - updated_at
+      - id
+      - user_id
+      - name
+      - fingerprint
+      - key
+    properties:
+      created_at:
+        title: Timestamp at which the key was created
+        type: string
+      updated_at:
+        title: Timestamp at which the key was updated
+        type: string
+      id:
+        title: SSH key ID
+        $ref: "#/definitions/UUID"
+      user_id:
+        title: User ID of the associated user
+        $ref: "#/definitions/UUID"
+      name:
+        title: Name of they key
+        type: string
+      fingerprint:
+        title: Fingerprint of they key
+        type: string
+      key:
+        title: Public key
+        type: string
+
+  SSHKeys:
+    type: array
+    items:
+      $ref: "#/definitions/SSHKey"
+
   UUID:
     title: UUID
     type: string
