@@ -17,7 +17,6 @@ type CKEClusterInterface interface {
 	Create(*types.CKECluster) (*types.CKECluster, error)
 	Get(id string) (*types.CKECluster, error)
 	Delete(id string) error
-	// TODO list options implemented client-side
 	List() ([]types.CKECluster, error)
 }
 

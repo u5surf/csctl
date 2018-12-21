@@ -17,7 +17,6 @@ type PluginInterface interface {
 	Create(*types.Plugin) (*types.Plugin, error)
 	Get(id string) (*types.Plugin, error)
 	Delete(id string) error
-	// TODO list options implemented client-side
 	List() ([]types.Plugin, error)
 }
 

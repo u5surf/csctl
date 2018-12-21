@@ -17,7 +17,6 @@ type UserInterface interface {
 	Create(*types.User) (*types.User, error)
 	Get(id string) (*types.User, error)
 	Delete(id string) error
-	// TODO list options implemented client-side
 	List() ([]types.User, error)
 }
 

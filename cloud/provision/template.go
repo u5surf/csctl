@@ -17,7 +17,6 @@ type TemplateInterface interface {
 	Create(*types.CreateTemplateRequest) (*types.Template, error)
 	Get(id string) (*types.Template, error)
 	Delete(id string) error
-	// TODO list options implemented client-side
 	List() ([]types.Template, error)
 }
 

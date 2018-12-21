@@ -17,7 +17,6 @@ type ProviderInterface interface {
 	Create(*types.Provider) (*types.Provider, error)
 	Get(id string) (*types.Provider, error)
 	Delete(id string) error
-	// TODO list options implemented client-side
 	List() ([]types.Provider, error)
 }
 

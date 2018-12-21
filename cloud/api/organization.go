@@ -17,7 +17,6 @@ type OrganizationInterface interface {
 	Create(*types.Organization) (*types.Organization, error)
 	Get(id string) (*types.Organization, error)
 	Delete(id string) error
-	// TODO list options implemented client-side
 	List() ([]types.Organization, error)
 }
 

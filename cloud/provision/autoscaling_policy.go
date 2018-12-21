@@ -17,7 +17,6 @@ type AutoscalingPolicyInterface interface {
 	Create(*types.AutoscalingPolicy) (*types.AutoscalingPolicy, error)
 	Get(id string) (*types.AutoscalingPolicy, error)
 	Delete(id string) error
-	// TODO list options implemented client-side
 	List() ([]types.AutoscalingPolicy, error)
 }
 

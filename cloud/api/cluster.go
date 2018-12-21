@@ -17,7 +17,6 @@ type ClusterInterface interface {
 	Create(*types.Cluster) (*types.Cluster, error)
 	Get(id string) (*types.Cluster, error)
 	Delete(id string) error
-	// TODO list options implemented client-side
 	List() ([]types.Cluster, error)
 }
 

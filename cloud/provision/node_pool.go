@@ -17,7 +17,6 @@ type NodePoolInterface interface {
 	Create(*types.NodePool) (*types.NodePool, error)
 	Get(id string) (*types.NodePool, error)
 	Delete(id string) error
-	// TODO list options implemented client-side
 	List() ([]types.NodePool, error)
 	Scale(id string, req *types.ScaleNodePoolRequest) (*types.NodePool, error)
 }

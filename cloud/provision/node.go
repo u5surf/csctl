@@ -17,7 +17,6 @@ type NodeInterface interface {
 	Create(*types.Node) (*types.Node, error)
 	Get(id string) (*types.Node, error)
 	Delete(id string) error
-	// TODO list options implemented client-side
 	List() ([]types.Node, error)
 }
 
