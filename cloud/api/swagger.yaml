@@ -313,6 +313,49 @@ paths:
           schema:
             $ref: "#/definitions/Error"
 
+  /organizations/{organization_id}/registries:
+    get:
+      summary: List registries for an organization
+      operationId: listRegistries
+      tags:
+        - registries
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: A list of registries
+          schema:
+            $ref: "#/definitions/Registries"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+  /organizations/{organization_id}/registries/{registry_id}:
+    get:
+      summary: Get a registry
+      operationId: getRegistry
+      tags:
+        - registry
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+        - in: path
+          name: registry_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: A registry
+          schema:
+            $ref: "#/definitions/Registry"
+
+
 definitions:
   Account:
     title: A user account
@@ -639,16 +682,44 @@ definitions:
     items:
       $ref: "#/definitions/Plugin"
 
-  Error:
+  Registry:
+    title: A Containership registry
+    type: object
     required:
-      - code
-      - message
+      - created_at
+      - description
+      - id
+      - organization_id
+      - provider
+      - serveraddress
+      - updated_at
     properties:
-      code:
-        type: integer
-        format: int32
-      message:
+      created_at:
+        title: Timestamp at which the registry was added
         type: string
+      description:
+        title: Registry description
+        type: string
+      id:
+        title: Registry ID
+        $ref: "#/definitions/UUID"
+      organization_id:
+        title: Organization ID
+        type: string
+      provider:
+        title: Registry provider, e.g. quay or dockerhub
+        type: string
+      serveraddress:
+        title: Registry server address
+        type: string
+      updated_at:
+        title: Timestamp at which the registry was updated
+        type: string
+
+  Registries:
+    type: array
+    items:
+      $ref: "#/definitions/Registry"
 
   User:
     title: A user belonging to an organization
@@ -729,6 +800,7 @@ definitions:
     type: string
     minLength: 36
     maxLength: 36
+  
   Error:
     required:
       - code
