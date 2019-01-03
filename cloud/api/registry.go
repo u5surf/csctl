@@ -22,8 +22,8 @@ type RegistryInterface interface {
 
 // registry implements RegistryInterface
 type registry struct {
-	client         	rest.Interface
-	organizationID 	string
+	client         rest.Interface
+	organizationID string
 }
 
 func newRegistry(c *Client, organizationID string) *registry {

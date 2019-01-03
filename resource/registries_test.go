@@ -14,18 +14,18 @@ var (
 
 	regs = []types.Registry{
 		{
-			ID:             types.UUID("1234"),
-			CreatedAt:      &regTime,
-			Description:    strptr("logs"),
-			Provider:       strptr("kubernetes"),
-			Serveraddress:  strptr("v1.0.0"),
+			ID:            types.UUID("1234"),
+			CreatedAt:     &regTime,
+			Description:   strptr("logs"),
+			Provider:      strptr("kubernetes"),
+			Serveraddress: strptr("v1.0.0"),
 		},
 		{
-			ID:             types.UUID("4321"),
-			CreatedAt:      &regTime,
-			Description:    strptr("metrics"),
-			Provider:       strptr("prometheus"),
-			Serveraddress:  strptr("2.0.0"),
+			ID:            types.UUID("4321"),
+			CreatedAt:     &regTime,
+			Description:   strptr("metrics"),
+			Provider:      strptr("prometheus"),
+			Serveraddress: strptr("2.0.0"),
 		},
 	}
 )
