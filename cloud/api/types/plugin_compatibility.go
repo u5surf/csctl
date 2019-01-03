@@ -21,6 +21,9 @@ type PluginCompatibility struct {
 	// Required: true
 	Kubernetes *PluginKubernetesCompatibility `json:"kubernetes"`
 
+	// The plugins required and version compatibility for this plugin
+	Plugins map[string]PluginPluginsCompatibility `json:"plugins,omitempty"`
+
 	// The list of valid upgrade paths for the plugin
 	// Required: true
 	Upgrades []string `json:"upgrades"`
@@ -31,6 +34,10 @@ func (m *PluginCompatibility) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateKubernetes(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePlugins(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -57,6 +64,28 @@ func (m *PluginCompatibility) validateKubernetes(formats strfmt.Registry) error 
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *PluginCompatibility) validatePlugins(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Plugins) { // not required
+		return nil
+	}
+
+	for k := range m.Plugins {
+
+		if err := validate.Required("plugins"+"."+k, "body", m.Plugins[k]); err != nil {
+			return err
+		}
+		if val, ok := m.Plugins[k]; ok {
+			if err := val.Validate(formats); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	return nil

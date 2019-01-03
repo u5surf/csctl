@@ -42,6 +42,8 @@ func NewPluginCatalogFromDefinitions(pluginType string, defs []*types.PluginDefi
 	pc := types.PluginCatalog{}
 
 	switch pluginType {
+	case "autoscaler":
+		pc.Autoscaler = defs
 	case "cni":
 		pc.CNI = defs
 	case "csi":
@@ -104,6 +106,7 @@ func addPlugins(plugins []*types.PluginDefinition, table *table.Table, ptype str
 func (pc *PluginsCatalog) Table(w io.Writer) error {
 	table := table.New(w, pc.columns())
 
+	addPlugins(pc.items.Autoscaler, table, "Autoscaler")
 	addPlugins(pc.items.CloudControllerManager, table, "Cloud Controller Manager")
 	addPlugins(pc.items.ClusterManagement, table, "Cluster Management")
 	addPlugins(pc.items.CNI, table, "CNI")

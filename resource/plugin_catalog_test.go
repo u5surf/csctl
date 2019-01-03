@@ -11,6 +11,29 @@ import (
 
 var (
 	plugsCatalog = &types.PluginCatalog{
+		Autoscaler: []*types.PluginDefinition{
+			{
+				Implementation: strptr("cerebral"),
+				Versions: []*types.PluginVersion{
+					{
+						Version: strptr("1.0.0"),
+						Compatibility: &types.PluginCompatibility{
+							Kubernetes: &types.PluginKubernetesCompatibility{
+								Min: strptr("1.10.x"),
+								Max: strptr("1.12.x"),
+							},
+							Plugins: map[string]types.PluginPluginsCompatibility{
+								"Metrics": types.PluginPluginsCompatibility{
+									Implementation: strptr("prometheus"),
+									Min:            strptr("1.0.0"),
+									Max:            strptr("1.1.0"),
+								},
+							},
+						},
+					},
+				},
+			},
+		},
 		CNI: []*types.PluginDefinition{
 			{
 				Implementation: strptr("calico"),
@@ -131,11 +154,15 @@ func TestNewPluginCatalogFromDefinition(t *testing.T) {
 
 	// We'll only do these checks once. Doesn't seem worth the effort to do it
 	// for every type, as the code is straightforward.
+	assert.Nil(t, pc.items.Autoscaler, "only cni def is set")
 	assert.Nil(t, pc.items.CSI, "only cni def is set")
 	assert.Nil(t, pc.items.CloudControllerManager, "only cni def is set")
 	assert.Nil(t, pc.items.ClusterManagement, "only cni def is set")
 	assert.Nil(t, pc.items.Logs, "only cni def is set")
 	assert.Nil(t, pc.items.Metrics, "only cni def is set")
+
+	pc = NewPluginCatalogFromDefinition("autoscaler", plugsCatalog.Autoscaler[0])
+	assert.Equal(t, plugsCatalog.Autoscaler[0], pc.items.Autoscaler[0], "autoscaler def set properly")
 
 	pc = NewPluginCatalogFromDefinition("csi", plugsCatalog.CSI[0])
 	assert.Equal(t, plugsCatalog.CSI[0], pc.items.CSI[0], "csi def set properly")
@@ -178,6 +205,7 @@ func TestPluginCatalogTable(t *testing.T) {
 	assert.Equal(t, len(pc.columns()), info.numCols)
 
 	l := 0
+	l += len(plugsCatalog.Autoscaler)
 	l += len(plugsCatalog.CNI)
 	l += len(plugsCatalog.CSI)
 	l += len(plugsCatalog.CloudControllerManager)

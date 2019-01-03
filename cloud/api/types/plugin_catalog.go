@@ -24,6 +24,9 @@ type PluginCatalog struct {
 	// Container Storage Interface (CSI) Plugins
 	CSI []*PluginDefinition `json:"CSI,omitempty"`
 
+	// Autoscaler Plugins
+	Autoscaler []*PluginDefinition `json:"autoscaler,omitempty"`
+
 	// Cloud Controller Manager Plugins
 	CloudControllerManager []*PluginDefinition `json:"cloud_controller_manager,omitempty"`
 
@@ -46,6 +49,10 @@ func (m *PluginCatalog) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCSI(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAutoscaler(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -111,6 +118,31 @@ func (m *PluginCatalog) validateCSI(formats strfmt.Registry) error {
 			if err := m.CSI[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("CSI" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *PluginCatalog) validateAutoscaler(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Autoscaler) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Autoscaler); i++ {
+		if swag.IsZero(m.Autoscaler[i]) { // not required
+			continue
+		}
+
+		if m.Autoscaler[i] != nil {
+			if err := m.Autoscaler[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("autoscaler" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

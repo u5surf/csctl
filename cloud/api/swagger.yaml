@@ -567,6 +567,12 @@ definitions:
     title: A Containership plugin definition
     type: object
     properties:
+      autoscaler:
+        title: Autoscaler Plugins
+        type: array
+        x-omitempty: true
+        items:
+          $ref: "#/definitions/PluginDefinition"
       cloud_controller_manager:
         title: Cloud Controller Manager Plugins
         type: array
@@ -662,6 +668,11 @@ definitions:
       kubernetes:
         title: The definition for Kubernetes compatibility
         $ref: "#/definitions/PluginKubernetesCompatibility"
+      plugins:
+        title: The plugins required and version compatibility for this plugin
+        type: object
+        additionalProperties:
+          $ref: '#/definitions/PluginPluginsCompatibility'
 
   PluginKubernetesCompatibility:
     title: Defines the Kubernetes version that the plugin supports
@@ -675,6 +686,24 @@ definitions:
         type: string
       max:
         title: The maximum Kubernetes version for the plugin
+        type: string
+
+  PluginPluginsCompatibility:
+    title: Defines the Plugin required and what versions are compatible with this version of the parent plugin
+    type: object
+    required:
+      - implementation
+      - min
+      - max
+    properties:
+      implementation:
+        title: The implementation name for the type of plugin
+        type: string
+      min:
+        title: The minimum plugin version
+        type: string
+      max:
+        title: The maximum plugin version
         type: string
 
   Plugins:
