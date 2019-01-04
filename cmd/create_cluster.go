@@ -25,7 +25,13 @@ func init() {
 	createClusterCmd.PersistentFlags().StringVarP(&createClusterOpts.Name, "name", "n", "", "cluster name")
 	createClusterCmd.PersistentFlags().StringVarP(&createClusterOpts.Environment, "environment", "e", "", "environment")
 
-	// Plugins which are never provider-specific
+	// Plugins
+	createClusterDigitalOceanCmd.Flags().StringVar(&createClusterOpts.PluginCNIFlag.Val, "plugin-cni", "",
+		"Container Networking Interface (CNI) plugin")
+	createClusterDigitalOceanCmd.Flags().StringVar(&createClusterOpts.PluginCSIFlag.Val, "plugin-csi", "",
+		fmt.Sprintf("Cloud Storage Interface (CSI) plugin (specify %q to disable)", plugin.NoImplementation))
+	createClusterDigitalOceanCmd.Flags().StringVar(&createClusterOpts.PluginCCMFlag.Val, "plugin-ccm", "",
+		fmt.Sprintf("Cloud Controller Manager (CCM) plugin (specify %q to disable)", plugin.NoImplementation))
 	createClusterDigitalOceanCmd.Flags().StringVar(&createClusterOpts.PluginMetricsFlag.Val, "plugin-metrics", "",
 		fmt.Sprintf("metrics plugin (specify %q to disable)", plugin.NoImplementation))
 	createClusterDigitalOceanCmd.Flags().StringVar(&createClusterOpts.PluginClusterManagementFlag.Val, "plugin-cluster-management", "",

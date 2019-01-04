@@ -11,12 +11,6 @@ import (
 // to create a DigitalOcean cluster
 type DigitalOceanClusterCreate struct {
 	ClusterCreate
-
-	PluginCNIFlag plugin.Flag
-	PluginCSIFlag plugin.Flag
-	PluginCCMFlag plugin.Flag
-
-	plugins []*types.CreateCKEClusterPlugin
 }
 
 // DefaultAndValidate defaults and validates all options
@@ -42,14 +36,11 @@ func (o *DigitalOceanClusterCreate) DefaultAndValidate() error {
 
 // CreateCKEClusterRequest constructs a CreateCKEClusterRequest from these options
 func (o *DigitalOceanClusterCreate) CreateCKEClusterRequest() types.CreateCKEClusterRequest {
-	// Include parent plugins
-	plugins := append(o.plugins, o.ClusterCreate.plugins...)
-
 	return types.CreateCKEClusterRequest{
 		ProviderID: types.UUID(o.ProviderID),
 		TemplateID: types.UUID(o.TemplateID),
 		Labels:     o.labels,
-		Plugins:    plugins,
+		Plugins:    o.plugins,
 	}
 }
 
@@ -94,7 +85,7 @@ func (o *DigitalOceanClusterCreate) defaultAndValidateCCM() error {
 	impl = "digitalocean"
 
 	pType := "cloud_controller_manager"
-	o.plugins = append(o.plugins, &types.CreateCKEClusterPlugin{
+	o.ClusterCreate.plugins = append(o.plugins, &types.CreateCKEClusterPlugin{
 		Type:           &pType,
 		Implementation: &impl,
 		Version:        version,

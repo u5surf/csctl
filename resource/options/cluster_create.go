@@ -15,10 +15,15 @@ type ClusterCreate struct {
 	Name        string
 	Environment string
 
-	// Global plugins
+	// Plugin flags without provider-specific validation
 	PluginMetricsFlag           plugin.Flag
 	PluginClusterManagementFlag plugin.Flag
 	PluginAutoscalerFlag        plugin.Flag
+
+	// Flags with provider-specific validation
+	PluginCNIFlag plugin.Flag
+	PluginCSIFlag plugin.Flag
+	PluginCCMFlag plugin.Flag
 
 	plugins []*types.CreateCKEClusterPlugin
 

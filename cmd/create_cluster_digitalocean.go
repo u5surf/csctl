@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/containership/csctl/resource/options"
-	"github.com/containership/csctl/resource/plugin"
+	//"github.com/containership/csctl/resource/plugin"
 )
 
 var doCreateClusterOpts options.DigitalOceanClusterCreate
@@ -44,11 +44,4 @@ func init() {
 	createClusterCmd.AddCommand(createClusterDigitalOceanCmd)
 
 	bindCommandToOrganizationScope(createClusterDigitalOceanCmd, false)
-
-	createClusterDigitalOceanCmd.Flags().StringVar(&doCreateClusterOpts.PluginCNIFlag.Val, "plugin-cni", "",
-		"Container Networking Interface (CNI) plugin")
-	createClusterDigitalOceanCmd.Flags().StringVar(&doCreateClusterOpts.PluginCSIFlag.Val, "plugin-csi", "",
-		fmt.Sprintf("Cloud Storage Interface (CSI) plugin (specify %q to disable)", plugin.NoImplementation))
-	createClusterDigitalOceanCmd.Flags().StringVar(&doCreateClusterOpts.PluginCCMFlag.Val, "plugin-ccm", "",
-		fmt.Sprintf("Cloud Controller Manager (CCM) plugin (specify %q to disable)", plugin.NoImplementation))
 }
