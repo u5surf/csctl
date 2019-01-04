@@ -15,6 +15,7 @@ Containership Cloud is composed of various microservices, some of which are acce
 In particular, this client is currently able to interact with the following microservices:
 
 - **API** - The main Containership Cloud API
+- **Auth** - API specific to user authentication and authorization
 - **Provision** - API specific to provisioning, i.e. for Containership Kubernetes Engine (CKE)
 - **Proxy** - The API used for proxying requests to the Kubernetes API for a given cluster
 

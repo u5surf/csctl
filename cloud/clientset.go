@@ -4,6 +4,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/containership/csctl/cloud/api"
+	"github.com/containership/csctl/cloud/auth"
 	"github.com/containership/csctl/cloud/provision"
 	"github.com/containership/csctl/cloud/rest"
 )
@@ -11,12 +12,14 @@ import (
 // Interface is the main top-level interface to cloud
 type Interface interface {
 	API() api.Interface
+	Auth() auth.Interface
 	Provision() provision.Interface
 }
 
 // Clientset implements Interface
 type Clientset struct {
 	api       *api.Client
+	auth      *auth.Client
 	provision *provision.Client
 }
 
@@ -26,6 +29,7 @@ type Config struct {
 
 	// Optional
 	APIBaseURL       string
+	AuthBaseURL      string
 	ProvisionBaseURL string
 
 	DebugEnabled bool
@@ -34,6 +38,11 @@ type Config struct {
 // API returns an instance of the API client
 func (c *Clientset) API() api.Interface {
 	return c.api
+}
+
+// Auth returns an instance of the Auth client
+func (c *Clientset) Auth() auth.Interface {
+	return c.auth
 }
 
 // Provision returns an instance of the Provision client
@@ -53,6 +62,14 @@ func New(cfg Config) (*Clientset, error) {
 		return nil, errors.Wrap(err, "constructing API client")
 	}
 
+	auth, err := auth.New(rest.Config{
+		BaseURL: cfg.AuthBaseURL,
+		Token:   cfg.Token,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "constructing auth client")
+	}
+
 	provision, err := provision.New(rest.Config{
 		BaseURL:      cfg.ProvisionBaseURL,
 		Token:        cfg.Token,
@@ -64,6 +81,7 @@ func New(cfg Config) (*Clientset, error) {
 
 	return &Clientset{
 		api:       api,
+		auth:      auth,
 		provision: provision,
 	}, nil
 }

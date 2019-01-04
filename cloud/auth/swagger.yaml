@@ -1,0 +1,82 @@
+swagger: "2.0"
+host: auth.containership.io
+basePath: /v3
+schemes:
+  - http
+  - https
+produces:
+  - application/json
+consumes:
+  - application/json
+
+info:
+  version: "3.0.0"
+  title: Containership Auth API
+  contact:
+    name: Containership Developers
+    email: developers@containership.io
+    url: https://containership.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+paths:
+  /login/{method}:
+    post:
+      summary: Login to containership cloud
+      operationId: login
+      tags:
+        - login
+      parameters:
+        - in: path
+          name: method
+          required: true
+          type: string
+        - in: body
+          name: login-request
+          schema:
+            $ref: '#/definitions/LoginRequest'
+      responses:
+        "200":
+          description: A Containership user token
+          schema:
+            $ref: "#/definitions/AccountToken"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+definitions:
+  AccountToken:
+    title: A Containership Account Authorization Token
+    type: object
+    required:
+      - token
+    properties:
+      token:
+        title: User authorization token
+        type: string
+
+  LoginRequest:
+    type: object
+    # not required: eventually other method types will include state and code
+    # until we support oneOf syntax with OpenAPI v3, we cannot specify
+    # required:
+    properties:
+      email:
+        title: Email to use for login
+        type: string
+      password:
+        title: Password to use for login
+        type: string
+
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
