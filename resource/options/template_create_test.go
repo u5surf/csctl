@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDefaultAndValidate(t *testing.T) {
+func TestTemplateCreateDefaultAndValidate(t *testing.T) {
 	var opts = TemplateCreate{}
 	// Everything is defaultable, so no error should occur for empty opts
 	err := opts.DefaultAndValidate()

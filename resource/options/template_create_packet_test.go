@@ -11,7 +11,7 @@ const (
 )
 
 func TestPacketDefaultAndValidate(t *testing.T) {
-	var opts = PacketTemplateCreate{
+	opts := PacketTemplateCreate{
 		ProjectID: validUUID,
 	}
 	err := opts.DefaultAndValidate()
@@ -26,7 +26,7 @@ func TestPacketDefaultAndValidate(t *testing.T) {
 }
 
 func TestPacketTemplate(t *testing.T) {
-	var opts = PacketTemplateCreate{
+	opts := PacketTemplateCreate{
 		ProjectID: validUUID,
 		Facility:  "ewr1",
 		Plan:      "t1.small.x86",
@@ -39,7 +39,7 @@ func TestPacketTemplate(t *testing.T) {
 }
 
 func TestValidateProjectID(t *testing.T) {
-	var opts = PacketTemplateCreate{
+	opts := PacketTemplateCreate{
 		ProjectID: validUUID,
 	}
 	err := opts.validateProjectID()
@@ -51,14 +51,14 @@ func TestValidateProjectID(t *testing.T) {
 }
 
 func TestDefaultAndValidateFacility(t *testing.T) {
-	var opts = PacketTemplateCreate{}
+	opts := PacketTemplateCreate{}
 	err := opts.defaultAndValidateFacility()
 	assert.NoError(t, err)
 	assert.NotEmpty(t, opts.Facility, "facility set")
 }
 
 func TestDefaultAndValidatePlan(t *testing.T) {
-	var opts = PacketTemplateCreate{}
+	opts := PacketTemplateCreate{}
 	err := opts.defaultAndValidatePlan()
 	assert.NoError(t, err)
 	assert.NotEmpty(t, opts.Plan, "plan set")

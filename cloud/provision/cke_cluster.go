@@ -14,7 +14,7 @@ type CKEClustersGetter interface {
 
 // CKEClusterInterface is the interface for CKE clusters
 type CKEClusterInterface interface {
-	Create(*types.CKECluster) (*types.CKECluster, error)
+	Create(req *types.CreateCKEClusterRequest) (*types.IDResponse, error)
 	Get(id string) (*types.CKECluster, error)
 	Delete(id string) error
 	List() ([]types.CKECluster, error)
@@ -34,9 +34,10 @@ func newCKEClusters(c *Client, organizationID string) *ckeClusters {
 }
 
 // Create creates a CKE cluster
-func (c *ckeClusters) Create(*types.CKECluster) (*types.CKECluster, error) {
-	// TODO
-	return nil, nil
+func (c *ckeClusters) Create(req *types.CreateCKEClusterRequest) (*types.IDResponse, error) {
+	path := fmt.Sprintf("/v3/organizations/%s/clusters", c.organizationID)
+	var out types.IDResponse
+	return &out, c.client.Post(path, req, &out)
 }
 
 // Get gets a CKE cluster

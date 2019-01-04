@@ -24,11 +24,11 @@ func init() {
 
 	// No defaulting is performed here because the logic in many cases is nontrivial,
 	// and we'd like to be consistent with where and how we default.
-	createTemplateCmd.Flags().Int32VarP(&createTemplateOpts.MasterCount, "master-count", "m", 0, "number of nodes in master node pool")
-	createTemplateCmd.Flags().Int32VarP(&createTemplateOpts.WorkerCount, "worker-count", "w", 0, "number of nodes in worker node pool")
+	createTemplateCmd.PersistentFlags().Int32VarP(&createTemplateOpts.MasterCount, "master-count", "m", 0, "number of nodes in master node pool")
+	createTemplateCmd.PersistentFlags().Int32VarP(&createTemplateOpts.WorkerCount, "worker-count", "w", 0, "number of nodes in worker node pool")
 
-	createTemplateCmd.Flags().StringVar(&createTemplateOpts.MasterKubernetesVersion, "master-kubernetes-version", "", "Kubernetes version for master node pool")
-	createTemplateCmd.Flags().StringVar(&createTemplateOpts.WorkerKubernetesVersion, "worker-kubernetes-version", "", "Kubernetes version for worker node pool")
+	createTemplateCmd.PersistentFlags().StringVar(&createTemplateOpts.MasterKubernetesVersion, "master-kubernetes-version", "", "Kubernetes version for master node pool")
+	createTemplateCmd.PersistentFlags().StringVar(&createTemplateOpts.WorkerKubernetesVersion, "worker-kubernetes-version", "", "Kubernetes version for worker node pool")
 
-	createTemplateCmd.Flags().StringVar(&createTemplateOpts.Description, "description", "", "template description")
+	createTemplateCmd.PersistentFlags().StringVar(&createTemplateOpts.Description, "description", "", "template description")
 }
