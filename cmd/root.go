@@ -16,7 +16,8 @@ import (
 
 // Flags / config options
 var (
-	cfgFile string
+	cfgFile      string
+	debugEnabled bool
 
 	// TODO support names, not just IDs, and resolve appropriately
 	organizationID string
@@ -125,6 +126,7 @@ This is a long description`,
 			Token:            userToken,
 			APIBaseURL:       viper.GetString("apiBaseURL"),
 			ProvisionBaseURL: viper.GetString("provisionBaseURL"),
+			DebugEnabled:     debugEnabled,
 		})
 
 		return err
@@ -146,6 +148,8 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is ~/.containership/csctl.yaml)")
+
+	rootCmd.PersistentFlags().BoolVar(&debugEnabled, "debug", false, "enable/disable debug mode (trace all HTTP requests)")
 }
 
 // initConfig reads in config file and ENV variables if set.

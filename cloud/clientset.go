@@ -27,6 +27,8 @@ type Config struct {
 	// Optional
 	APIBaseURL       string
 	ProvisionBaseURL string
+
+	DebugEnabled bool
 }
 
 // API returns an instance of the API client
@@ -43,16 +45,18 @@ func (c *Clientset) Provision() provision.Interface {
 // If base URLs are not provided, they will be defaulted by the underlying clients
 func New(cfg Config) (*Clientset, error) {
 	api, err := api.New(rest.Config{
-		BaseURL: cfg.APIBaseURL,
-		Token:   cfg.Token,
+		BaseURL:      cfg.APIBaseURL,
+		Token:        cfg.Token,
+		DebugEnabled: cfg.DebugEnabled,
 	})
 	if err != nil {
 		return nil, errors.Wrap(err, "constructing API client")
 	}
 
 	provision, err := provision.New(rest.Config{
-		BaseURL: cfg.ProvisionBaseURL,
-		Token:   cfg.Token,
+		BaseURL:      cfg.ProvisionBaseURL,
+		Token:        cfg.Token,
+		DebugEnabled: cfg.DebugEnabled,
 	})
 	if err != nil {
 		return nil, errors.Wrap(err, "constructing provision client")

@@ -18,14 +18,16 @@ type Interface interface {
 
 // Client is a basic HTTP client for REST operations
 type Client struct {
-	baseURL *url.URL
-	token   string
+	baseURL      *url.URL
+	token        string
+	debugEnabled bool
 }
 
 // Config is the configuration for a REST client
 type Config struct {
-	BaseURL string
-	Token   string
+	BaseURL      string
+	Token        string
+	DebugEnabled bool
 }
 
 // NewClient constructs a new REST client for the given config
@@ -42,8 +44,9 @@ func NewClient(cfg Config) (*Client, error) {
 	}
 
 	return &Client{
-		baseURL: baseURL,
-		token:   cfg.Token,
+		baseURL:      baseURL,
+		token:        cfg.Token,
+		debugEnabled: cfg.DebugEnabled,
 	}, nil
 }
 
@@ -78,7 +81,7 @@ func (c *Client) execute(verb string, path string, body interface{}, output inte
 
 	authHeader := fmt.Sprintf("JWT %s", c.token)
 
-	req := resty.R().SetHeader("Authorization", authHeader)
+	req := resty.SetDebug(c.debugEnabled).R().SetHeader("Authorization", authHeader)
 
 	if body != nil {
 		req.SetBody(body)
