@@ -829,7 +829,7 @@ definitions:
     type: string
     minLength: 36
     maxLength: 36
-  
+
   Error:
     required:
       - code

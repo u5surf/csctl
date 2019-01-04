@@ -42,6 +42,31 @@ paths:
           schema:
             $ref: "#/definitions/Error"
 
+  /organizations/{organization_id}/clusters:
+    post:
+      summary: Create (provision) a cluster
+      operationId: createCluster
+      tags:
+        - cluster
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+        - in: body
+          name: create_cluster_request
+          schema:
+            $ref: '#/definitions/CreateCKEClusterRequest'
+      responses:
+        "202":
+          description: ID of the cluster being created
+          schema:
+            $ref: "#/definitions/IDResponse"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
   /organizations/{organization_id}/clusters/{cluster_id}:
     get:
       summary: Get a CKE cluster
@@ -249,11 +274,15 @@ paths:
           name: organization_id
           required: true
           type: string
+        - in: body
+          name: create_template_request
+          schema:
+            $ref: '#/definitions/CreateTemplateRequest'
       responses:
         "200":
-          description: A list of provisioning templates
+          description: The created template
           schema:
-            $ref: "#/definitions/CreateTemplateRequest"
+            $ref: "#/definitions/Template"
         default:
           description: Unexpected error
           schema:
@@ -285,6 +314,53 @@ paths:
             $ref: "#/definitions/Error"
 
 definitions:
+  CreateCKEClusterRequest:
+    title: Request to create (provision) a CKE cluster
+    type: object
+    required:
+      - template_id
+      - plugins
+      - provider_id
+      - labels
+    properties:
+      template_id:
+        title: Template ID to use for provisioning
+        $ref: '#/definitions/UUID'
+      plugins:
+        title: List of plugins to add to cluster
+        $ref: '#/definitions/CreateCKEClusterPlugins'
+      provider_id:
+        title: Provider credentials ID to use for provisioning
+        $ref: '#/definitions/UUID'
+      labels:
+        title: List of label key/value pairs to add to cluster
+        type: object
+
+  CreateCKEClusterPlugin:
+    type: object
+    required:
+      - implementation
+      - type
+    properties:
+      implementation:
+        title: Specific implementation of this plugin type
+        type: string
+      type:
+        title: Plugin type
+        type: string
+        enum: [cluster_management, metrics, logs, cni, csi, cloud_controller_manager, autoscaler]
+      configuration:
+        description: Plugin configuration
+        type: object
+      version:
+        description: Plugin version
+        type: string
+
+  CreateCKEClusterPlugins:
+    type: array
+    items:
+      $ref: '#/definitions/CreateCKEClusterPlugin'
+
   CKECluster:
     title: A Containership Kubernetes Engine (CKE) cluster
     type: object
@@ -582,7 +658,17 @@ definitions:
     minLength: 36
     maxLength: 36
 
+  IDResponse:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        title: ID of some resource
+        $ref: '#/definitions/UUID'
+
   Error:
+    type: object
     required:
       - code
       - message
