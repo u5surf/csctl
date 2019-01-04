@@ -23,7 +23,7 @@ var (
 								Max: strptr("1.12.x"),
 							},
 							Plugins: map[string]types.PluginPluginsCompatibility{
-								"Metrics": types.PluginPluginsCompatibility{
+								"Metrics": {
 									Implementation: strptr("prometheus"),
 									Min:            strptr("1.0.0"),
 									Max:            strptr("1.1.0"),
