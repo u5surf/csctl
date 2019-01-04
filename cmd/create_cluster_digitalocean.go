@@ -51,8 +51,4 @@ func init() {
 		fmt.Sprintf("Cloud Storage Interface (CSI) plugin (specify %q to disable)", plugin.NoImplementation))
 	createClusterDigitalOceanCmd.Flags().StringVar(&doCreateClusterOpts.PluginCCMFlag.Val, "plugin-ccm", "",
 		fmt.Sprintf("Cloud Controller Manager (CCM) plugin (specify %q to disable)", plugin.NoImplementation))
-	createClusterDigitalOceanCmd.Flags().StringVar(&doCreateClusterOpts.PluginMetricsFlag.Val, "plugin-metrics", "",
-		fmt.Sprintf("metrics plugin (specify %q to disable)", plugin.NoImplementation))
-	createClusterDigitalOceanCmd.Flags().StringVar(&doCreateClusterOpts.PluginClusterManagementFlag.Val, "plugin-cluster-management", "", "Cluster Management plugin (implementation must be \"containership\")")
-	createClusterDigitalOceanCmd.Flags().StringVar(&doCreateClusterOpts.PluginAutoscalerFlag.Val, "plugin-autoscaler", "", "Autoscaler plugin")
 }
