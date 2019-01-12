@@ -13,17 +13,17 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// ScaleNodePoolRequest scale node pool request
-// swagger:model ScaleNodePoolRequest
-type ScaleNodePoolRequest struct {
+// NodePoolScaleRequest node pool scale request
+// swagger:model NodePoolScaleRequest
+type NodePoolScaleRequest struct {
 
 	// Number of nodes in this node pool
 	// Required: true
 	Count *int32 `json:"count"`
 }
 
-// Validate validates this scale node pool request
-func (m *ScaleNodePoolRequest) Validate(formats strfmt.Registry) error {
+// Validate validates this node pool scale request
+func (m *NodePoolScaleRequest) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCount(formats); err != nil {
@@ -36,7 +36,7 @@ func (m *ScaleNodePoolRequest) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *ScaleNodePoolRequest) validateCount(formats strfmt.Registry) error {
+func (m *NodePoolScaleRequest) validateCount(formats strfmt.Registry) error {
 
 	if err := validate.Required("count", "body", m.Count); err != nil {
 		return err
@@ -46,7 +46,7 @@ func (m *ScaleNodePoolRequest) validateCount(formats strfmt.Registry) error {
 }
 
 // MarshalBinary interface implementation
-func (m *ScaleNodePoolRequest) MarshalBinary() ([]byte, error) {
+func (m *NodePoolScaleRequest) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -54,8 +54,8 @@ func (m *ScaleNodePoolRequest) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *ScaleNodePoolRequest) UnmarshalBinary(b []byte) error {
-	var res ScaleNodePoolRequest
+func (m *NodePoolScaleRequest) UnmarshalBinary(b []byte) error {
+	var res NodePoolScaleRequest
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

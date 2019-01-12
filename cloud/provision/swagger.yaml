@@ -146,7 +146,6 @@ paths:
           schema:
             $ref: "#/definitions/Error"
 
-  # TODO this will have to change to support multiple PATCH requests, not just scale
   /organizations/{organization_id}/clusters/{cluster_id}/node-pools/{node_pool_id}:
     patch:
       summary: Scale a node pool
@@ -167,9 +166,9 @@ paths:
           required: true
           type: string
         - in: body
-          name: scale_node_pool_request
+          name: node_pool_scale_request
           schema:
-            $ref: '#/definitions/ScaleNodePoolRequest'
+            $ref: '#/definitions/NodePoolScaleRequest'
       responses:
         "200":
           description: The updated node pool
@@ -523,7 +522,7 @@ definitions:
     items:
       $ref: "#/definitions/NodePool"
 
-  ScaleNodePoolRequest:
+  NodePoolScaleRequest:
     type: object
     required:
       - count
@@ -532,6 +531,16 @@ definitions:
         title: Number of nodes in this node pool
         type: integer
         format: int32
+
+  NodePoolUpgradeRequest:
+    title: Upgrade (or downgrade) the Kubernetes version for a node pool
+    type: object
+    required:
+      - kubernetes_version
+    properties:
+      kubernetes_version:
+        title: Kubernetes version to upgrade (or downgrade) to
+        type: string
 
   AutoscalingPolicy:
     type: object
