@@ -313,6 +313,33 @@ paths:
           schema:
             $ref: "#/definitions/Error"
 
+  /organizations/{organization_id}/clusters/{cluster_id}/plugins/{plugin_id}:
+    patch:
+      summary: Update a plugin
+      operationId: updatePlugin
+      tags:
+        - plugins
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          type: string
+        - in: path
+          name: cluster_id
+          required: true
+          type: string
+        - in: path
+          name: plugin_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Successful request
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
   /organizations/{organization_id}/registries:
     get:
       summary: List registries for an organization
@@ -710,6 +737,16 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/Plugin"
+
+  PluginUpgradeRequest:
+    title: Upgrade a plugin
+    type: object
+    required:
+      - version
+    properties:
+      version:
+        title: Version to upgrade to
+        type: string
 
   Registry:
     title: A Containership registry

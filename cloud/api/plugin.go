@@ -18,6 +18,7 @@ type PluginInterface interface {
 	Get(id string) (*types.Plugin, error)
 	Delete(id string) error
 	List() ([]types.Plugin, error)
+	Upgrade(id string, req *types.PluginUpgradeRequest) error
 }
 
 // plugins implements PluginInterface
@@ -59,4 +60,10 @@ func (c *plugins) List() ([]types.Plugin, error) {
 	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s/plugins", c.organizationID, c.clusterID)
 	out := make([]types.Plugin, 0)
 	return out, c.client.Get(path, &out)
+}
+
+// Upgrade upgrades a plugin
+func (c *plugins) Upgrade(id string, req *types.PluginUpgradeRequest) error {
+	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s/plugins/%s", c.organizationID, c.clusterID, id)
+	return c.client.Patch(path, req, nil)
 }
