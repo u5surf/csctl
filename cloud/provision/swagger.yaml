@@ -146,6 +146,8 @@ paths:
           schema:
             $ref: "#/definitions/Error"
 
+  # TODO this will have to change to support multiple PATCH requests, not just scale
+  # Currently it's unclear how to do that with Swagger 2.0
   /organizations/{organization_id}/clusters/{cluster_id}/node-pools/{node_pool_id}:
     patch:
       summary: Scale a node pool

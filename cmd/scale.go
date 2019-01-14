@@ -38,7 +38,7 @@ var scaleCmd = &cobra.Command{
 			return err
 		}
 
-		req := types.ScaleNodePoolRequest{
+		req := types.NodePoolScaleRequest{
 			Count: &targetCount,
 		}
 

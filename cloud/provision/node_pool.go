@@ -18,7 +18,8 @@ type NodePoolInterface interface {
 	Get(id string) (*types.NodePool, error)
 	Delete(id string) error
 	List() ([]types.NodePool, error)
-	Scale(id string, req *types.ScaleNodePoolRequest) (*types.NodePool, error)
+	Scale(id string, req *types.NodePoolScaleRequest) (*types.NodePool, error)
+	Upgrade(id string, req *types.NodePoolUpgradeRequest) (*types.NodePool, error)
 }
 
 // nodePools implements NodePoolInterface
@@ -63,7 +64,14 @@ func (c *nodePools) List() ([]types.NodePool, error) {
 }
 
 // Scale scales a node pool
-func (c *nodePools) Scale(id string, req *types.ScaleNodePoolRequest) (*types.NodePool, error) {
+func (c *nodePools) Scale(id string, req *types.NodePoolScaleRequest) (*types.NodePool, error) {
+	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s/node-pools/%s", c.organizationID, c.clusterID, id)
+	var out types.NodePool
+	return &out, c.client.Patch(path, req, &out)
+}
+
+// Upgrade upgrades a node pool
+func (c *nodePools) Upgrade(id string, req *types.NodePoolUpgradeRequest) (*types.NodePool, error) {
 	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s/node-pools/%s", c.organizationID, c.clusterID, id)
 	var out types.NodePool
 	return &out, c.client.Patch(path, req, &out)
