@@ -1,3 +1,9 @@
+coverage:
+  status:
+    patch:
+      default:
+        target: 70
+
 # TODO re-enable coverage checking for the following cmd files
 ignore:
   - "cloud/*/types"
