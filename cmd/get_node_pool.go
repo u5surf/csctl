@@ -9,7 +9,7 @@ import (
 
 // getNodePoolCmd represents the getNodePool command
 var getNodePoolCmd = &cobra.Command{
-	Use:     "nodepool",
+	Use:     "node-pool",
 	Short:   "Get a node pool or list of node pools",
 	Aliases: resource.NodePool().Aliases(),
 

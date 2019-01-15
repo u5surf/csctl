@@ -10,7 +10,7 @@ import (
 
 // deleteNodePoolCmd represents the deleteNodePool command
 var deleteNodePoolCmd = &cobra.Command{
-	Use:     "nodepool",
+	Use:     "node-pool",
 	Short:   "Delete one or more node pools",
 	Aliases: resource.NodePool().Aliases(),
 

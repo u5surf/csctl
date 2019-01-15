@@ -16,7 +16,7 @@ var (
 
 // upgradeNodePoolCmd represents the upgradeNodePool command
 var upgradeNodePoolCmd = &cobra.Command{
-	Use:     "nodepool",
+	Use:     "node-pool",
 	Short:   "Upgrade the Kubernetes version for a node pool",
 	Aliases: resource.NodePool().Aliases(),
 
@@ -49,5 +49,5 @@ func init() {
 
 	bindCommandToNodePoolScope(upgradeNodePoolCmd, false)
 
-	upgradeNodePoolCmd.Flags().StringVarP(&kubernetesVersion, "kubernetes-version", "v", "", "Kubernetes version to upgrade to")
+	upgradeNodePoolCmd.Flags().StringVar(&kubernetesVersion, "kubernetes-version", "", "Kubernetes version to upgrade to")
 }

@@ -58,9 +58,9 @@ func nodePoolScopedPreRunE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	nodePoolID = viper.GetString("nodepool")
+	nodePoolID = viper.GetString("node-pool")
 	if nodePoolID == "" {
-		return errors.New("please specify a node pool via --nodepool or config file")
+		return errors.New("please specify a node pool via --node-pool or config file")
 	}
 
 	return nil
@@ -102,8 +102,8 @@ func bindCommandToNodePoolScope(cmd *cobra.Command, persistent bool) {
 		flagset = cmd.Flags()
 	}
 
-	flagset.StringVar(&nodePoolID, "nodepool", "", "node pool to use")
-	viper.BindPFlag("nodepool", flagset.Lookup("nodepool"))
+	flagset.StringVar(&nodePoolID, "node-pool", "", "node pool to use")
+	viper.BindPFlag("nodePool", flagset.Lookup("node-pool"))
 }
 
 // rootCmd represents the base command when called without any subcommands

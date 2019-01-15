@@ -17,9 +17,9 @@ type NodePools struct {
 func NewNodePools(items []types.NodePool) *NodePools {
 	return &NodePools{
 		resource: resource{
-			name:    "nodepool",
-			plural:  "nodepools",
-			aliases: []string{"np", "nps"},
+			name:    "node-pool",
+			plural:  "node-pools",
+			aliases: []string{"nodepool", "nodepools", "np", "nps"},
 		},
 		items: items,
 	}
