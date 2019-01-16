@@ -103,7 +103,7 @@ func bindCommandToNodePoolScope(cmd *cobra.Command, persistent bool) {
 	}
 
 	flagset.StringVar(&nodePoolID, "node-pool", "", "node pool to use")
-	viper.BindPFlag("nodePool", flagset.Lookup("node-pool"))
+	viper.BindPFlag("node-pool", flagset.Lookup("node-pool"))
 }
 
 // rootCmd represents the base command when called without any subcommands
