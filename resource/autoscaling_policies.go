@@ -51,21 +51,12 @@ func (p *AutoscalingPolicies) Table(w io.Writer) error {
 	table := table.New(w, p.columns())
 
 	for _, asp := range p.items {
-		var upPercent string
-		up := asp.Policy.ScaleUp
-		if *up.AdjustmentType == "percent" {
-			upPercent = "%"
+		scaleUpPolicy := emptyColState
+		scaleDownPolicy := emptyColState
+		if asp.Policy != nil {
+			scaleUpPolicy = getPolicyConfiguration(asp.Policy.ScaleUp)
+			scaleDownPolicy = getPolicyConfiguration(asp.Policy.ScaleDown)
 		}
-		scaleUpPolicy := fmt.Sprintf("%s %.2f: +%d%s",
-			*up.ComparisonOperator, *up.Threshold, *up.AdjustmentValue, upPercent)
-
-		var downPercent string
-		down := asp.Policy.ScaleDown
-		if *down.AdjustmentType == "percent" {
-			downPercent = "%"
-		}
-		scaleDownPolicy := fmt.Sprintf("%s %.2f: -%d%s",
-			*down.ComparisonOperator, *down.Threshold, *down.AdjustmentValue, downPercent)
 
 		table.Append([]string{
 			*asp.Name,
@@ -82,6 +73,20 @@ func (p *AutoscalingPolicies) Table(w io.Writer) error {
 	table.Render()
 
 	return nil
+}
+
+func getPolicyConfiguration(config *types.ScalingPolicyConfiguration) string {
+	if config == nil {
+		return emptyColState
+	}
+
+	var percent string
+	if *config.AdjustmentType == "percent" {
+		percent = "%"
+	}
+
+	return fmt.Sprintf("%s %.2f: -%d%s",
+		*config.ComparisonOperator, *config.Threshold, *config.AdjustmentValue, percent)
 }
 
 // JSON outputs the JSON representation to the given writer

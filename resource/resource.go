@@ -1,5 +1,9 @@
 package resource
 
+const (
+	emptyColState = "<none>"
+)
+
 type resourceInterface interface {
 	Displayable
 

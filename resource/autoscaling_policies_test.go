@@ -55,6 +55,15 @@ var (
 			PollInterval: int32ptr(20),
 			SamplePeriod: int32ptr(800),
 		},
+		{
+			Name:           strptr("test3"),
+			ID:             types.UUID("3214"),
+			MetricsBackend: "prometheus",
+			Metric:         strptr("memory"),
+			Policy:         nil,
+			PollInterval:   int32ptr(20),
+			SamplePeriod:   int32ptr(800),
+		},
 	}
 )
 
