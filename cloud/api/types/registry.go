@@ -21,6 +21,9 @@ type Registry struct {
 	// Required: true
 	CreatedAt *string `json:"created_at"`
 
+	// Registry credentials
+	Credentials interface{} `json:"credentials,omitempty"`
+
 	// Registry description
 	// Required: true
 	Description *string `json:"description"`

@@ -781,6 +781,9 @@ definitions:
       updated_at:
         title: Timestamp at which the registry was updated
         type: string
+      credentials:
+        title: Registry credentials
+        type:  object
 
   Registries:
     type: array
