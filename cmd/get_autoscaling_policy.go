@@ -7,6 +7,11 @@ import (
 	"github.com/containership/csctl/resource"
 )
 
+// Flags
+var (
+	nodePoolIDFilter string
+)
+
 // getAutoscalingPolicyCmd represents the getAutoscalingPolicy command
 var getAutoscalingPolicyCmd = &cobra.Command{
 	Use:     "autoscaling-policy",
@@ -24,6 +29,14 @@ var getAutoscalingPolicyCmd = &cobra.Command{
 			var v *types.AutoscalingPolicy
 			v, err = clientset.Provision().AutoscalingPolicies(organizationID, clusterID).Get(args[0])
 			resp[0] = *v
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if nodePoolIDFilter != "" {
+			resp, err = clientset.Provision().AutoscalingPolicies(organizationID, clusterID).ListForNodePool(nodePoolIDFilter)
 		} else {
 			resp, err = clientset.Provision().AutoscalingPolicies(organizationID, clusterID).List()
 		}
@@ -43,4 +56,6 @@ func init() {
 	getCmd.AddCommand(getAutoscalingPolicyCmd)
 
 	bindCommandToClusterScope(getAutoscalingPolicyCmd, false)
+
+	getAutoscalingPolicyCmd.Flags().StringVarP(&nodePoolIDFilter, "node-pool", "", "", "filter autoscaling policies by node pool")
 }

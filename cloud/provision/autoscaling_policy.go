@@ -18,6 +18,7 @@ type AutoscalingPolicyInterface interface {
 	Get(id string) (*types.AutoscalingPolicy, error)
 	Delete(id string) error
 	List() ([]types.AutoscalingPolicy, error)
+	ListForNodePool(nodePoolID string) ([]types.AutoscalingPolicy, error)
 }
 
 // autoscalingPolicies implements AutoscalingPolicyInterface
@@ -62,6 +63,14 @@ func (c *autoscalingPolicies) Delete(id string) error {
 func (c *autoscalingPolicies) List() ([]types.AutoscalingPolicy, error) {
 	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s/autoscaling-policies",
 		c.organizationID, c.clusterID)
+	out := make([]types.AutoscalingPolicy, 0)
+	return out, c.client.Get(path, &out)
+}
+
+// ListForNodePool lists node pool autoscaling policies
+func (c *autoscalingPolicies) ListForNodePool(nodePoolID string) ([]types.AutoscalingPolicy, error) {
+	path := fmt.Sprintf("/v3/organizations/%s/clusters/%s/node-pools/%s/autoscaling-policies",
+		c.organizationID, c.clusterID, nodePoolID)
 	out := make([]types.AutoscalingPolicy, 0)
 	return out, c.client.Get(path, &out)
 }
