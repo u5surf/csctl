@@ -85,7 +85,7 @@ func getPolicyConfiguration(config *types.ScalingPolicyConfiguration) string {
 		percent = "%"
 	}
 
-	return fmt.Sprintf("%s %.2f: -%d%s",
+	return fmt.Sprintf("%s %.2f: -%.2f%s",
 		*config.ComparisonOperator, *config.Threshold, *config.AdjustmentValue, percent)
 }
 

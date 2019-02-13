@@ -617,8 +617,8 @@ definitions:
         enum: [absolute, percent]
       adjustment_value:
         title: Numerical representation of the number of nodes to scale the AutoscalingGroup down by determined by the adjustmentType
-        type: integer
-        format: int32
+        type: number
+        format: float
 
   Node:
     type: object

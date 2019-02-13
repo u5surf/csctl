@@ -28,7 +28,7 @@ type ScalingPolicyConfiguration struct {
 
 	// Numerical representation of the number of nodes to scale the AutoscalingGroup down by determined by the adjustmentType
 	// Required: true
-	AdjustmentValue *int32 `json:"adjustment_value"`
+	AdjustmentValue *float32 `json:"adjustment_value"`
 
 	// The comparison operator to use when comparing the MetricsBackend metric value to the threshold value
 	// Required: true

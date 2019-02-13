@@ -19,13 +19,13 @@ var (
 			Policy: &types.ScalingPolicy{
 				ScaleUp: &types.ScalingPolicyConfiguration{
 					AdjustmentType:     strptr("percent"),
-					AdjustmentValue:    int32ptr(10),
+					AdjustmentValue:    float32ptr(10),
 					ComparisonOperator: strptr(">="),
 					Threshold:          float32ptr(0.5),
 				},
 				ScaleDown: &types.ScalingPolicyConfiguration{
 					AdjustmentType:     strptr("percent"),
-					AdjustmentValue:    int32ptr(30),
+					AdjustmentValue:    float32ptr(30),
 					ComparisonOperator: strptr("<"),
 					Threshold:          float32ptr(0.3),
 				},
@@ -41,13 +41,13 @@ var (
 			Policy: &types.ScalingPolicy{
 				ScaleUp: &types.ScalingPolicyConfiguration{
 					AdjustmentType:     strptr("absolute"),
-					AdjustmentValue:    int32ptr(1),
+					AdjustmentValue:    float32ptr(1),
 					ComparisonOperator: strptr(">"),
 					Threshold:          float32ptr(0.8),
 				},
 				ScaleDown: &types.ScalingPolicyConfiguration{
 					AdjustmentType:     strptr("aboslute"),
-					AdjustmentValue:    int32ptr(2),
+					AdjustmentValue:    float32ptr(2),
 					ComparisonOperator: strptr("<="),
 					Threshold:          float32ptr(0.2),
 				},
