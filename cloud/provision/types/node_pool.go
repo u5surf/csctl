@@ -19,6 +19,10 @@ import (
 // swagger:model NodePool
 type NodePool struct {
 
+	// Autoscaling if enabled holds the configuration for an autoscaling group
+	// Required: true
+	Autoscaling *NodePoolAutoscaling `json:"autoscaling"`
+
 	// Number of nodes in this node pool
 	// Required: true
 	Count *int32 `json:"count"`
@@ -69,6 +73,10 @@ type NodePool struct {
 func (m *NodePool) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateAutoscaling(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCount(formats); err != nil {
 		res = append(res, err)
 	}
@@ -116,6 +124,24 @@ func (m *NodePool) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *NodePool) validateAutoscaling(formats strfmt.Registry) error {
+
+	if err := validate.Required("autoscaling", "body", m.Autoscaling); err != nil {
+		return err
+	}
+
+	if m.Autoscaling != nil {
+		if err := m.Autoscaling.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("autoscaling")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

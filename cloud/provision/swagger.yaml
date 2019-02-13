@@ -465,6 +465,7 @@ definitions:
       - etcd
       - etcd_version
       - is_schedulable
+      - autoscaling
     properties:
       id:
         title: Node Pool ID
@@ -501,6 +502,9 @@ definitions:
       is_schedulable:
         title: Flag indicating whether this node pool can be scheduled on
         type: boolean
+      autoscaling:
+        title: Autoscaling if enabled holds the configuration for an autoscaling group
+        $ref: '#/definitions/NodePoolAutoscaling'
 
   NodePoolStatus:
     type: object
@@ -854,6 +858,35 @@ definitions:
     properties:
       default:
         $ref: '#/definitions/TemplateNodePool'
+
+  NodePoolAutoscaling:
+    type: object
+    required:
+      - enabled
+    properties:
+      enabled:
+        type: boolean
+      max_nodes:
+        type: integer
+        format: int32
+      min_nodes:
+        type: integer
+        format: int32
+      cooldown_period:
+        type: integer
+        format: int32
+      suspended:
+         type: boolean
+      scaling_strategy:
+         $ref: '#/definitions/NodePoolAutoscalingScalingStrategy'
+
+  NodePoolAutoscalingScalingStrategy:
+    type: object
+    properties:
+      scale_up:
+        type: string
+      scale_down:
+        type: string
 
   TemplateNodePool:
     type: object
