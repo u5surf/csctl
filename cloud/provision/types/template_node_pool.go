@@ -24,6 +24,9 @@ type TemplateNodePool struct {
 	// Minimum: 1
 	Count *int32 `json:"count"`
 
+	// Docker version of this node pool (excluding leading 'v')
+	DockerVersion string `json:"docker_version,omitempty"`
+
 	// true if etcd runs on this node pool, else false (required if kubernetes_mode == master)
 	Etcd bool `json:"etcd,omitempty"`
 

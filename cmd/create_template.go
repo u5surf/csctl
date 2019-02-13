@@ -30,5 +30,7 @@ func init() {
 	createTemplateCmd.PersistentFlags().StringVar(&createTemplateOpts.MasterKubernetesVersion, "master-kubernetes-version", "", "Kubernetes version for master node pool")
 	createTemplateCmd.PersistentFlags().StringVar(&createTemplateOpts.WorkerKubernetesVersion, "worker-kubernetes-version", "", "Kubernetes version for worker node pool")
 
+	createTemplateCmd.PersistentFlags().StringVar(&createTemplateOpts.DockerVersion, "docker-version", "", "Docker version for all node pools")
+
 	createTemplateCmd.PersistentFlags().StringVar(&createTemplateOpts.Description, "description", "", "template description")
 }

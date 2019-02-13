@@ -16,6 +16,8 @@ type TemplateCreate struct {
 	MasterKubernetesVersion string
 	WorkerKubernetesVersion string
 
+	DockerVersion string
+
 	Description string
 
 	// TODO the following should be user-settable
@@ -55,6 +57,9 @@ func (o *TemplateCreate) DefaultAndValidate() error {
 		return errors.Wrap(err, "kubernetes versions")
 	}
 
+	// Note that Docker versions are not validated; we delegate that to cloud
+	// for simplicity
+
 	if err := o.defaultAndValidateDescription(); err != nil {
 		return errors.Wrap(err, "description")
 	}
@@ -80,6 +85,7 @@ func (o *TemplateCreate) NodePoolVariableMap() types.TemplateVariableMap {
 				Count:             &o.MasterCount,
 				KubernetesMode:    &o.masterMode,
 				KubernetesVersion: &o.MasterKubernetesVersion,
+				DockerVersion:     o.DockerVersion,
 				Name:              &o.MasterNodePoolName,
 				Type:              &o.nodePoolType,
 
@@ -92,6 +98,7 @@ func (o *TemplateCreate) NodePoolVariableMap() types.TemplateVariableMap {
 				Count:             &o.WorkerCount,
 				KubernetesMode:    &o.workerMode,
 				KubernetesVersion: &o.WorkerKubernetesVersion,
+				DockerVersion:     o.DockerVersion,
 				Name:              &o.WorkerNodePoolName,
 				Type:              &o.nodePoolType,
 			},

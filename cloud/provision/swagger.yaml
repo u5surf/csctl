@@ -886,6 +886,9 @@ definitions:
       kubernetes_version:
         description: Kubernetes version of this node pool (excluding leading 'v')
         type: string
+      docker_version:
+        description: Docker version of this node pool (excluding leading 'v')
+        type: string
       etcd:
         description: true if etcd runs on this node pool, else false (required if kubernetes_mode == master)
         type: boolean
