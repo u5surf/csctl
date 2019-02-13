@@ -548,7 +548,7 @@ definitions:
     type: object
     required:
       - name
-      - policy
+      - scaling_policy
       - metric
       - poll_interval
       - sample_period
@@ -562,7 +562,7 @@ definitions:
       metrics_backend:
         title: MetricsBackend name associated with the AutoscalingPolicy
         type: string
-      policy:
+      scaling_policy:
         title: Scaling policy
         $ref: "#/definitions/ScalingPolicy"
       metric:

@@ -36,10 +36,6 @@ type AutoscalingPolicy struct {
 	// Required: true
 	Name *string `json:"name"`
 
-	// Scaling policy
-	// Required: true
-	Policy *ScalingPolicy `json:"policy"`
-
 	// Number of seconds between polling the associated MetricsBackend
 	// Required: true
 	PollInterval *int32 `json:"poll_interval"`
@@ -47,6 +43,10 @@ type AutoscalingPolicy struct {
 	// Number of seconds the AutoscalingPolicy must alert the threshold before the policy triggers a scale up or scale down action
 	// Required: true
 	SamplePeriod *int32 `json:"sample_period"`
+
+	// Scaling policy
+	// Required: true
+	ScalingPolicy *ScalingPolicy `json:"scaling_policy"`
 }
 
 // Validate validates this autoscaling policy
@@ -65,15 +65,15 @@ func (m *AutoscalingPolicy) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validatePolicy(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validatePollInterval(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateSamplePeriod(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateScalingPolicy(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -117,24 +117,6 @@ func (m *AutoscalingPolicy) validateName(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *AutoscalingPolicy) validatePolicy(formats strfmt.Registry) error {
-
-	if err := validate.Required("policy", "body", m.Policy); err != nil {
-		return err
-	}
-
-	if m.Policy != nil {
-		if err := m.Policy.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("policy")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
 func (m *AutoscalingPolicy) validatePollInterval(formats strfmt.Registry) error {
 
 	if err := validate.Required("poll_interval", "body", m.PollInterval); err != nil {
@@ -148,6 +130,24 @@ func (m *AutoscalingPolicy) validateSamplePeriod(formats strfmt.Registry) error 
 
 	if err := validate.Required("sample_period", "body", m.SamplePeriod); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *AutoscalingPolicy) validateScalingPolicy(formats strfmt.Registry) error {
+
+	if err := validate.Required("scaling_policy", "body", m.ScalingPolicy); err != nil {
+		return err
+	}
+
+	if m.ScalingPolicy != nil {
+		if err := m.ScalingPolicy.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("scaling_policy")
+			}
+			return err
+		}
 	}
 
 	return nil

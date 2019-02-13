@@ -16,7 +16,7 @@ var (
 			ID:             types.UUID("1234"),
 			MetricsBackend: "prometheus",
 			Metric:         strptr("cpu"),
-			Policy: &types.ScalingPolicy{
+			ScalingPolicy: &types.ScalingPolicy{
 				ScaleUp: &types.ScalingPolicyConfiguration{
 					AdjustmentType:     strptr("percent"),
 					AdjustmentValue:    float32ptr(10),
@@ -38,7 +38,7 @@ var (
 			ID:             types.UUID("4321"),
 			MetricsBackend: "prometheus",
 			Metric:         strptr("memory"),
-			Policy: &types.ScalingPolicy{
+			ScalingPolicy: &types.ScalingPolicy{
 				ScaleUp: &types.ScalingPolicyConfiguration{
 					AdjustmentType:     strptr("absolute"),
 					AdjustmentValue:    float32ptr(1),
@@ -60,7 +60,7 @@ var (
 			ID:             types.UUID("3214"),
 			MetricsBackend: "prometheus",
 			Metric:         strptr("memory"),
-			Policy:         nil,
+			ScalingPolicy:  nil,
 			PollInterval:   int32ptr(20),
 			SamplePeriod:   int32ptr(800),
 		},

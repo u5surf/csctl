@@ -53,9 +53,9 @@ func (p *AutoscalingPolicies) Table(w io.Writer) error {
 	for _, asp := range p.items {
 		scaleUpPolicy := emptyColState
 		scaleDownPolicy := emptyColState
-		if asp.Policy != nil {
-			scaleUpPolicy = getPolicyConfiguration(asp.Policy.ScaleUp)
-			scaleDownPolicy = getPolicyConfiguration(asp.Policy.ScaleDown)
+		if asp.ScalingPolicy != nil {
+			scaleUpPolicy = getPolicyConfiguration(asp.ScalingPolicy.ScaleUp, false)
+			scaleDownPolicy = getPolicyConfiguration(asp.ScalingPolicy.ScaleDown, true)
 		}
 
 		table.Append([]string{
@@ -75,18 +75,26 @@ func (p *AutoscalingPolicies) Table(w io.Writer) error {
 	return nil
 }
 
-func getPolicyConfiguration(config *types.ScalingPolicyConfiguration) string {
+func getPolicyConfiguration(config *types.ScalingPolicyConfiguration, scaleDown bool) string {
 	if config == nil {
 		return emptyColState
 	}
 
 	var percent string
+	var value string
 	if *config.AdjustmentType == "percent" {
 		percent = "%"
+		value = fmt.Sprintf("%.2f", *config.AdjustmentValue)
+	} else {
+		value = fmt.Sprintf("%.0f", *config.AdjustmentValue)
 	}
 
-	return fmt.Sprintf("%s %.2f: -%.2f%s",
-		*config.ComparisonOperator, *config.Threshold, *config.AdjustmentValue, percent)
+	if scaleDown {
+		value = "-" + value
+	}
+
+	return fmt.Sprintf("%s %.2f: %s%s",
+		*config.ComparisonOperator, *config.Threshold, value, percent)
 }
 
 // JSON outputs the JSON representation to the given writer
