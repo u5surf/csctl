@@ -811,6 +811,14 @@ definitions:
         $ref: '#/definitions/AWSMainRouteTableAssociation'
       digitalocean_droplet:
         $ref: '#/definitions/DigitalOceanDropletMap'
+      google_compute_network:
+        $ref: '#/definitions/GoogleComputeNetwork'
+      google_compute_firewall:
+        $ref: '#/definitions/GoogleComputeFirewall'
+      google_compute_instance:
+        $ref: '#/definitions/GoogleComputeInstance'
+      google_compute_subnetwork:
+        $ref: '#/definitions/GoogleComputeSubnetwork'
       packet_device:
         $ref: '#/definitions/PacketDeviceMap'
 
@@ -1042,6 +1050,159 @@ definitions:
         type: string
       size:
         description: Droplet size
+        type: string
+
+  GoogleComputeNetwork:
+    description: Google compute network
+    type: object
+
+  GoogleComputeNetworkConfiguration:
+    description: Google compute network configuration
+    type: object
+    properties:
+      name:
+        description: Name
+        type: string
+      project:
+        description: Project
+        type: string
+      description:
+        description: Description
+        type: string
+      auto_create_subnetworks:
+        description: Auto create subnetworks
+        type: boolean
+
+  GoogleComputeFirewall:
+    description: Google compute firewall
+    type: object
+
+  GoogleComputeFirewallConfiguration:
+    description: Google compute firewall configuration
+    type: object
+    properties:
+      name:
+        description: Name
+        type: string
+      project:
+        description: Project
+        type: string
+      allow:
+        description: Allow rules
+        type: object
+      network:
+        description: Network
+        type: string
+      target_tags:
+        description: Target tags
+        type: array
+        items:
+          type: string
+      source_ranges:
+        description: Source ranges
+        type: array
+        items:
+          type: string
+
+  GoogleComputeInstance:
+    description: Google compute instance
+    type: object
+
+  GoogleComputeInstanceConfiguration:
+    description: Google compute instance configuration
+    type: object
+    properties:
+      tags:
+        description: Tags
+        type: array
+        items:
+          type: string
+      zone:
+        description: Zone
+        type: string
+      project:
+        description: Project
+        type: string
+      boot_disk:
+        description: Boot disk
+        $ref: '#/definitions/GoogleComputeBootDiskConfiguration'
+      machine_type:
+        description: Machine type
+        type: string
+      service_account:
+        description: Service account
+        $ref: '#/definitions/GoogleComputeServiceAccount'
+      network_interface:
+        description: Network interface
+        $ref: '#/definitions/GoogleComputeNetworkInterface'
+
+  GoogleComputeBootDiskConfiguration:
+    description: Boot disk configuration
+    type: object
+    properties:
+      initialize_params:
+        description: Initialize parameters
+        $ref: '#/definitions/GoogleComputeBootDiskConfigurationInitializeParams'
+
+  GoogleComputeBootDiskConfigurationInitializeParams:
+    description: Boot disk configuration initialize params
+    type: object
+    required:
+      - size
+    properties:
+      size:
+        description: Disk size
+        type: integer
+      type:
+        description: Disk type
+        type: string
+      image:
+        description: Disk image
+        type: string
+
+  GoogleComputeServiceAccount:
+    description: Service account
+    type: object
+    properties:
+      scopes:
+        description: Scopes
+        type: array
+        items:
+          type: string
+
+  GoogleComputeNetworkInterface:
+    description: Network interface
+    type: object
+    properties:
+      subnetwork:
+        type: string
+      access_config:
+        type: object
+      subnetwork_project:
+        type: string
+
+  GoogleComputeSubnetwork:
+    description: Google compute subnetwork
+    type: object
+
+  GoogleComputeSubnetworkConfiguration:
+    description: Google compute subnetwork configuration
+    type: object
+    properties:
+      name:
+        description: Name
+        type: string
+      project:
+        description: Project
+        type: string
+      region:
+        description: Region
+        type: string
+      network:
+        description: Network
+        type: string
+      ip_cidr_range:
+        description: IP CIDR
         type: string
 
   PacketDeviceMap:

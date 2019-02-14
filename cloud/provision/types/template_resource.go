@@ -40,6 +40,18 @@ type TemplateResource struct {
 	// digitalocean droplet
 	DigitaloceanDroplet DigitalOceanDropletMap `json:"digitalocean_droplet,omitempty"`
 
+	// google compute firewall
+	GoogleComputeFirewall GoogleComputeFirewall `json:"google_compute_firewall,omitempty"`
+
+	// google compute instance
+	GoogleComputeInstance GoogleComputeInstance `json:"google_compute_instance,omitempty"`
+
+	// google compute network
+	GoogleComputeNetwork GoogleComputeNetwork `json:"google_compute_network,omitempty"`
+
+	// google compute subnetwork
+	GoogleComputeSubnetwork GoogleComputeSubnetwork `json:"google_compute_subnetwork,omitempty"`
+
 	// packet device
 	PacketDevice PacketDeviceMap `json:"packet_device,omitempty"`
 }
