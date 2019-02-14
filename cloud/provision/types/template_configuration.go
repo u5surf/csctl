@@ -17,6 +17,9 @@ import (
 // swagger:model TemplateConfiguration
 type TemplateConfiguration struct {
 
+	// Template provider
+	Provider TemplateProvider `json:"provider,omitempty"`
+
 	// Provider-specific cloud resources
 	// Required: true
 	Resource *TemplateResource `json:"resource"`
@@ -30,6 +33,10 @@ type TemplateConfiguration struct {
 func (m *TemplateConfiguration) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateProvider(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateResource(formats); err != nil {
 		res = append(res, err)
 	}
@@ -41,6 +48,22 @@ func (m *TemplateConfiguration) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *TemplateConfiguration) validateProvider(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Provider) { // not required
+		return nil
+	}
+
+	if err := m.Provider.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("provider")
+		}
+		return err
+	}
+
 	return nil
 }
 

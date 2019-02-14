@@ -772,6 +772,9 @@ definitions:
       - resource
       - variable
     properties:
+      provider:
+        title: Template provider
+        $ref: '#/definitions/TemplateProvider'
       resource:
         title: Provider-specific cloud resources
         $ref: '#/definitions/TemplateResource'
@@ -779,13 +782,233 @@ definitions:
         title: Provider-agnostic cloud resources
         $ref: '#/definitions/TemplateVariableMap'
 
+  TemplateProvider:
+    description: Provider for a template
+    type: object
+    additionalProperties:
+        $ref: '#/definitions/TemplateProviderConfiguration'
+
+  TemplateProviderConfiguration:
+    description: Template provider configuration
+    type: object
+
   TemplateResource:
     type: object
     properties:
+      aws_vpc:
+        $ref: '#/definitions/AWSVPC'
+      aws_subnet:
+        $ref: '#/definitions/AWSSubnet'
+      aws_instance:
+        $ref: '#/definitions/AWSInstance'
+      aws_route_table:
+        $ref: '#/definitions/AWSRouteTable'
+      aws_security_group:
+        $ref: '#/definitions/AWSSecurityGroup'
+      aws_internet_gateway:
+        $ref: '#/definitions/AWSInternetGateway'
+      aws_main_route_table_association:
+        $ref: '#/definitions/AWSMainRouteTableAssociation'
       digitalocean_droplet:
         $ref: '#/definitions/DigitalOceanDropletMap'
       packet_device:
         $ref: '#/definitions/PacketDeviceMap'
+
+  AWSVPC:
+    description: AWS VPC
+    type: object
+    additionalProperties:
+        $ref: '#/definitions/AWSVPCConfiguration'
+
+  AWSVPCConfiguration:
+    description: AWS VPC Configuration
+    type: object
+    properties:
+      tags:
+        description: AWS tags
+        type: object
+      cidr_block:
+        description: CIDR block for this VPC
+        type: string
+
+  AWSSubnet:
+    description: AWS subnet
+    type: object
+    additionalProperties:
+        $ref: '#/definitions/AWSSubnetConfiguration'
+
+  AWSSubnetConfiguration:
+    description: AWS subnet configuration
+    type: object
+    properties:
+      tags:
+        description: AWS tags
+        type: object
+      vpc_id:
+        description: VPC this subnet belongs to
+        type: string
+      cidr_block:
+        description: CIDR block for this subnet
+        type: string
+      availability_zone:
+        description: Availability zone this subnet belongs to
+        type: string
+
+  AWSInstance:
+    description: AWS instance
+    type: object
+    additionalProperties:
+        $ref: '#/definitions/AWSInstanceConfiguration'
+
+  AWSInstanceConfiguration:
+    description: AWS instance configuration
+    type: object
+    properties:
+      ami:
+        description: AMI for this instance
+        type: string
+      subnet_id:
+        description: Subnet this instance belongs to
+        type: string
+      depends_on:
+        description: Dependencies for this instance
+        type: array
+        items:
+          type: string
+      instance_type:
+        description: AWS instance type
+        type: string
+      availability_zone:
+        description: Availability zone for this instance
+        type: string
+      vpc_security_group_ids:
+        description: VPC security group IDs
+        type: array
+        items:
+          type: string
+      associate_public_ip_address:
+        description: Flag indicating whether to associate a public IP with this instance
+        type: boolean
+      key_name:
+        description: Name of key pair to use
+        type: string
+
+  AWSRouteTable:
+    description: AWS route table
+    type: object
+    additionalProperties:
+        $ref: '#/definitions/AWSRouteTableConfiguration'
+
+  AWSRouteTableConfiguration:
+    description: AWS route table configuration
+    type: object
+    properties:
+      tags:
+        description: AWS tags
+        type: object
+      route:
+        description: List of routes in this route table
+        type: array
+        items:
+          $ref: "#/definitions/AWSRoute"
+      vpc_id:
+        description: VPC this route table belongs to
+        type: string
+
+  AWSRoute:
+    description: AWS route
+    type: object
+    properties:
+      cidr_block:
+        title: CIDR block
+        type: string
+      gateway_id:
+        title: Gateway ID
+        type: string
+
+  AWSSecurityGroup:
+    description: AWS security group
+    type: object
+    additionalProperties:
+        $ref: '#/definitions/AWSSecurityGroupConfiguration'
+
+  AWSSecurityGroupConfiguration:
+    description: AWS security group configuration
+    type: object
+    properties:
+      name:
+        description: Name of this security group
+        type: string
+      description:
+        description: Description of this security group
+        type: string
+      vpc_id:
+        description: VPC this route table belongs to
+        type: string
+      egress:
+        description: List of egress rules
+        type: array
+        items:
+          $ref: "#/definitions/AWSTrafficRule"
+      ingress:
+        description: List of ingress rules
+        type: array
+        items:
+          $ref: "#/definitions/AWSTrafficRule"
+
+  AWSTrafficRule:
+    description: AWS traffic rule
+    type: object
+    required:
+      - to_port
+      - from_port
+    properties:
+      to_port:
+        description: To port
+        type: integer
+      from_port:
+        description: From port
+        type: integer
+      protocol:
+        description: Protocol
+        type: string
+      cidr_blocks:
+        description: List of CIDR blocks
+        type: array
+        items:
+          type: string
+
+  AWSInternetGateway:
+    description: AWS internet gateway
+    type: object
+    additionalProperties:
+        $ref: '#/definitions/AWSInternetGatewayConfiguration'
+
+  AWSInternetGatewayConfiguration:
+    description: AWS internet gateway configuration
+    type: object
+    properties:
+      tags:
+        description: AWS tags
+        type: object
+      vpc_id:
+        description: VPC this internet gateway belongs to
+        type: string
+
+  AWSMainRouteTableAssociation:
+    description: AWS internet gateway
+    type: object
+
+  AWSMainRouteTableAssociationConfiguration:
+    description: AWS main route table configuration
+    type: object
+    properties:
+      vpc_id:
+        description: VPC the route table belongs to
+        type: string
+      route_table_id:
+        description: Route table to associate
+        type: string
 
   DigitalOceanDropletMap:
     description: Map of node pool name to DigitalOcean droplet configuration

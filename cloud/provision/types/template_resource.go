@@ -16,6 +16,27 @@ import (
 // swagger:model TemplateResource
 type TemplateResource struct {
 
+	// aws instance
+	AwsInstance AWSInstance `json:"aws_instance,omitempty"`
+
+	// aws internet gateway
+	AwsInternetGateway AWSInternetGateway `json:"aws_internet_gateway,omitempty"`
+
+	// aws main route table association
+	AwsMainRouteTableAssociation AWSMainRouteTableAssociation `json:"aws_main_route_table_association,omitempty"`
+
+	// aws route table
+	AwsRouteTable AWSRouteTable `json:"aws_route_table,omitempty"`
+
+	// aws security group
+	AwsSecurityGroup AWSSecurityGroup `json:"aws_security_group,omitempty"`
+
+	// aws subnet
+	AwsSubnet AWSSubnet `json:"aws_subnet,omitempty"`
+
+	// aws vpc
+	AwsVpc AWSVPC `json:"aws_vpc,omitempty"`
+
 	// digitalocean droplet
 	DigitaloceanDroplet DigitalOceanDropletMap `json:"digitalocean_droplet,omitempty"`
 
@@ -26,6 +47,30 @@ type TemplateResource struct {
 // Validate validates this template resource
 func (m *TemplateResource) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.validateAwsInstance(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAwsInternetGateway(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAwsRouteTable(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAwsSecurityGroup(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAwsSubnet(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAwsVpc(formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.validateDigitaloceanDroplet(formats); err != nil {
 		res = append(res, err)
@@ -38,6 +83,102 @@ func (m *TemplateResource) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *TemplateResource) validateAwsInstance(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AwsInstance) { // not required
+		return nil
+	}
+
+	if err := m.AwsInstance.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("aws_instance")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *TemplateResource) validateAwsInternetGateway(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AwsInternetGateway) { // not required
+		return nil
+	}
+
+	if err := m.AwsInternetGateway.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("aws_internet_gateway")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *TemplateResource) validateAwsRouteTable(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AwsRouteTable) { // not required
+		return nil
+	}
+
+	if err := m.AwsRouteTable.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("aws_route_table")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *TemplateResource) validateAwsSecurityGroup(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AwsSecurityGroup) { // not required
+		return nil
+	}
+
+	if err := m.AwsSecurityGroup.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("aws_security_group")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *TemplateResource) validateAwsSubnet(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AwsSubnet) { // not required
+		return nil
+	}
+
+	if err := m.AwsSubnet.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("aws_subnet")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *TemplateResource) validateAwsVpc(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AwsVpc) { // not required
+		return nil
+	}
+
+	if err := m.AwsVpc.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("aws_vpc")
+		}
+		return err
+	}
+
 	return nil
 }
 
