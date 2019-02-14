@@ -809,6 +809,18 @@ definitions:
         $ref: '#/definitions/AWSInternetGateway'
       aws_main_route_table_association:
         $ref: '#/definitions/AWSMainRouteTableAssociation'
+      azurerm_subnet:
+        $ref: '#/definitions/AzureRMSubnet'
+      azurerm_resource_group:
+        $ref: '#/definitions/AzureRMResourceGroup'
+      azurerm_virtual_machine:
+        $ref: '#/definitions/AzureRMVirtualMachine'
+      azurerm_virtual_network:
+        $ref: '#/definitions/AzureRMVirtualNetwork'
+      azurerm_availability_set:
+        $ref: '#/definitions/AzureRMAvailabilitySet'
+      azurerm_network_security_group:
+        $ref: '#/definitions/AzureRMNetworkSecurityGroup'
       digitalocean_droplet:
         $ref: '#/definitions/DigitalOceanDropletMap'
       google_compute_network:
@@ -821,6 +833,209 @@ definitions:
         $ref: '#/definitions/GoogleComputeSubnetwork'
       packet_device:
         $ref: '#/definitions/PacketDeviceMap'
+
+  AzureRMSubnet:
+    type: object
+    additionalProperties:
+        $ref: '#/definitions/AzureRMSubnetConfiguration'
+
+  AzureRMSubnetConfiguration:
+    type: object
+    properties:
+      name:
+        type: string
+      address_prefix:
+        type: string
+      resource_group_name:
+        type: string
+      virtual_network_name:
+        type: string
+
+  AzureRMResourceGroup:
+    type: object
+    additionalProperties:
+        $ref: '#/definitions/AzureRMResourceGroupConfiguration'
+
+  AzureRMResourceGroupConfiguration:
+    type: object
+    properties:
+      name:
+        type: string
+      location:
+        type: string
+
+  AzureRMVirtualMachine:
+    type: object
+    additionalProperties:
+        $ref: '#/definitions/AzureRMVirtualMachineConfiguration'
+
+  AzureRMVirtualMachineConfiguration:
+    type: object
+    properties:
+      vm_size:
+        type: string
+      location:
+        type: string
+      os_profile:
+        $ref: '#/definitions/AzureRMVirtualMachineOSProfile'
+      storage_os_disk:
+        $ref: '#/definitions/AzureRMVirtualMachineStorageOSDisk'
+      storage_data_disk:
+        type: array
+        items:
+          $ref: '#/definitions/AzureRMVirtualMachineStorageDataDisk'
+      availability_set_id:
+        type: string
+      resource_group_name:
+        type: string
+      os_profile_linux_config:
+        $ref: '#/definitions/AzureRMVirtualMachineOSProfileLinuxConfig'
+      storage_image_reference:
+        $ref: '#/definitions/AzureRMVirtualMachineStorageImageReference'
+
+  AzureRMVirtualMachineOSProfile:
+    type: object
+    properties:
+      computer_name:
+        type: string
+      admin_username:
+        type: string
+
+  AzureRMVirtualMachineStorageOSDisk:
+    type: object
+    properties:
+      caching:
+        type: string
+      create_option:
+        type: string
+      managed_disk_type:
+        type: string
+
+  AzureRMVirtualMachineStorageDataDisk:
+    type: object
+    required:
+      - lun
+      - disk_size_gb
+    properties:
+      lun:
+        type: integer
+      name:
+        type: string
+      caching:
+        type: string
+      disk_size_gb:
+        type: integer
+      create_option:
+        type: string
+
+  AzureRMVirtualMachineOSProfileLinuxConfig:
+    type: object
+    properties:
+      ssh_keys:
+        type: array
+        items:
+          $ref: '#/definitions/AzureRMSSHKey'
+      disable_password_authentication:
+        type: boolean
+
+  AzureRMSSHKey:
+    type: object
+    properties:
+      path:
+        type: string
+      key_data:
+        type: string
+
+  AzureRMVirtualMachineStorageImageReference:
+    type: object
+    properties:
+      sku:
+        type: string
+      offer:
+        type: string
+      version:
+        type: string
+      publisher:
+        type: string
+
+  AzureRMVirtualNetwork:
+    type: object
+    additionalProperties:
+        $ref: '#/definitions/AzureRMVirtualNetworkConfiguration'
+
+  AzureRMVirtualNetworkConfiguration:
+    type: object
+    properties:
+      name:
+        type: string
+      location:
+        type: string
+      address_space:
+        type: array
+        items:
+          type: string
+      resource_group_name:
+        type: string
+
+  AzureRMAvailabilitySet:
+    type: object
+    additionalProperties:
+        $ref: '#/definitions/AzureRMAvailabilitySetConfiguration'
+
+  AzureRMAvailabilitySetConfiguration:
+    type: object
+    properties:
+      name:
+        type: string
+      location:
+        type: string
+      managed:
+        type: boolean
+      resource_group_name:
+        type: string
+      platform_fault_domain_count:
+        type: integer
+
+  AzureRMNetworkSecurityGroup:
+    type: object
+    additionalProperties:
+        $ref: '#/definitions/AzureRMNetworkSecurityGroupConfiguration'
+
+  AzureRMNetworkSecurityGroupConfiguration:
+    type: object
+    properties:
+      name:
+        type: string
+      location:
+        type: string
+      resource_group_name:
+        type: string
+      security_rule:
+        type: array
+        items:
+          $ref: '#/definitions/AzureRMNetworkSecurityRule'
+
+  AzureRMNetworkSecurityRule:
+    type: object
+    properties:
+      name:
+        type: string
+      access:
+        type: string
+      priority:
+        type: integer
+      protocol:
+        type: string
+      direction:
+        type: string
+      source_port_range:
+        type: string
+      source_address_prefix:
+        type: string
+      destination_port_range:
+        type: string
+      destination_address_prefix:
+        type: string
 
   AWSVPC:
     description: AWS VPC

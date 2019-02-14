@@ -37,6 +37,24 @@ type TemplateResource struct {
 	// aws vpc
 	AwsVpc AWSVPC `json:"aws_vpc,omitempty"`
 
+	// azurerm availability set
+	AzurermAvailabilitySet AzureRMAvailabilitySet `json:"azurerm_availability_set,omitempty"`
+
+	// azurerm network security group
+	AzurermNetworkSecurityGroup AzureRMNetworkSecurityGroup `json:"azurerm_network_security_group,omitempty"`
+
+	// azurerm resource group
+	AzurermResourceGroup AzureRMResourceGroup `json:"azurerm_resource_group,omitempty"`
+
+	// azurerm subnet
+	AzurermSubnet AzureRMSubnet `json:"azurerm_subnet,omitempty"`
+
+	// azurerm virtual machine
+	AzurermVirtualMachine AzureRMVirtualMachine `json:"azurerm_virtual_machine,omitempty"`
+
+	// azurerm virtual network
+	AzurermVirtualNetwork AzureRMVirtualNetwork `json:"azurerm_virtual_network,omitempty"`
+
 	// digitalocean droplet
 	DigitaloceanDroplet DigitalOceanDropletMap `json:"digitalocean_droplet,omitempty"`
 
@@ -81,6 +99,30 @@ func (m *TemplateResource) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateAwsVpc(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAzurermAvailabilitySet(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAzurermNetworkSecurityGroup(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAzurermResourceGroup(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAzurermSubnet(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAzurermVirtualMachine(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAzurermVirtualNetwork(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -187,6 +229,102 @@ func (m *TemplateResource) validateAwsVpc(formats strfmt.Registry) error {
 	if err := m.AwsVpc.Validate(formats); err != nil {
 		if ve, ok := err.(*errors.Validation); ok {
 			return ve.ValidateName("aws_vpc")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *TemplateResource) validateAzurermAvailabilitySet(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AzurermAvailabilitySet) { // not required
+		return nil
+	}
+
+	if err := m.AzurermAvailabilitySet.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("azurerm_availability_set")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *TemplateResource) validateAzurermNetworkSecurityGroup(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AzurermNetworkSecurityGroup) { // not required
+		return nil
+	}
+
+	if err := m.AzurermNetworkSecurityGroup.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("azurerm_network_security_group")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *TemplateResource) validateAzurermResourceGroup(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AzurermResourceGroup) { // not required
+		return nil
+	}
+
+	if err := m.AzurermResourceGroup.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("azurerm_resource_group")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *TemplateResource) validateAzurermSubnet(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AzurermSubnet) { // not required
+		return nil
+	}
+
+	if err := m.AzurermSubnet.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("azurerm_subnet")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *TemplateResource) validateAzurermVirtualMachine(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AzurermVirtualMachine) { // not required
+		return nil
+	}
+
+	if err := m.AzurermVirtualMachine.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("azurerm_virtual_machine")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *TemplateResource) validateAzurermVirtualNetwork(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AzurermVirtualNetwork) { // not required
+		return nil
+	}
+
+	if err := m.AzurermVirtualNetwork.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("azurerm_virtual_network")
 		}
 		return err
 	}
