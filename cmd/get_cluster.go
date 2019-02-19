@@ -1,10 +1,9 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
-
 	provisiontypes "github.com/containership/csctl/cloud/provision/types"
 	"github.com/containership/csctl/resource"
+	"github.com/spf13/cobra"
 )
 
 // getClusterCmd represents the getCluster command
@@ -33,6 +32,10 @@ var getClusterCmd = &cobra.Command{
 		}
 
 		clusters := resource.NewCKEClusters(resp)
+
+		if len(args) == 1 {
+			clusters.DisableItemListView()
+		}
 
 		if mineOnly {
 			me, err := getMyAccountID()

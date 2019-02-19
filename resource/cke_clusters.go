@@ -12,7 +12,8 @@ import (
 type CKEClusters struct {
 	resource
 	filterable
-	items []types.CKECluster
+	items    []types.CKECluster
+	listview bool
 }
 
 // NewCKEClusters constructs a new CKEClusters wrapping the given cloud type
@@ -22,8 +23,14 @@ func NewCKEClusters(items []types.CKECluster) *CKEClusters {
 			name:   "cluster",
 			plural: "clusters",
 		},
-		items: items,
+		items:    items,
+		listview: true,
 	}
+}
+
+// DisableItemListView sets to output a single value of item
+func (c *CKEClusters) DisableItemListView() {
+	c.listview = false
 }
 
 // CKECluster constructs a new CKEClusters with no underlying items, useful for
@@ -63,11 +70,17 @@ func (c *CKEClusters) Table(w io.Writer) error {
 
 // JSON outputs the JSON representation to the given writer
 func (c *CKEClusters) JSON(w io.Writer) error {
+	if !c.listview && len(c.items) == 1 {
+		return displayJSON(w, c.items[0])
+	}
 	return displayJSON(w, c.items)
 }
 
 // YAML outputs the YAML representation to the given writer
 func (c *CKEClusters) YAML(w io.Writer) error {
+	if !c.listview && len(c.items) == 1 {
+		return displayYAML(w, c.items[0])
+	}
 	return displayYAML(w, c.items)
 }
 

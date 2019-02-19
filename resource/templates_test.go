@@ -4,9 +4,8 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/containership/csctl/cloud/provision/types"
+	"github.com/stretchr/testify/assert"
 )
 
 var (
@@ -55,6 +54,9 @@ var (
 			Configuration: &tmplConfig,
 		},
 	}
+	tmplSingle = []types.Template{
+		tmplGood,
+	}
 )
 
 func TestNewTemplates(t *testing.T) {
@@ -67,6 +69,13 @@ func TestNewTemplates(t *testing.T) {
 
 	a = Template()
 	assert.NotNil(t, a)
+}
+
+func TestDisableItemListView(t *testing.T) {
+	a := NewTemplates(nil)
+	assert.NotNil(t, a)
+	a.DisableItemListView()
+	assert.Equal(t, a.listview, false)
 }
 
 func TestTemplatesTable(t *testing.T) {
@@ -161,4 +170,24 @@ func TestGetMasterKubernetesVersion(t *testing.T) {
 	v, err = getMasterKubernetesVersion(&tmplGood)
 	assert.Nil(t, err)
 	assert.Equal(t, v, tmplK8sVersion)
+}
+
+func TestTemplatesJSON(t *testing.T) {
+	buf := new(bytes.Buffer)
+	templs := NewTemplates(tmplSingle)
+	err := templs.JSON(buf)
+	assert.Nil(t, err)
+	templs.DisableItemListView()
+	err = templs.JSON(buf)
+	assert.Nil(t, err)
+}
+
+func TestTemplatesYAML(t *testing.T) {
+	buf := new(bytes.Buffer)
+	templs := NewTemplates(tmplSingle)
+	err := templs.YAML(buf)
+	assert.Nil(t, err)
+	templs.DisableItemListView()
+	err = templs.YAML(buf)
+	assert.Nil(t, err)
 }

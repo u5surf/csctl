@@ -3,18 +3,18 @@ package resource
 import (
 	"io"
 
-	"github.com/pkg/errors"
-
 	"github.com/containership/csctl/cloud/provision/types"
 	"github.com/containership/csctl/pkg/convert"
 	"github.com/containership/csctl/resource/table"
+	"github.com/pkg/errors"
 )
 
 // Templates is a list of the associated cloud resource with additional functionality
 type Templates struct {
 	resource
 	filterable
-	items []types.Template
+	items    []types.Template
+	listview bool
 }
 
 // filterFunc returns true if the item should be filtered in
@@ -31,7 +31,8 @@ func NewTemplates(items []types.Template) *Templates {
 			plural:  "templates",
 			aliases: []string{"tmpl", "tmpls"},
 		},
-		items: items,
+		items:    items,
+		listview: true,
 	}
 }
 
@@ -50,6 +51,11 @@ func (c *Templates) columns() []string {
 		"Owner ID",
 		"Created At",
 	}
+}
+
+// DisableItemListView sets to output a single value of item
+func (c *Templates) DisableItemListView() {
+	c.listview = false
 }
 
 // Table outputs the table representation to the given writer
@@ -84,11 +90,17 @@ func (c *Templates) Table(w io.Writer) error {
 
 // JSON outputs the JSON representation to the given writer
 func (c *Templates) JSON(w io.Writer) error {
+	if !c.listview && len(c.items) == 1 {
+		return displayJSON(w, c.items[0])
+	}
 	return displayJSON(w, c.items)
 }
 
 // YAML outputs the YAML representation to the given writer
 func (c *Templates) YAML(w io.Writer) error {
+	if !c.listview && len(c.items) == 1 {
+		return displayYAML(w, c.items[0])
+	}
 	return displayYAML(w, c.items)
 }
 

@@ -4,9 +4,8 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/containership/csctl/cloud/provision/types"
+	"github.com/stretchr/testify/assert"
 )
 
 var (
@@ -32,6 +31,17 @@ var (
 			CreatedAt: &ckeClusterTime,
 		},
 	}
+	ckeClusterSingle = []types.CKECluster{
+		{
+			ID:           types.UUID("1111"),
+			ProviderName: strptr("facebook"),
+			Status: &types.CKEClusterStatus{
+				Type: strptr("RUNNING"),
+			},
+			OwnerID:   types.UUID("1111"),
+			CreatedAt: &ckeClusterTime,
+		},
+	}
 )
 
 func TestNewCKEClusters(t *testing.T) {
@@ -44,6 +54,13 @@ func TestNewCKEClusters(t *testing.T) {
 
 	a = CKECluster()
 	assert.NotNil(t, a)
+}
+
+func TestCKEClustersDisableItemListView(t *testing.T) {
+	a := NewCKEClusters(nil)
+	assert.NotNil(t, a)
+	a.DisableItemListView()
+	assert.Equal(t, a.listview, false)
 }
 
 func TestCKEClustersTable(t *testing.T) {
@@ -60,4 +77,24 @@ func TestCKEClustersTable(t *testing.T) {
 	assert.Equal(t, len(a.columns()), info.numHeaderCols)
 	assert.Equal(t, len(a.columns()), info.numCols)
 	assert.Equal(t, len(ckeClusters), info.numRows)
+}
+
+func TestCKEClustersJSON(t *testing.T) {
+	buf := new(bytes.Buffer)
+	cluster := NewCKEClusters(ckeClusterSingle)
+	err := cluster.JSON(buf)
+	assert.Nil(t, err)
+	cluster.DisableItemListView()
+	err = cluster.JSON(buf)
+	assert.Nil(t, err)
+}
+
+func TestCKEClustersYAML(t *testing.T) {
+	buf := new(bytes.Buffer)
+	cluster := NewCKEClusters(ckeClusterSingle)
+	err := cluster.YAML(buf)
+	assert.Nil(t, err)
+	cluster.DisableItemListView()
+	err = cluster.YAML(buf)
+	assert.Nil(t, err)
 }
