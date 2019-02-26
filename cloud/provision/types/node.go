@@ -17,6 +17,10 @@ import (
 // swagger:model Node
 type Node struct {
 
+	// Node addresses
+	// Required: true
+	Addresses *NodeAddresses `json:"addresses"`
+
 	// Timestamp at which the node was created
 	// Required: true
 	CreatedAt *string `json:"created_at"`
@@ -38,6 +42,10 @@ type Node struct {
 func (m *Node) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateAddresses(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCreatedAt(formats); err != nil {
 		res = append(res, err)
 	}
@@ -57,6 +65,24 @@ func (m *Node) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Node) validateAddresses(formats strfmt.Registry) error {
+
+	if err := validate.Required("addresses", "body", m.Addresses); err != nil {
+		return err
+	}
+
+	if m.Addresses != nil {
+		if err := m.Addresses.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("addresses")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 

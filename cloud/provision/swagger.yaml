@@ -631,6 +631,7 @@ definitions:
       - status
       - created_at
       - updated_at
+      - addresses
     properties:
       id:
         title: Node ID
@@ -643,6 +644,19 @@ definitions:
         type: string
       updated_at:
         title: Timestamp at which the node was updated
+        type: string
+      addresses:
+        title: Node addresses
+        $ref: "#/definitions/NodeAddresses"
+
+  NodeAddresses:
+    type: object
+    properties:
+      external_ip:
+        title: External IP
+        type: string
+      internal_ip:
+        title: Internal IP
         type: string
 
   NodeStatus:

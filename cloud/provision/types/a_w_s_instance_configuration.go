@@ -30,6 +30,9 @@ type AWSInstanceConfiguration struct {
 	// AWS instance type
 	InstanceType string `json:"instance_type,omitempty"`
 
+	// Name of key pair to use
+	KeyName string `json:"key_name,omitempty"`
+
 	// Subnet this instance belongs to
 	SubnetID string `json:"subnet_id,omitempty"`
 
