@@ -850,10 +850,10 @@ definitions:
         title: User ID of the associated user
         $ref: "#/definitions/UUID"
       name:
-        title: Name of they key
+        title: Name of the key
         type: string
       fingerprint:
-        title: Fingerprint of they key
+        title: Fingerprint of the key
         type: string
       key:
         title: Public key

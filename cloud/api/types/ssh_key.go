@@ -21,7 +21,7 @@ type SSHKey struct {
 	// Required: true
 	CreatedAt *string `json:"created_at"`
 
-	// Fingerprint of they key
+	// Fingerprint of the key
 	// Required: true
 	Fingerprint *string `json:"fingerprint"`
 
@@ -33,7 +33,7 @@ type SSHKey struct {
 	// Required: true
 	Key *string `json:"key"`
 
-	// Name of they key
+	// Name of the key
 	// Required: true
 	Name *string `json:"name"`
 
