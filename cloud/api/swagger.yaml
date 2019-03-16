@@ -864,6 +864,50 @@ definitions:
     items:
       $ref: "#/definitions/SSHKey"
 
+  CreateAccessTokenRequest:
+    title: Request to create an access token
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        title: Name of the access token
+        type: string
+
+  AccessToken:
+    title: An access token belonging to a user
+    type: object
+    required:
+      - created_at
+      - updated_at
+      - id
+      - user_id
+      - name
+    properties:
+      created_at:
+        title: Timestamp at which the token was created
+        type: string
+      updated_at:
+        title: Timestamp at which the token was updated
+        type: string
+      id:
+        title: Access token key ID
+        $ref: "#/definitions/UUID"
+      user_id:
+        title: User ID of the associated user
+        $ref: "#/definitions/UUID"
+      name:
+        title: Name of the access token
+        type: string
+      token:
+        title: Access token value
+        type: string
+
+  AccessTokens:
+    type: array
+    items:
+      $ref: "#/definitions/AccessToken"
+
   UUID:
     title: UUID
     type: string

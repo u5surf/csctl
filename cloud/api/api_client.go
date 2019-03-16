@@ -13,6 +13,7 @@ const (
 // Interface is the interface for API
 type Interface interface {
 	RESTClient() rest.Interface
+	AccessTokensGetter
 	AccountGetter
 	ClustersGetter
 	OrganizationsGetter
@@ -49,6 +50,11 @@ func New(cfg rest.Config) (*Client, error) {
 // RESTClient returns the REST client associated with this client
 func (c *Client) RESTClient() rest.Interface {
 	return c.restClient
+}
+
+// AccessToken returns the access token interface
+func (c *Client) AccessTokens() AccessTokenInterface {
+	return newAccessTokens(c)
 }
 
 // Account returns the account interface
