@@ -52,7 +52,7 @@ func (c *Client) RESTClient() rest.Interface {
 	return c.restClient
 }
 
-// AccessToken returns the access token interface
+// AccessTokens returns the access token interface
 func (c *Client) AccessTokens() AccessTokenInterface {
 	return newAccessTokens(c)
 }
