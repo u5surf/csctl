@@ -1,6 +1,6 @@
 # csctl
 
-[![Build Status](https://travis-ci.org/containership/csctl.svg?branch=master)](https://travis-ci.org/containership/csctl)
+[![CircleCI](https://circleci.com/gh/containership/csctl.svg?style=svg)](https://circleci.com/gh/containership/csctl)
 [![Go Report Card](https://goreportcard.com/badge/github.com/containership/csctl)](https://goreportcard.com/report/github.com/containership/csctl)
 [![codecov](https://codecov.io/gh/containership/csctl/branch/master/graph/badge.svg)](https://codecov.io/gh/containership/csctl)
 

@@ -1,0 +1,46 @@
+version:
+  2
+
+jobs:
+  test:
+    docker:
+      - image: circleci/golang:1.11.4
+    working_directory: /go/src/github.com/containership/csctl
+    steps:
+      - checkout
+      - run: go get -u github.com/golang/dep/cmd/dep
+      - run: go get -u golang.org/x/lint/golint
+      - run:
+          name: Install dependencies
+          command: make dep
+      - run:
+          name: Format check
+          command: make fmt-check
+      - run:
+          name: Lint
+          command: make lint
+      - run:
+          name: Vet
+          command: make vet
+      - run:
+          name: Test
+          command: |
+            make coverage && bash <(curl -s https://codecov.io/bash)
+
+  build:
+    docker:
+      - image: circleci/golang:1.11.4
+    working_directory: /go/src/github.com/containership/csctl
+    steps:
+      - checkout
+      - run:
+          name: Default build
+          command: make
+
+workflows:
+  version: 2
+
+  commit:
+    jobs:
+      - test
+      - build
