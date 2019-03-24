@@ -1,9 +1,10 @@
 package cmd
 
 import (
+	"github.com/spf13/cobra"
+
 	provisiontypes "github.com/containership/csctl/cloud/provision/types"
 	"github.com/containership/csctl/resource"
-	"github.com/spf13/cobra"
 )
 
 // getClusterCmd represents the getCluster command

@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/containership/csctl/cloud/provision/types"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/containership/csctl/cloud/provision/types"
 )
 
 var (

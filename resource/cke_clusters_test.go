@@ -34,7 +34,7 @@ var (
 	ckeClusterSingle = []types.CKECluster{
 		{
 			ID:           types.UUID("1111"),
-			ProviderName: strptr("facebook"),
+			ProviderName: strptr("google"),
 			Status: &types.CKEClusterStatus{
 				Type: strptr("RUNNING"),
 			},

@@ -3,10 +3,11 @@ package resource
 import (
 	"io"
 
+	"github.com/pkg/errors"
+
 	"github.com/containership/csctl/cloud/provision/types"
 	"github.com/containership/csctl/pkg/convert"
 	"github.com/containership/csctl/resource/table"
-	"github.com/pkg/errors"
 )
 
 // Templates is a list of the associated cloud resource with additional functionality
