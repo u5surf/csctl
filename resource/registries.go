@@ -19,9 +19,10 @@ type Registries struct {
 func NewRegistries(items []types.Registry) *Registries {
 	return &Registries{
 		resource: resource{
-			name:    "registry",
-			plural:  "registries",
-			aliases: []string{"reg", "regs"},
+			name:     "registry",
+			plural:   "registries",
+			aliases:  []string{"reg", "regs"},
+			listView: true,
 		},
 		items: items,
 	}
@@ -64,12 +65,12 @@ func (p *Registries) Table(w io.Writer) error {
 
 // JSON outputs the JSON representation to the given writer
 func (p *Registries) JSON(w io.Writer) error {
-	return displayJSON(w, p.items)
+	return displayJSON(w, p.items, p.resource.listView)
 }
 
 // YAML outputs the YAML representation to the given writer
 func (p *Registries) YAML(w io.Writer) error {
-	return displayYAML(w, p.items)
+	return displayYAML(w, p.items, p.resource.listView)
 }
 
 // JSONPath outputs the executed JSONPath template to the given writer

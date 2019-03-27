@@ -72,11 +72,11 @@ func TestNewTemplates(t *testing.T) {
 	assert.NotNil(t, a)
 }
 
-func TestDisableItemListView(t *testing.T) {
+func TestTemplatesDisableListView(t *testing.T) {
 	a := NewTemplates(nil)
 	assert.NotNil(t, a)
-	a.DisableItemListView()
-	assert.Equal(t, a.listview, false)
+	a.resource.DisableListView()
+	assert.Equal(t, a.resource.listView, false)
 }
 
 func TestTemplatesTable(t *testing.T) {
@@ -178,7 +178,7 @@ func TestTemplatesJSON(t *testing.T) {
 	templs := NewTemplates(tmplSingle)
 	err := templs.JSON(buf)
 	assert.Nil(t, err)
-	templs.DisableItemListView()
+	templs.DisableListView()
 	err = templs.JSON(buf)
 	assert.Nil(t, err)
 }
@@ -188,7 +188,7 @@ func TestTemplatesYAML(t *testing.T) {
 	templs := NewTemplates(tmplSingle)
 	err := templs.YAML(buf)
 	assert.Nil(t, err)
-	templs.DisableItemListView()
+	templs.DisableListView()
 	err = templs.YAML(buf)
 	assert.Nil(t, err)
 }

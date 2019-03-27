@@ -24,6 +24,13 @@ var (
 			CreatedAt: &acctTime,
 		},
 	}
+	acctSingle = []types.Account{
+		{
+			Name:      strptr("test3"),
+			ID:        types.UUID("1234"),
+			CreatedAt: &acctTime,
+		},
+	}
 )
 
 func TestNewAccounts(t *testing.T) {
@@ -36,6 +43,13 @@ func TestNewAccounts(t *testing.T) {
 
 	a = Account()
 	assert.NotNil(t, a)
+}
+
+func TestAccountsDisableListView(t *testing.T) {
+	a := NewAccounts(nil)
+	assert.NotNil(t, a)
+	a.resource.DisableListView()
+	assert.Equal(t, a.resource.listView, false)
 }
 
 func TestAccountsTable(t *testing.T) {
@@ -52,4 +66,24 @@ func TestAccountsTable(t *testing.T) {
 	assert.Equal(t, len(a.columns()), info.numHeaderCols)
 	assert.Equal(t, len(a.columns()), info.numCols)
 	assert.Equal(t, len(accts), info.numRows)
+}
+
+func TestAccountsJSON(t *testing.T) {
+	buf := new(bytes.Buffer)
+	a := NewAccounts(acctSingle)
+	err := a.JSON(buf)
+	assert.Nil(t, err)
+	a.resource.DisableListView()
+	err = a.JSON(buf)
+	assert.Nil(t, err)
+}
+
+func TestAccountsYAML(t *testing.T) {
+	buf := new(bytes.Buffer)
+	a := NewAccounts(acctSingle)
+	err := a.YAML(buf)
+	assert.Nil(t, err)
+	a.resource.DisableListView()
+	err = a.YAML(buf)
+	assert.Nil(t, err)
 }

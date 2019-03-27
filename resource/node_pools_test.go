@@ -31,6 +31,16 @@ var (
 			DockerVersion:     &dockerVersion,
 		},
 	}
+	npsSingle = []types.NodePool{
+		{
+			Name:              strptr("test3"),
+			ID:                types.UUID("1234"),
+			KubernetesMode:    strptr("master"),
+			KubernetesVersion: strptr("1.12.1"),
+			EtcdVersion:       &etcdVersion,
+			DockerVersion:     &dockerVersion,
+		},
+	}
 )
 
 func TestNewNodePools(t *testing.T) {
@@ -43,6 +53,13 @@ func TestNewNodePools(t *testing.T) {
 
 	a = NodePool()
 	assert.NotNil(t, a)
+}
+
+func TestNodePoolsDisableListView(t *testing.T) {
+	a := NewNodePools(npsSingle)
+	assert.NotNil(t, a)
+	a.resource.DisableListView()
+	assert.Equal(t, a.resource.listView, false)
 }
 
 func TestNodePoolsTable(t *testing.T) {
@@ -59,4 +76,24 @@ func TestNodePoolsTable(t *testing.T) {
 	assert.Equal(t, len(a.columns()), info.numHeaderCols)
 	assert.Equal(t, len(a.columns()), info.numCols)
 	assert.Equal(t, len(nps), info.numRows)
+}
+
+func TestNodePoolsJSON(t *testing.T) {
+	buf := new(bytes.Buffer)
+	a := NewNodePools(npsSingle)
+	err := a.JSON(buf)
+	assert.Nil(t, err)
+	a.resource.DisableListView()
+	err = a.JSON(buf)
+	assert.Nil(t, err)
+}
+
+func TestNodePoolsYAML(t *testing.T) {
+	buf := new(bytes.Buffer)
+	a := NewNodePools(npsSingle)
+	err := a.YAML(buf)
+	assert.Nil(t, err)
+	a.resource.DisableListView()
+	err = a.YAML(buf)
+	assert.Nil(t, err)
 }

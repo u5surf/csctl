@@ -28,6 +28,15 @@ var (
 			Serveraddress: strptr("2.0.0"),
 		},
 	}
+	regsSingle = []types.Registry{
+		{
+			ID:            types.UUID("1234"),
+			CreatedAt:     &regTime,
+			Description:   strptr("logs"),
+			Provider:      strptr("kubernetes"),
+			Serveraddress: strptr("v1.0.0"),
+		},
+	}
 )
 
 func TestNewRegistries(t *testing.T) {
@@ -42,6 +51,12 @@ func TestNewRegistries(t *testing.T) {
 	assert.NotNil(t, a)
 }
 
+func TestRegistriesDisableListView(t *testing.T) {
+	a := NewRegistries(regsSingle)
+	assert.NotNil(t, a)
+	a.resource.DisableListView()
+	assert.Equal(t, a.resource.listView, false)
+}
 func TestRegistriesTable(t *testing.T) {
 	buf := new(bytes.Buffer)
 
@@ -56,4 +71,24 @@ func TestRegistriesTable(t *testing.T) {
 	assert.Equal(t, len(a.columns()), info.numHeaderCols)
 	assert.Equal(t, len(a.columns()), info.numCols)
 	assert.Equal(t, len(regs), info.numRows)
+}
+
+func TestRegistriesJSON(t *testing.T) {
+	buf := new(bytes.Buffer)
+	a := NewRegistries(regsSingle)
+	err := a.JSON(buf)
+	assert.Nil(t, err)
+	a.resource.DisableListView()
+	err = a.JSON(buf)
+	assert.Nil(t, err)
+}
+
+func TestRegistriesYAML(t *testing.T) {
+	buf := new(bytes.Buffer)
+	a := NewRegistries(regsSingle)
+	err := a.YAML(buf)
+	assert.Nil(t, err)
+	a.resource.DisableListView()
+	err = a.YAML(buf)
+	assert.Nil(t, err)
 }

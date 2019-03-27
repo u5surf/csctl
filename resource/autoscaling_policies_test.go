@@ -65,6 +65,30 @@ var (
 			SamplePeriod:   int32ptr(800),
 		},
 	}
+	aspsSingle = []types.AutoscalingPolicy{
+		{
+			Name:           strptr("test4"),
+			ID:             types.UUID("1234"),
+			MetricsBackend: "prometheus",
+			Metric:         strptr("cpu"),
+			ScalingPolicy: &types.ScalingPolicy{
+				ScaleUp: &types.ScalingPolicyConfiguration{
+					AdjustmentType:     strptr("percent"),
+					AdjustmentValue:    float32ptr(10),
+					ComparisonOperator: strptr(">="),
+					Threshold:          float32ptr(0.5),
+				},
+				ScaleDown: &types.ScalingPolicyConfiguration{
+					AdjustmentType:     strptr("percent"),
+					AdjustmentValue:    float32ptr(30),
+					ComparisonOperator: strptr("<"),
+					Threshold:          float32ptr(0.3),
+				},
+			},
+			PollInterval: int32ptr(15),
+			SamplePeriod: int32ptr(600),
+		},
+	}
 )
 
 func TestNewAutoscalingPolicies(t *testing.T) {
@@ -77,6 +101,13 @@ func TestNewAutoscalingPolicies(t *testing.T) {
 
 	a = AutoscalingPolicy()
 	assert.NotNil(t, a)
+}
+
+func TestAutoscalingPoliciesDisableListView(t *testing.T) {
+	a := NewAutoscalingPolicies(aspsSingle)
+	assert.NotNil(t, a)
+	a.resource.DisableListView()
+	assert.Equal(t, a.resource.listView, false)
 }
 
 func TestAutoscalingPoliciesTable(t *testing.T) {
@@ -93,4 +124,24 @@ func TestAutoscalingPoliciesTable(t *testing.T) {
 	assert.Equal(t, len(a.columns()), info.numHeaderCols)
 	assert.Equal(t, len(a.columns()), info.numCols)
 	assert.Equal(t, len(asps), info.numRows)
+}
+
+func TestAutoscalingPoliciesJSON(t *testing.T) {
+	buf := new(bytes.Buffer)
+	a := NewAutoscalingPolicies(aspsSingle)
+	err := a.JSON(buf)
+	assert.Nil(t, err)
+	a.resource.DisableListView()
+	err = a.JSON(buf)
+	assert.Nil(t, err)
+}
+
+func TestAutoscalingPoliciesYAML(t *testing.T) {
+	buf := new(bytes.Buffer)
+	a := NewAutoscalingPolicies(aspsSingle)
+	err := a.YAML(buf)
+	assert.Nil(t, err)
+	a.resource.DisableListView()
+	err = a.YAML(buf)
+	assert.Nil(t, err)
 }

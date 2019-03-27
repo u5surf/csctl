@@ -33,6 +33,11 @@ var getRegistryCmd = &cobra.Command{
 		}
 
 		regs := resource.NewRegistries(resp)
+
+		if len(args) == 1 {
+			resource.Registry().DisableListView()
+		}
+
 		outputResponse(regs)
 		return nil
 	},

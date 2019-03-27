@@ -26,6 +26,14 @@ var (
 			CreatedAt: &orgTime,
 		},
 	}
+	orgsSingle = []types.Organization{
+		{
+			Name:      strptr("test3"),
+			ID:        types.UUID("1234"),
+			OwnerID:   types.UUID("1234"),
+			CreatedAt: &orgTime,
+		},
+	}
 )
 
 func TestNewOrganizations(t *testing.T) {
@@ -38,6 +46,13 @@ func TestNewOrganizations(t *testing.T) {
 
 	a = Organization()
 	assert.NotNil(t, a)
+}
+
+func TestOrganizationsDisableListView(t *testing.T) {
+	a := NewOrganizations(orgsSingle)
+	assert.NotNil(t, a)
+	a.resource.DisableListView()
+	assert.Equal(t, a.resource.listView, false)
 }
 
 func TestOrganizationsTable(t *testing.T) {
@@ -54,4 +69,24 @@ func TestOrganizationsTable(t *testing.T) {
 	assert.Equal(t, len(a.columns()), info.numHeaderCols)
 	assert.Equal(t, len(a.columns()), info.numCols)
 	assert.Equal(t, len(orgs), info.numRows)
+}
+
+func TestOrganizationsJSON(t *testing.T) {
+	buf := new(bytes.Buffer)
+	a := NewOrganizations(orgsSingle)
+	err := a.JSON(buf)
+	assert.Nil(t, err)
+	a.resource.DisableListView()
+	err = a.JSON(buf)
+	assert.Nil(t, err)
+}
+
+func TestOrganizationsYAML(t *testing.T) {
+	buf := new(bytes.Buffer)
+	a := NewOrganizations(orgsSingle)
+	err := a.YAML(buf)
+	assert.Nil(t, err)
+	a.resource.DisableListView()
+	err = a.YAML(buf)
+	assert.Nil(t, err)
 }

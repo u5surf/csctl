@@ -32,6 +32,10 @@ var getOrganizationCmd = &cobra.Command{
 
 		orgs := resource.NewOrganizations(resp)
 
+		if len(args) == 1 {
+			resource.Organization().DisableListView()
+		}
+
 		if mineOnly {
 			me, err := getMyAccountID()
 			if err != nil {

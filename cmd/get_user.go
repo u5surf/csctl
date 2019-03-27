@@ -26,6 +26,10 @@ var getUserCmd = &cobra.Command{
 
 		users := resource.NewUsers(resp)
 
+		if len(args) == 1 {
+			resource.User().DisableListView()
+		}
+
 		outputResponse(users)
 		return nil
 	},

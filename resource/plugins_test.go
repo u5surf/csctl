@@ -28,6 +28,15 @@ var (
 			CreatedAt:      &plugTime,
 		},
 	}
+	plugsSingle = []types.Plugin{
+		{
+			ID:             types.UUID("1234"),
+			Type:           strptr("logs"),
+			Implementation: strptr("kubernetes"),
+			Version:        strptr("v1.0.0"),
+			CreatedAt:      &plugTime,
+		},
+	}
 )
 
 func TestNewPlugins(t *testing.T) {
@@ -40,6 +49,13 @@ func TestNewPlugins(t *testing.T) {
 
 	a = Plugin()
 	assert.NotNil(t, a)
+}
+
+func TestPluginsDisableListView(t *testing.T) {
+	a := NewPlugins(plugsSingle)
+	assert.NotNil(t, a)
+	a.resource.DisableListView()
+	assert.Equal(t, a.resource.listView, false)
 }
 
 func TestPluginsTable(t *testing.T) {
@@ -56,4 +72,24 @@ func TestPluginsTable(t *testing.T) {
 	assert.Equal(t, len(a.columns()), info.numHeaderCols)
 	assert.Equal(t, len(a.columns()), info.numCols)
 	assert.Equal(t, len(plugs), info.numRows)
+}
+
+func TestPluginsJSON(t *testing.T) {
+	buf := new(bytes.Buffer)
+	a := NewPlugins(plugsSingle)
+	err := a.JSON(buf)
+	assert.Nil(t, err)
+	a.resource.DisableListView()
+	err = a.JSON(buf)
+	assert.Nil(t, err)
+}
+
+func TestPluginsYAML(t *testing.T) {
+	buf := new(bytes.Buffer)
+	a := NewPlugins(plugsSingle)
+	err := a.YAML(buf)
+	assert.Nil(t, err)
+	a.resource.DisableListView()
+	err = a.YAML(buf)
+	assert.Nil(t, err)
 }

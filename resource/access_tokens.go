@@ -19,9 +19,10 @@ type AccessTokens struct {
 func NewAccessTokens(items []types.AccessToken) *AccessTokens {
 	return &AccessTokens{
 		resource: resource{
-			name:    "access-token",
-			plural:  "access-tokens",
-			aliases: []string{"token", "tokens"},
+			name:     "access-token",
+			plural:   "access-tokens",
+			aliases:  []string{"token", "tokens"},
+			listView: true,
 		},
 		items: items,
 	}
@@ -60,12 +61,12 @@ func (t *AccessTokens) Table(w io.Writer) error {
 
 // JSON outputs the JSON representation to the given writer
 func (t *AccessTokens) JSON(w io.Writer) error {
-	return displayJSON(w, t.items)
+	return displayJSON(w, t.items, t.resource.listView)
 }
 
 // YAML outputs the YAML representation to the given writer
 func (t *AccessTokens) YAML(w io.Writer) error {
-	return displayYAML(w, t.items)
+	return displayYAML(w, t.items, t.resource.listView)
 }
 
 // JSONPath outputs the executed JSONPath template to the given writer

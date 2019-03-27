@@ -19,9 +19,10 @@ type Organizations struct {
 func NewOrganizations(items []types.Organization) *Organizations {
 	return &Organizations{
 		resource: resource{
-			name:    "organization",
-			plural:  "organizations",
-			aliases: []string{"org", "orgs"},
+			name:     "organization",
+			plural:   "organizations",
+			aliases:  []string{"org", "orgs"},
+			listView: true,
 		},
 		items: items,
 	}
@@ -62,12 +63,12 @@ func (o *Organizations) Table(w io.Writer) error {
 
 // JSON outputs the JSON representation to the given writer
 func (o *Organizations) JSON(w io.Writer) error {
-	return displayJSON(w, o.items)
+	return displayJSON(w, o.items, o.resource.listView)
 }
 
 // YAML outputs the YAML representation to the given writer
 func (o *Organizations) YAML(w io.Writer) error {
-	return displayYAML(w, o.items)
+	return displayYAML(w, o.items, o.resource.listView)
 }
 
 // JSONPath outputs the executed JSONPath template to the given writer

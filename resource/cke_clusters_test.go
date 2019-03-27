@@ -56,11 +56,11 @@ func TestNewCKEClusters(t *testing.T) {
 	assert.NotNil(t, a)
 }
 
-func TestCKEClustersDisableItemListView(t *testing.T) {
+func TestCKEClustersDisableListView(t *testing.T) {
 	a := NewCKEClusters(nil)
 	assert.NotNil(t, a)
-	a.DisableItemListView()
-	assert.Equal(t, a.listview, false)
+	a.resource.DisableListView()
+	assert.Equal(t, a.resource.listView, false)
 }
 
 func TestCKEClustersTable(t *testing.T) {
@@ -84,7 +84,7 @@ func TestCKEClustersJSON(t *testing.T) {
 	cluster := NewCKEClusters(ckeClusterSingle)
 	err := cluster.JSON(buf)
 	assert.Nil(t, err)
-	cluster.DisableItemListView()
+	cluster.resource.DisableListView()
 	err = cluster.JSON(buf)
 	assert.Nil(t, err)
 }
@@ -94,7 +94,7 @@ func TestCKEClustersYAML(t *testing.T) {
 	cluster := NewCKEClusters(ckeClusterSingle)
 	err := cluster.YAML(buf)
 	assert.Nil(t, err)
-	cluster.DisableItemListView()
+	cluster.resource.DisableListView()
 	err = cluster.YAML(buf)
 	assert.Nil(t, err)
 }

@@ -46,6 +46,11 @@ var getAutoscalingPolicyCmd = &cobra.Command{
 		}
 
 		nps := resource.NewAutoscalingPolicies(resp)
+
+		if len(args) == 1 {
+			resource.AutoscalingPolicy().DisableListView()
+		}
+
 		outputResponse(nps)
 
 		return nil

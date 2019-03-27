@@ -26,6 +26,14 @@ var (
 			CreatedAt:   &providerTime,
 		},
 	}
+	providersSingle = []types.Provider{
+		{
+			ID:          types.UUID("1234"),
+			Provider:    strptr("google"),
+			Description: strptr("google description"),
+			CreatedAt:   &providerTime,
+		},
+	}
 )
 
 func TestNewProviders(t *testing.T) {
@@ -38,6 +46,13 @@ func TestNewProviders(t *testing.T) {
 
 	a = Provider()
 	assert.NotNil(t, a)
+}
+
+func TestProvidersDisableListView(t *testing.T) {
+	a := NewProviders(providersSingle)
+	assert.NotNil(t, a)
+	a.resource.DisableListView()
+	assert.Equal(t, a.resource.listView, false)
 }
 
 func TestProvidersTable(t *testing.T) {
@@ -54,4 +69,24 @@ func TestProvidersTable(t *testing.T) {
 	assert.Equal(t, len(a.columns()), info.numHeaderCols)
 	assert.Equal(t, len(a.columns()), info.numCols)
 	assert.Equal(t, len(providers), info.numRows)
+}
+
+func TestProvidersJSON(t *testing.T) {
+	buf := new(bytes.Buffer)
+	a := NewProviders(providersSingle)
+	err := a.JSON(buf)
+	assert.Nil(t, err)
+	a.resource.DisableListView()
+	err = a.JSON(buf)
+	assert.Nil(t, err)
+}
+
+func TestProvidersYAML(t *testing.T) {
+	buf := new(bytes.Buffer)
+	a := NewProviders(providersSingle)
+	err := a.YAML(buf)
+	assert.Nil(t, err)
+	a.resource.DisableListView()
+	err = a.YAML(buf)
+	assert.Nil(t, err)
 }

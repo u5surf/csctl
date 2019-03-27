@@ -32,6 +32,10 @@ var getAccessTokenCmd = &cobra.Command{
 
 		tokens := resource.NewAccessTokens(resp)
 
+		if len(args) == 1 {
+			resource.AccessToken().DisableListView()
+		}
+
 		outputResponse(tokens)
 		return nil
 	},

@@ -33,6 +33,11 @@ var getPluginCmd = &cobra.Command{
 		}
 
 		plugs := resource.NewPlugins(resp)
+
+		if len(args) == 1 {
+			resource.Plugin().DisableListView()
+		}
+
 		outputResponse(plugs)
 		return nil
 	},

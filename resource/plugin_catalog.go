@@ -17,8 +17,9 @@ type PluginsCatalog struct {
 func NewPluginCatalog(item *types.PluginCatalog) *PluginsCatalog {
 	return &PluginsCatalog{
 		resource: resource{
-			name:    "plugin-catalog",
-			aliases: []string{"plgnc", "plugc", "pc"},
+			name:     "plugin-catalog",
+			aliases:  []string{"plgnc", "plugc", "pc"},
+			listView: true,
 		},
 		items: item,
 	}
@@ -121,12 +122,12 @@ func (pc *PluginsCatalog) Table(w io.Writer) error {
 
 // JSON outputs the JSON representation to the given writer
 func (pc *PluginsCatalog) JSON(w io.Writer) error {
-	return displayJSON(w, pc.items)
+	return displayJSON(w, pc.items, pc.resource.listView)
 }
 
 // YAML outputs the YAML representation to the given writer
 func (pc *PluginsCatalog) YAML(w io.Writer) error {
-	return displayYAML(w, pc.items)
+	return displayYAML(w, pc.items, pc.resource.listView)
 }
 
 // JSONPath outputs the executed JSONPath template to the given writer

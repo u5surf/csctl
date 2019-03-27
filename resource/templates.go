@@ -14,8 +14,7 @@ import (
 type Templates struct {
 	resource
 	filterable
-	items    []types.Template
-	listview bool
+	items []types.Template
 }
 
 // filterFunc returns true if the item should be filtered in
@@ -28,12 +27,12 @@ type filterFunc func(types.Template) bool
 func NewTemplates(items []types.Template) *Templates {
 	return &Templates{
 		resource: resource{
-			name:    "template",
-			plural:  "templates",
-			aliases: []string{"tmpl", "tmpls"},
+			name:     "template",
+			plural:   "templates",
+			aliases:  []string{"tmpl", "tmpls"},
+			listView: true,
 		},
-		items:    items,
-		listview: true,
+		items: items,
 	}
 }
 
@@ -52,11 +51,6 @@ func (c *Templates) columns() []string {
 		"Owner ID",
 		"Created At",
 	}
-}
-
-// DisableItemListView sets to output a single value of item
-func (c *Templates) DisableItemListView() {
-	c.listview = false
 }
 
 // Table outputs the table representation to the given writer
@@ -91,18 +85,12 @@ func (c *Templates) Table(w io.Writer) error {
 
 // JSON outputs the JSON representation to the given writer
 func (c *Templates) JSON(w io.Writer) error {
-	if !c.listview && len(c.items) == 1 {
-		return displayJSON(w, c.items[0])
-	}
-	return displayJSON(w, c.items)
+	return displayJSON(w, c.items, c.resource.listView)
 }
 
 // YAML outputs the YAML representation to the given writer
 func (c *Templates) YAML(w io.Writer) error {
-	if !c.listview && len(c.items) == 1 {
-		return displayYAML(w, c.items[0])
-	}
-	return displayYAML(w, c.items)
+	return displayYAML(w, c.items, c.resource.listView)
 }
 
 // JSONPath outputs the executed JSONPath template to the given writer

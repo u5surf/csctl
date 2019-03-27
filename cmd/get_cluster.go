@@ -35,7 +35,7 @@ var getClusterCmd = &cobra.Command{
 		clusters := resource.NewCKEClusters(resp)
 
 		if len(args) == 1 {
-			clusters.DisableItemListView()
+			resource.CKECluster().DisableListView()
 		}
 
 		if mineOnly {

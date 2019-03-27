@@ -35,7 +35,7 @@ var getTemplateCmd = &cobra.Command{
 		templates := resource.NewTemplates(resp)
 
 		if len(args) == 1 {
-			templates.DisableItemListView()
+			resource.Template().DisableListView()
 		}
 
 		if mineOnly {

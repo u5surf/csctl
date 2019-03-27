@@ -18,9 +18,10 @@ type AutoscalingPolicies struct {
 func NewAutoscalingPolicies(items []types.AutoscalingPolicy) *AutoscalingPolicies {
 	return &AutoscalingPolicies{
 		resource: resource{
-			name:    "autoscaling-policy",
-			plural:  "autoscaling-policies",
-			aliases: []string{"asp", "asps"},
+			name:     "autoscaling-policy",
+			plural:   "autoscaling-policies",
+			aliases:  []string{"asp", "asps"},
+			listView: true,
 		},
 		items: items,
 	}
@@ -99,12 +100,12 @@ func getPolicyConfiguration(config *types.ScalingPolicyConfiguration, scaleDown 
 
 // JSON outputs the JSON representation to the given writer
 func (p *AutoscalingPolicies) JSON(w io.Writer) error {
-	return displayJSON(w, p.items)
+	return displayJSON(w, p.items, p.resource.listView)
 }
 
 // YAML outputs the YAML representation to the given writer
 func (p *AutoscalingPolicies) YAML(w io.Writer) error {
-	return displayYAML(w, p.items)
+	return displayYAML(w, p.items, p.resource.listView)
 }
 
 // JSONPath outputs the executed JSONPath template to the given writer

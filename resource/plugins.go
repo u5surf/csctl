@@ -19,9 +19,10 @@ type Plugins struct {
 func NewPlugins(items []types.Plugin) *Plugins {
 	return &Plugins{
 		resource: resource{
-			name:    "plugin",
-			plural:  "plugins",
-			aliases: []string{"plug", "plugs", "plgn", "plgns"},
+			name:     "plugin",
+			plural:   "plugins",
+			aliases:  []string{"plug", "plugs", "plgn", "plgns"},
+			listView: true,
 		},
 		items: items,
 	}
@@ -64,12 +65,12 @@ func (p *Plugins) Table(w io.Writer) error {
 
 // JSON outputs the JSON representation to the given writer
 func (p *Plugins) JSON(w io.Writer) error {
-	return displayJSON(w, p.items)
+	return displayJSON(w, p.items, p.resource.listView)
 }
 
 // YAML outputs the YAML representation to the given writer
 func (p *Plugins) YAML(w io.Writer) error {
-	return displayYAML(w, p.items)
+	return displayYAML(w, p.items, p.resource.listView)
 }
 
 // JSONPath outputs the executed JSONPath template to the given writer

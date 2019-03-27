@@ -65,6 +65,10 @@ var getPluginCatalogCmd = &cobra.Command{
 			return errors.New("invalid flag combination - see usage")
 		}
 
+		if len(args) == 1 {
+			resource.PluginCatalog().DisableListView()
+		}
+
 		outputResponse(plugins)
 		return nil
 	},

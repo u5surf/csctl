@@ -33,6 +33,11 @@ var getNodeCmd = &cobra.Command{
 		}
 
 		nps := resource.NewNodes(resp)
+
+		if len(args) == 1 {
+			resource.Node().DisableListView()
+		}
+
 		outputResponse(nps)
 
 		return nil

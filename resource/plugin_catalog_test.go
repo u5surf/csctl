@@ -131,6 +131,31 @@ var (
 			},
 		},
 	}
+	plugsCatalogSingle = &types.PluginCatalog{
+		Autoscaler: []*types.PluginDefinition{
+			{
+				Implementation: strptr("cerebral"),
+				Versions: []*types.PluginVersion{
+					{
+						Version: strptr("1.0.0"),
+						Compatibility: &types.PluginCompatibility{
+							Kubernetes: &types.PluginKubernetesCompatibility{
+								Min: strptr("1.10.x"),
+								Max: strptr("1.12.x"),
+							},
+							Plugins: map[string]types.PluginPluginsCompatibility{
+								"Metrics": {
+									Implementation: strptr("prometheus"),
+									Min:            strptr("1.0.0"),
+									Max:            strptr("1.1.0"),
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
 )
 
 func TestNewPluginCatalog(t *testing.T) {
@@ -143,6 +168,13 @@ func TestNewPluginCatalog(t *testing.T) {
 
 	pc = PluginCatalog()
 	assert.NotNil(t, pc)
+}
+
+func TestPluginCatalogsDisableListView(t *testing.T) {
+	a := NewPluginCatalog(plugsCatalogSingle)
+	assert.NotNil(t, a)
+	a.resource.DisableListView()
+	assert.Equal(t, a.resource.listView, false)
 }
 
 func TestNewPluginCatalogFromDefinition(t *testing.T) {
@@ -214,4 +246,24 @@ func TestPluginCatalogTable(t *testing.T) {
 	l += len(plugsCatalog.Metrics)
 
 	assert.Equal(t, l, info.numRows)
+}
+
+func TestPluginCatalogJSON(t *testing.T) {
+	buf := new(bytes.Buffer)
+	a := NewPluginCatalog(plugsCatalogSingle)
+	err := a.JSON(buf)
+	assert.Nil(t, err)
+	a.resource.DisableListView()
+	err = a.JSON(buf)
+	assert.Nil(t, err)
+}
+
+func TestPluginCatalogYAML(t *testing.T) {
+	buf := new(bytes.Buffer)
+	a := NewPluginCatalog(plugsCatalogSingle)
+	err := a.YAML(buf)
+	assert.Nil(t, err)
+	a.resource.DisableListView()
+	err = a.YAML(buf)
+	assert.Nil(t, err)
 }

@@ -12,25 +12,19 @@ import (
 type CKEClusters struct {
 	resource
 	filterable
-	items    []types.CKECluster
-	listview bool
+	items []types.CKECluster
 }
 
 // NewCKEClusters constructs a new CKEClusters wrapping the given cloud type
 func NewCKEClusters(items []types.CKECluster) *CKEClusters {
 	return &CKEClusters{
 		resource: resource{
-			name:   "cluster",
-			plural: "clusters",
+			name:     "cluster",
+			plural:   "clusters",
+			listView: true,
 		},
-		items:    items,
-		listview: true,
+		items: items,
 	}
-}
-
-// DisableItemListView sets to output a single value of item
-func (c *CKEClusters) DisableItemListView() {
-	c.listview = false
 }
 
 // CKECluster constructs a new CKEClusters with no underlying items, useful for
@@ -70,18 +64,12 @@ func (c *CKEClusters) Table(w io.Writer) error {
 
 // JSON outputs the JSON representation to the given writer
 func (c *CKEClusters) JSON(w io.Writer) error {
-	if !c.listview && len(c.items) == 1 {
-		return displayJSON(w, c.items[0])
-	}
-	return displayJSON(w, c.items)
+	return displayJSON(w, c.items, c.resource.listView)
 }
 
 // YAML outputs the YAML representation to the given writer
 func (c *CKEClusters) YAML(w io.Writer) error {
-	if !c.listview && len(c.items) == 1 {
-		return displayYAML(w, c.items[0])
-	}
-	return displayYAML(w, c.items)
+	return displayYAML(w, c.items, c.resource.listView)
 }
 
 // JSONPath outputs the executed JSONPath template to the given writer
